@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as a,d as o}from"./app.2ed2a9a6.js";const _='{"title":"Operators","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/operators.md","lastUpdated":null}',r={},i=o("",7),s=[i];function p(n,l,d,c,h,m){return a(),t("div",null,s)}var f=e(r,[["render",p]]);export{_ as __pageData,f as default};
