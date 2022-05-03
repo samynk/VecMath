@@ -45,6 +45,6 @@ export default defineConfig({
         lineNumbers: true
     },
     lastUpdated: true,
-    base: '/VecMath/'
+    base: '/'
 });
 

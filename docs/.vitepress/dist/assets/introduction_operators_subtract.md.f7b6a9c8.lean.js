@@ -1,1 +1,0 @@
-import{_ as n,c as s,o as a,d as p}from"./app.2ed2a9a6.js";const d='{"title":"Subtract","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/subtract.md","lastUpdated":null}',e={},t=p("",10),o=[t];function c(r,l,u,i,k,b){return a(),s("div",null,o)}var v=n(e,[["render",c]]);export{d as __pageData,v as default};
