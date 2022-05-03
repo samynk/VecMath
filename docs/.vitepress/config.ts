@@ -44,6 +44,7 @@ export default defineConfig({
     markdown: {
         lineNumbers: true
     },
-    lastUpdated: true
+    lastUpdated: true,
+    outDir: 'docs'
 });
 
