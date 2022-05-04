@@ -27,9 +27,19 @@ find_package(ANTLR REQUIRED)
 # Call macro to add lexer and grammar to your build dependencies.
 
 # include generated files in project environment
-add_subdirectory(main)
+add_subdirectory(vecmathlib)
+add_subdirectory(vecmathmain)
+
 add_subdirectory(unittests)
-add_dependencies(VecMath UnitTests)
+add_dependencies(VecMathMain VecMathLib)
+
+target_include_directories (VecMathMain PUBLIC 
+	${VecMathLibIncludeDir}
+)
+target_include_directories (UnitTests PUBLIC 
+	${VecMathLibIncludeDir}
+)
+
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/License.txt")

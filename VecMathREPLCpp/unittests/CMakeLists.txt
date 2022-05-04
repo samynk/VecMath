@@ -10,7 +10,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_executable(UnitTests UnitTestMain.cpp )
-target_link_libraries(UnitTests PRIVATE VecMath )
+target_link_libraries(UnitTests PRIVATE VecMathLib )
 
 #configure_file(week1.json week1.json)
 #configure_file(week2.json week2.json)
