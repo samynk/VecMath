@@ -38,7 +38,7 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 		printInfo("Leaving so soon? Was it something I said?");
 		SetConsoleTextAttribute(m_ConsoleHandle, 15);
 		m_Exit = true;
-		
+
 	}
 	else if (ctx->PRINTALL() != nullptr) {
 		for (const auto& [key, value] : m_VarMap) {
@@ -87,7 +87,8 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 
 void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 {
-	if (ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
+	if (ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR
+		&& ctx->ASSIGN()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
 	{
 		std::string varId = ctx->ID()->getText();
 		if (stackIsValid()) {
@@ -102,7 +103,7 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 			std::cout << "If you want this to be a variable you need the following format: b = 7\n";
 		}
 	}
-	else if (ctx->ASSIGN() == nullptr)
+	else
 	{
 		SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
 		std::cout << "Assigning a new variable should be done with the equals sign.\n";
@@ -151,25 +152,31 @@ void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 	int dim = ctx->value().size();
 	switch (dim) {
 	case 1: {
-		IMatrix* f = popFromStack();
-		Scalar* s = new Scalar(f->get(0, 0));
-		m_ExprStack.push(s);
+		if (stackIsValid()) {
+			IMatrix* f = popFromStack();
+			Scalar* s = new Scalar(f->get(0, 0));
+			m_ExprStack.push(s);
+		}
 		break;
 	}
 	case 2: {
+		if (m_ExprStack.size() >= 2) {
+			IMatrix* y = popFromStack();
+			IMatrix* x = popFromStack();
 
-		IMatrix* y = popFromStack();
-		IMatrix* x = popFromStack();
-		Vector2D* v2d = new Vector2D(x->get(0, 0), y->get(0, 0));
-		m_ExprStack.push(v2d);
+			Vector2D* v2d = new Vector2D(x->get(0, 0), y->get(0, 0));
+			m_ExprStack.push(v2d);
+		}
 		break;
 	}
 	case 3: {
-		IMatrix* z = popFromStack();
-		IMatrix* y = popFromStack();
-		IMatrix* x = popFromStack();
-		Vector3D* v3d = new Vector3D(x->get(0, 0), y->get(0, 0), z->get(0, 0));
-		m_ExprStack.push(v3d);
+		if (m_ExprStack.size() >= 3) {
+			IMatrix* z = popFromStack();
+			IMatrix* y = popFromStack();
+			IMatrix* x = popFromStack();
+			Vector3D* v3d = new Vector3D(x->get(0, 0), y->get(0, 0), z->get(0, 0));
+			m_ExprStack.push(v3d);
+		}
 		break;
 	}
 	}
@@ -177,16 +184,19 @@ void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 
 void VecMathListener::exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)
 {
-	IMatrix* z = popFromStack();
-	IMatrix* y = popFromStack();
-	IMatrix* x = popFromStack();
-	IMatrix* w = popFromStack();
-	Quaternion* q = new Quaternion(x->get(0, 0), y->get(0, 0), z->get(0, 0), w->get(0, 0));
-	m_ExprStack.push(q);
+	if (m_ExprStack.size() >= 4) {
+		IMatrix* z = popFromStack();
+		IMatrix* y = popFromStack();
+		IMatrix* x = popFromStack();
+		IMatrix* w = popFromStack();
+		Quaternion* q = new Quaternion(x->get(0, 0), y->get(0, 0), z->get(0, 0), w->get(0, 0));
+		m_ExprStack.push(q);
+	}
 }
 
 void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 {
+
 	if (ctx->ID() != nullptr) {
 		std::string id = ctx->ID()->getText();
 		if (m_VarMap.find(id) != m_VarMap.end()) {
@@ -201,77 +211,94 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 		}
 	}
 	else if (ctx->op != nullptr) {
+
 		using namespace VecMath;
+
 		switch (ctx->op->getType()) {
 		case VecMathLexer::ABS: {
-			IMatrix* op2 = m_ExprStack.top();
-			m_ExprStack.pop();
-			Scalar* s = new Scalar(op2->magnitude());
-			m_ExprStack.push(s);
+			IMatrix* op2 = popFromStack();
+			if (op2 != nullptr) {
+				Scalar* s = new Scalar(op2->magnitude());
+				m_ExprStack.push(s);
+			}
+			else {
+				printError("An error occurred, maybe you forgot to asssign the value to a variable?");
+			}
+
 			break;
 		}
 
 		case VecMathLexer::ADD: {
 			// unary case: do nothing leave value on stack.
 			if (ctx->op2 != nullptr) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::add(op1, op2));
+				if (m_ExprStack.size() >= 2) {
+					IMatrix* op2 = popFromStack();
+					IMatrix* op1 = popFromStack();
+					m_ExprStack.push(IMatrix::add(op1, op2));
+				}
 			}
 			break;
 		}
 		case VecMathLexer::MINUS: {
 			// can be unary minus!
 			if (ctx->op2 == nullptr) {
-				IMatrix* op = popFromStack();
-				m_ExprStack.push(IMatrix::neg(op));
+				if (stackIsValid()) {
+					IMatrix* op = popFromStack();
+					m_ExprStack.push(IMatrix::neg(op));
+				}
 			}
 			else {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-
-				m_ExprStack.push(IMatrix::subtract(op1, op2));
+				if (m_ExprStack.size() >= 2) {
+					IMatrix* op2 = popFromStack();
+					IMatrix* op1 = popFromStack();
+					m_ExprStack.push(IMatrix::subtract(op1, op2));
+				}
 			}
 			break;
 		}
 		case VecMathLexer::MUL: {
-			IMatrix* op2 = popFromStack();
-			IMatrix* op1 = popFromStack();
-
-			m_ExprStack.push(IMatrix::mul(op1, op2));
+			if (m_ExprStack.size() >= 2) {
+				IMatrix* op2 = popFromStack();
+				IMatrix* op1 = popFromStack();
+				m_ExprStack.push(IMatrix::mul(op1, op2));
+			}
 			break;
 		}
 		case VecMathLexer::CROSS: {
-			IMatrix* op2 = popFromStack();
-			IMatrix* op1 = popFromStack();
-
-			m_ExprStack.push(IMatrix::cross(op1, op2));
+			if (m_ExprStack.size() >= 2) {
+				IMatrix* op2 = popFromStack();
+				IMatrix* op1 = popFromStack();
+				m_ExprStack.push(IMatrix::cross(op1, op2));
+			}
 			break;
 		}
 		case VecMathLexer::POWER: {
-			IMatrix* op2 = popFromStack();
-			IMatrix* op1 = popFromStack();
-
-			m_ExprStack.push(IMatrix::power(op1, op2));
+			if (m_ExprStack.size() >= 2) {
+				IMatrix* op2 = popFromStack();
+				IMatrix* op1 = popFromStack();
+				m_ExprStack.push(IMatrix::power(op1, op2));
+			}
 			break;
 		}
 		case VecMathLexer::DIV: {
-			IMatrix* op2 = popFromStack();
-			IMatrix* op1 = popFromStack();
-
-			m_ExprStack.push(IMatrix::divide(op1, op2));
+			if (m_ExprStack.size() >= 2) {
+				IMatrix* op2 = popFromStack();
+				IMatrix* op1 = popFromStack();
+				m_ExprStack.push(IMatrix::divide(op1, op2));
+			}
 			break;
 		}
 		case VecMathLexer::DOT: {
-			IMatrix* op2 = popFromStack();
-			IMatrix* op1 = popFromStack();
-
-			m_ExprStack.push(IMatrix::dot(op1, op2));
+			if (m_ExprStack.size() >= 2) {
+				IMatrix* op2 = popFromStack();
+				IMatrix* op1 = popFromStack();
+				m_ExprStack.push(IMatrix::dot(op1, op2));
+			}
 			break;
 		}
 		}
 	}
-	else if (ctx->f != nullptr) {
+	else if (ctx->f != nullptr && stackIsValid()) {
 		IMatrix* op = popFromStack();
 		IMatrix* result = IMatrix::maxMatrix(op, nullptr);
 		auto ctxFunc = ctx->f;
@@ -329,18 +356,18 @@ void VecMathListener::visitErrorNode(antlr4::tree::ErrorNode* node) {
 	size_t type = node->getSymbol()->getType();
 	auto interval = node->getSourceInterval();
 
-	
+
 	switch (type) {
 	case VecMath::VecMathLexer::COMMA:
 		printErrorLoc(interval.a, interval.b, m_CurrentCodeLine);
-		printError("Was not expecting a comma at character " + std::to_string(interval.a+1));
+		printError("Was not expecting a comma at character " + std::to_string(interval.a + 1));
 		printInfo("Did you forget to use [ and ] to define vectors, matrices or quaternions?");
 		printInfo("Example: v=[2,3.1,7]");
 		m_ErrorFlagged = true;
 		break;
 	case VecMath::VecMathLexer::FLOAT:
 		printErrorLoc(interval.a, interval.b, m_CurrentCodeLine);
-		printError("Was not expecting a float at character " + std::to_string(interval.a+1));
+		printError("Was not expecting a float at character " + std::to_string(interval.a + 1));
 		printInfo("Did you forget to use commas to define vectors, matrices or quaternions?");
 		printInfo("Example: v=[2,3.1,7]");
 		m_ErrorFlagged = true;
@@ -390,7 +417,7 @@ IMatrix* VecMathListener::popFromStack()
 		return r;
 	}
 	else {
-		return new Scalar(NAN);
+		return nullptr;
 	}
 }
 

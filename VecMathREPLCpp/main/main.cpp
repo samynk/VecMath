@@ -30,8 +30,6 @@ int main()
 		tokenType = -1;
 		try {
 			ANTLRInputStream is{ codeLine };
-
-
 			VecMath::VecMathLexer lexer{ &is };
 
 			CommonTokenStream stream{ &lexer };
