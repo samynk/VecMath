@@ -19,5 +19,6 @@ value:
  | ID;
 
 function: SIN|COS|TAN|ASIN|ACOS|ATAN|RADTODEG|DEGTORAD|CON|SQRT|ID;
-command : print | PRINTALL | EXIT | CLEAR | HELP;
+command : print | PRINTALL | EXIT | clear | HELP;
 print: PRINT ID;
+clear: CLEAR ID?;

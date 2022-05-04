@@ -24,6 +24,7 @@ public:
 	void exitCommand(VecMath::VecMathParser::CommandContext* /*ctx*/) override;
 	void exitAssign(VecMath::VecMathParser::AssignContext* ctx) override;
 	void exitPrint(VecMath::VecMathParser::PrintContext* ctx) override;
+	void exitClear(VecMath::VecMathParser::ClearContext* ctx) override;
 	void exitLiteral(VecMath::VecMathParser::LiteralContext* ctx) override;
 	void exitVector(VecMath::VecMathParser::VectorContext* ctx) override;
 	void exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)override;

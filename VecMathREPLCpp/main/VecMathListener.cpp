@@ -50,9 +50,6 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 			std::cout << "\n";
 		}
 	}
-	else if (ctx->CLEAR() != nullptr) {
-		m_VarMap.clear();
-	}
 	else if (ctx->HELP() != nullptr) {
 		printInfo("your friendly neighbourhood help\n");
 
@@ -135,6 +132,17 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 	else {
 		SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
 		std::cout << "Use the print statement with a variable id, for example: 'print var'\n";
+	}
+}
+
+void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)
+{
+	if (ctx->ID() != nullptr) {
+		std::string id = ctx->ID()->getText();
+		m_VarMap.erase(id);
+	}
+	else {
+		m_VarMap.clear();
 	}
 }
 
