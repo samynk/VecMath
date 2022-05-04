@@ -3,3 +3,8 @@
 ################################################################################
 
 *.db
+*.db-shm
+*.db-wal
+*.opendb
+/VecMathREPLCpp/out/build/x64-Debug
+/VecMathREPLCpp/.vs
