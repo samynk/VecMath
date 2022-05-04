@@ -8,3 +8,4 @@
 *.opendb
 /VecMathREPLCpp/out/build/x64-Debug
 /VecMathREPLCpp/.vs
+/VecMathREPLCpp/out/install/x64-Debug/bin

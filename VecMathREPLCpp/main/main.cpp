@@ -8,50 +8,58 @@
 #include "VecMathErrorListener.h"
 
 void printTokens(
-    antlr4::CommonTokenStream& stream,
-    const antlr4::dfa::Vocabulary& symbols);
+	antlr4::CommonTokenStream& stream,
+	const antlr4::dfa::Vocabulary& symbols);
 
 int main()
 {
-    std::cout << "VecMath REPL shell - Koen Samyn - 2022\n";
-    std::cout << "Mail any bugs to koen.samyn@howest.be\n";
-    std::string codeLine;
-    int tokenType = -1;
-    using namespace antlr4;
-    using namespace VecMath;
-    
-    VecMathListener listener{};
-    VecMathErrorListener errorListener;
-    do {
-        listener.prompt("vecmath>");
-        std::getline(std::cin,codeLine);
-        //std::cout << "You typed : " << codeLine << std::endl;
-        listener.setCurrentCodeLine(codeLine);
-        ANTLRInputStream is{ codeLine };
-        VecMath::VecMathLexer lexer{&is};
-        
-        CommonTokenStream stream{ &lexer };
-        VecMathParser parser(&stream);
-        //parser.removeErrorListeners();
-        parser.addParseListener(&listener);
-        //parser.addErrorListener(&errorListener);
-        parser.expression();
-        stream.fill();
-        //printTokens(stream,lexer.getVocabulary());
-        tokenType = stream.getTokens()[0]->getType();
-    }while (tokenType != VecMathLexer::EXIT);
+	std::cout << "VecMath REPL shell - Koen Samyn - 2022\n";
+	std::cout << "Mail any bugs to koen.samyn@howest.be\n";
+	std::string codeLine;
+	int tokenType = -1;
+	using namespace antlr4;
+	using namespace VecMath;
+
+	VecMathListener listener{};
+	VecMathErrorListener errorListener;
+	do {
+		listener.prompt("vecmath>");
+		std::getline(std::cin, codeLine);
+		//std::cout << "You typed : " << codeLine << std::endl;
+		listener.setCurrentCodeLine(codeLine);
+		tokenType = -1;
+		try {
+			ANTLRInputStream is{ codeLine };
+
+
+			VecMath::VecMathLexer lexer{ &is };
+
+			CommonTokenStream stream{ &lexer };
+			VecMathParser parser(&stream);
+			//parser.removeErrorListeners();
+			parser.addParseListener(&listener);
+			//parser.addErrorListener(&errorListener);
+			parser.expression();
+			stream.fill();
+			//printTokens(stream,lexer.getVocabulary());
+			tokenType = stream.getTokens()[0]->getType();
+		}
+		catch (IllegalArgumentException ex) {
+			listener.printError("Illegal character in string, best to use ASCII characters only. ");
+		}
+	} while (tokenType != VecMathLexer::EXIT);
 }
 
 void printTokens(
-    antlr4::CommonTokenStream& stream, 
-    const antlr4::dfa::Vocabulary& symbols
+	antlr4::CommonTokenStream& stream,
+	const antlr4::dfa::Vocabulary& symbols
 ) {
-    using namespace std;
-    for (auto token : stream.getTokens()) {
-        cout << token->getText();
-        cout << " [";
-        cout << symbols.getSymbolicName(token->getType());
-        cout << "] ";
-    }
-    cout << endl;
+	using namespace std;
+	for (auto token : stream.getTokens()) {
+		cout << token->getText();
+		cout << " [";
+		cout << symbols.getSymbolicName(token->getType());
+		cout << "] ";
+	}
+	cout << endl;
 }
