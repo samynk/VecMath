@@ -19,6 +19,14 @@ target_link_libraries(VecMath antlr4_static)
 
 message(${ANTLR_VecMathLexer_OUTPUT_DIR})
 
+add_custom_command(
+    TARGET VecMath POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources
+    $<TARGET_FILE_DIR:VecMath>/resources
+    )
+    
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/" DESTINATION "bin/resources")
 install(TARGETS VecMath DESTINATION bin)
 
 

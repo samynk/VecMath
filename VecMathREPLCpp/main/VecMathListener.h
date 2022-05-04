@@ -11,6 +11,7 @@ public:
 	VecMathListener();
 
 	void prompt(const std::string& text);
+	void readHelp();
 	bool isExit() {
 		return m_Exit;
 	}
@@ -36,6 +37,7 @@ public:
 	void printInfo(const std::string& message);
 	void printText(const std::string& message);
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
+	void printMarkDown(const std::string& text);
 
 	IMatrix* popFromStack();
 	void pushToStack(IMatrix* toPush);
@@ -47,6 +49,7 @@ private:
 	std::map<std::string, IMatrix*> m_Constants;
 	std::stack<IMatrix*> m_ExprStack;
 	std::string m_CurrentCodeLine;
+	std::string m_HelpString;
 
 
 	static const int ERRORCOLOR{ 12 };

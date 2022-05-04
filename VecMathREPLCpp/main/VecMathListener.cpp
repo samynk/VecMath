@@ -14,6 +14,7 @@ VecMathListener::VecMathListener()
 	m_Constants["PI"] = new Scalar(M_PI);
 	m_Constants["pi"] = new Scalar(M_PI);
 	m_Constants["e"] = new Scalar(M_E);
+	readHelp();
 }
 
 void VecMathListener::prompt(const std::string& text)
@@ -24,6 +25,17 @@ void VecMathListener::prompt(const std::string& text)
 	m_ErrorFlagged = false;
 	while (!m_ExprStack.empty()) {
 		m_ExprStack.pop();
+	}
+}
+
+void VecMathListener::readHelp()
+{
+	std::ifstream helpFile{ "resources/help.txt" };
+	if (helpFile.is_open()) {
+		std::ostringstream ss;
+		ss << helpFile.rdbuf();
+		m_HelpString = ss.str();
+		helpFile.close();
 	}
 }
 
@@ -51,6 +63,8 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 		}
 	}
 	else if (ctx->HELP() != nullptr) {
+		printMarkDown(m_HelpString);
+		/*
 		printInfo("your friendly neighbourhood help\n");
 
 		printInfo("Available commands");
@@ -79,6 +93,7 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 		printText("rad2deg : converts a value in radians to degrees.");
 		printText("deg2rad : converts a value in degrees to radians.");
 		printInfo("Here ends the shift of the friendly neighbourhood help.");
+		*/
 	}
 }
 
@@ -414,6 +429,20 @@ void VecMathListener::printErrorLoc(size_t start, size_t end, const std::string&
 		std::cout << message[pc];
 	}
 	std::cout << "\n";
+}
+
+void VecMathListener::printMarkDown(const std::string& text)
+{
+	std::stringstream ss(text);
+	std::string token;
+	while (std::getline(ss, token, '\n')) {
+		if (token[0] == '#') {
+			printInfo(token.substr(1));
+		}
+		else {
+			printText(token);
+		}
+	}
 }
 
 void VecMathListener::printInfo(const std::string& message)
