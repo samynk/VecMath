@@ -53,3 +53,8 @@ void Vector3D::set(int ri, int ci, float value)
 		}
 	}
 }
+
+IMatrix* Vector3D::conjugate()
+{
+	return new Vector3D(m_X,m_Y,m_Z);
+}

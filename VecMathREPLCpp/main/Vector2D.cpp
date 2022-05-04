@@ -47,3 +47,8 @@ void Vector2D::set(int ri, int ci, float value)
 		}
 	}
 }
+
+IMatrix* Vector2D::conjugate()
+{
+	return new Vector2D(m_X, m_Y);
+}

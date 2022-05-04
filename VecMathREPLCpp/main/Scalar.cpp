@@ -33,3 +33,8 @@ void Scalar::set(int ri, int ci,float value)
 		m_Value = value;
 	}
 }
+
+IMatrix* Scalar::conjugate()
+{
+	return new Scalar(m_Value);
+}
