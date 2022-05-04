@@ -258,12 +258,27 @@ IMatrix* IMatrix::power(IMatrix* op1, IMatrix* op2)
 IMatrix* IMatrix::cross(IMatrix* op1, IMatrix* op2)
 {
 	// result is always 3D vector.
+	int nrOfVectors = std::max(op1->m_Rows, op2->m_Rows);
+	if (nrOfVectors == 1) {
+		float x1 = op1->get(0, 0);
+		float y1 = op1->get(0, 1);
+		float z1 = op1->get(0, 2);
 
-	IMatrix* result = maxMatrix(op1, op2);
-	if (result->m_Columns == 2) {
-
+		float x2 = op2->get(0, 0);
+		float y2 = op2->get(0, 1);
+		float z2 = op2->get(0, 2);
+		Vector3D* result = new Vector3D(
+			y1*z2-y2*z1,
+			z1*x2-z2*x1,
+			x1*y2-x2*y1
+		);
+	
+		return result;
 	}
-	return result;
+	else {
+		// todo add matrix functionality
+		return nullptr;
+	}
 }
 
 bool IMatrix::inRange(int ri, int ci)
