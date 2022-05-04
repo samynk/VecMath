@@ -1,5 +1,6 @@
 #pragma once
 #include "VecMathParserBaseListener.h"
+#include "JokeGenerator.h"
 #include <map>
 #include <stack>
 #include "IMatrix.h"
@@ -50,6 +51,8 @@ private:
 	std::stack<IMatrix*> m_ExprStack;
 	std::string m_CurrentCodeLine;
 	std::string m_HelpString;
+
+	JokeGenerator m_JokeGenerator;
 
 
 	static const int ERRORCOLOR{ 12 };

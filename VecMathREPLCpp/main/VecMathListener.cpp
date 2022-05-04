@@ -62,38 +62,11 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 			std::cout << "\n";
 		}
 	}
+	else if (ctx->JOKE() != nullptr) {
+		m_JokeGenerator.printRandomJoke(m_ConsoleHandle);
+	}
 	else if (ctx->HELP() != nullptr) {
 		printMarkDown(m_HelpString);
-		/*
-		printInfo("your friendly neighbourhood help\n");
-
-		printInfo("Available commands");
-		printText("help : prints this very helpful message.");
-		printText("print variableName: prints the value of the variable name to output.");
-		printText("printAll : prints the values of all the current variables to output.");
-		printText("exit or bye : stops this fine REPL shell.");
-		printInfo("Variables");
-		printText("a=1.0 -> creates a scalar value, internally this will be stored as a one dimensional vector.");
-		printText("b=[1.0] -> creates a scalar value (a one dimensional vector).");
-		printText("c=[2,3] -> creates a two dimensional vector.");
-		printText("d=[2,3,9] -> creates a three dimensional vector.");
-		printText("q=[3,(2,3,9)] -> creates a quaternion with i=2, j=3, k=9 and w=3.");
-		printInfo("Operators");
-		printText("* : component wise multiplication.");
-		printText("/ : component wise division.");
-		printText("+ : component wise addition.");
-		printText("- : component wise subtraction, unary negation.");
-		printText("^ : raise vector, matrix or quaternion to a power.");
-		printText(". : dot product for vectors, complex multiplication for quaternions.");
-		printText("|v1| : calculates the norm or magnitude of the vector.");
-		printInfo("Mathematical functions");
-		printText("sin, cos, tan: sine, cosine and tangent function of a value in radians. These functions will be applied on all components.");
-		printText("asin, acos, atan: arc sine, arc cosine and arc tangent function. Returns an angle in radians. These functions will be applied on all components.");
-		printText("con : calculates the conjugate of a quaternion.");
-		printText("rad2deg : converts a value in radians to degrees.");
-		printText("deg2rad : converts a value in degrees to radians.");
-		printInfo("Here ends the shift of the friendly neighbourhood help.");
-		*/
 	}
 }
 

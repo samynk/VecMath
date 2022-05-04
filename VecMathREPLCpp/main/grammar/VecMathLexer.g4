@@ -37,6 +37,7 @@ PRINT: 'print';
 PRINTALL: 'printAll';
 EXIT: 'bye' | 'exit';
 CLEAR: 'clear';
+JOKE: 'joke';
 HELP: 'help';
  
 ID : [a-zA-Z]+ [a-zA-Z0-9]* ;
