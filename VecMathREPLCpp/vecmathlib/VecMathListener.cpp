@@ -44,6 +44,31 @@ void VecMathListener::setCurrentCodeLine(std::string codeLine)
 	m_CurrentCodeLine = codeLine;
 }
 
+void VecMathListener::exec(std::string code)
+{
+	using namespace VecMath;
+	using namespace antlr4;
+	ANTLRInputStream is{ code };
+	VecMath::VecMathLexer lexer{ &is };
+
+	CommonTokenStream stream{ &lexer };
+	VecMathParser parser(&stream);
+	//parser.removeErrorListeners();
+	parser.addParseListener(this);
+	//parser.addErrorListener(&errorListener);
+	parser.expression();
+}
+
+IMatrix* VecMathListener::getVariable(const std::string& id) const
+{
+	if (m_VarMap.find(id) != m_VarMap.end()) {
+		return m_VarMap.at(id);
+	}
+	else {
+		return nullptr;
+	}
+}
+
 void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 {
 	if (ctx->EXIT() != nullptr) {

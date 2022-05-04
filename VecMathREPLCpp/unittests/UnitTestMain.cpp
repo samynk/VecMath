@@ -1,22 +1,20 @@
 
 
-#include "rapidjson.h"
-#include "document.h"
-#include "stream.h"
-#include "filereadstream.h"
-#include "EMath.h"
-#include "RayTracerFunctions.h"
-#include "RayTracerFunctionsW2.h"
-#include "RayTracerFunctionsW3.h"
-#include "RayTracerFunctionsW4.h"
-#include "RayTracerFunctionsW5.h"
-#include "TestUtil.h"
-#include "Week1Test.h"
-#include "Week2Test.h"
-#include "Week3Test.h"
-// #include "Week4Test.h"
-// #include "Week5Test.h"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
+#include "AssignmentTests.h"
+
+unsigned int Factorial(unsigned int number) {
+    return number <= 1 ? number : Factorial(number - 1) * number;
+}
+
+TEST_CASE("Factorials are computed", "[factorial]") {
+    REQUIRE(Factorial(1) == 1);
+    REQUIRE(Factorial(2) == 2);
+    REQUIRE(Factorial(3) == 6);
+    REQUIRE(Factorial(10) == 3628800);
+}
 
 
 

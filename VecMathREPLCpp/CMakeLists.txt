@@ -31,7 +31,7 @@ add_subdirectory(vecmathlib)
 add_subdirectory(vecmathmain)
 
 add_subdirectory(unittests)
-add_dependencies(VecMathMain VecMathLib)
+add_dependencies(VecMathMain VecMathLib UnitTestsRun)
 
 target_include_directories (VecMathMain PUBLIC 
 	${VecMathLibIncludeDir}

@@ -9,8 +9,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(UnitTests UnitTestMain.cpp )
-target_link_libraries(UnitTests PRIVATE VecMathLib )
+add_executable(UnitTests UnitTestMain.cpp  "AssignmentTests.h")
+target_link_libraries(UnitTests PRIVATE VecMathLib Catch2::Catch2WithMain)
 
 #configure_file(week1.json week1.json)
 #configure_file(week2.json week2.json)
@@ -18,7 +18,7 @@ target_link_libraries(UnitTests PRIVATE VecMathLib )
 #configure_file(week4.json week4.json)
 #configure_file(week5.json week5.json)
 
-add_custom_target(testsrun
+add_custom_target(UnitTestsRun
   COMMAND UnitTests -d yes
   COMMENT "running tests"
 )

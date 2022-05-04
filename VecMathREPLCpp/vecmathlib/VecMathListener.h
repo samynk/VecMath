@@ -22,6 +22,8 @@ public:
 	}
 
 	void setCurrentCodeLine(std::string codeLine);
+	void exec(std::string code);
+	IMatrix* getVariable(const std::string& id)const;
 
 	void exitCommand(VecMath::VecMathParser::CommandContext* /*ctx*/) override;
 	void exitAssign(VecMath::VecMathParser::AssignContext* ctx) override;
