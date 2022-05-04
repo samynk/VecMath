@@ -28,6 +28,8 @@ find_package(ANTLR REQUIRED)
 
 # include generated files in project environment
 add_subdirectory(main)
+add_subdirectory(unittests)
+add_dependencies(VecMath UnitTests)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/License.txt")
