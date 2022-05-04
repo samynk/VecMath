@@ -308,46 +308,60 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 	}
 	else if (ctx->f != nullptr && stackIsValid()) {
 		IMatrix* op = popFromStack();
-		IMatrix* result = IMatrix::maxMatrix(op, nullptr);
+		IMatrix* result = nullptr;
 		auto ctxFunc = ctx->f;
-		if (ctxFunc->COS() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return cos(x); }, result);
+		if (ctxFunc->ID() == nullptr) {
+			result = IMatrix::maxMatrix(op, nullptr);
+			if (ctxFunc->COS() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return cos(x); }, result);
+			}
+			else if (ctxFunc->SIN() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return sin(x); }, result);
+			}
+			else if (ctxFunc->TAN() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return tan(x); }, result);
+			}
+			else if (ctxFunc->ACOS() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return acos(x); }, result);
+			}
+			else if (ctxFunc->ASIN() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return asin(x); }, result);
+			}
+			else if (ctxFunc->ATAN() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return atan(x); }, result);
+			}
+			else if (ctxFunc->DEGTORAD() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return x * M_PI / 180.0f; }, result);
+			}
+			else if (ctxFunc->RADTODEG() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return x * 180 / M_PI; }, result);
+			}
+			else if (ctxFunc->SQRT() != nullptr) {
+				IMatrix::unaryOp(op, [](float x) {return sqrt(x); }, result);
+			}
+			else if (ctxFunc->CON() != nullptr) {
+				// only do this if it is a quaternion.
+				result = op->conjugate();
+			}
 		}
-		else if (ctxFunc->SIN() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return sin(x); }, result);
-		}
-		else if (ctxFunc->TAN() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return tan(x); }, result);
-		}
-		else if (ctxFunc->ACOS() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return acos(x); }, result);
-		}
-		else if (ctxFunc->ASIN() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return asin(x); }, result);
-		}
-		else if (ctxFunc->ATAN() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return atan(x); }, result);
-		}
-		else if (ctxFunc->DEGTORAD() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return x * M_PI / 180.0f; }, result);
-		}
-		else if (ctxFunc->RADTODEG() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return x * 180 / M_PI; }, result);
-		}
-		else if (ctxFunc->SQRT() != nullptr) {
-			IMatrix::unaryOp(op, [](float x) {return sqrt(x); }, result);
-		}
-		else if (ctxFunc->CON() != nullptr) {
-			// only do this if it is a quaternion.
-			result = op->conjugate();
-		}
-		else if (ctxFunc->ID() != nullptr) {
+		else {
 			std::string funcName = ctxFunc->ID()->getText();
-			printError("There is no function called " + funcName + " (yet)!");
-			printInfo("Maybe you made a typo? (type 'help' for a list of functions)");
-			m_ErrorFlagged = true;
+			if (funcName == "abs") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return abs(x); }, result);
+			}
+			else if (funcName == "norm") {
+				result = new Scalar( op->magnitude());
+			}
+			else {
+				printError("There is no function called " + funcName + " (yet)!");
+				printInfo("Maybe you made a typo? (type 'help' for a list of functions)");
+				m_ErrorFlagged = true;
+			}
 		}
-		pushToStack(result);
+		if (result != nullptr && !m_ErrorFlagged) {
+			pushToStack(result);
+		}
 	}
 }
 
