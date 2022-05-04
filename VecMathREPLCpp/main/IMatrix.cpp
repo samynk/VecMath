@@ -61,6 +61,14 @@ IMatrix* IMatrix::conjugate()
 	return new Scalar(NAN);
 }
 
+IMatrix* IMatrix::inverse()
+{
+	IMatrix* result = maxMatrix(this, nullptr);
+	IMatrix::unaryOp(this, [](float x) {return 1/x; }, result);
+	return result;
+
+}
+
 IMatrix* IMatrix::maxMatrix(IMatrix* op1, IMatrix* op2)
 {
 	int rows = std::max(

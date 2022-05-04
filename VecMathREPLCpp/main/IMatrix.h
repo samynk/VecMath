@@ -20,6 +20,7 @@ public:
 	virtual void print(HANDLE console);
 	virtual float magnitude();
 	virtual IMatrix* conjugate();
+	virtual IMatrix* inverse();
 	
 	
 	static IMatrix* maxMatrix(IMatrix* op1, IMatrix* op2);

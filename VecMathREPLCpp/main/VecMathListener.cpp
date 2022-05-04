@@ -353,6 +353,9 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			else if (funcName == "norm") {
 				result = new Scalar( op->magnitude());
 			}
+			else if (funcName == "inv") {
+				result = op->inverse();
+			}
 			else {
 				printError("There is no function called " + funcName + " (yet)!");
 				printInfo("Maybe you made a typo? (type 'help' for a list of functions)");
