@@ -1,0 +1,32 @@
+#your friendly neighbourhood help
+
+#Available commands
+help : prints this very helpful message.
+print variableName: prints the value of the variable name to output.
+printAll : prints the values of all the current variables to output.
+exit or bye : stops this fine REPL shell.
+Variables
+a=1.0 -> creates a scalar value, internally this will be stored as a one dimensional vector.
+b=[1.0] -> creates a scalar value (a one dimensional vector).
+c=[2,3] -> creates a two dimensional vector.
+d=[2,3,9] -> creates a three dimensional vector.
+q=[3,(2,3,9)] -> creates a quaternion with i=2, j=3, k=9 and w=3.
+#Operators
+* : component wise multiplication.
+/ : component wise division.
++ : component wise addition.
+- : component wise subtraction, unary negation.
+^ : raise vector, matrix or quaternion to a power.
+. : dot product for vectors, complex multiplication for quaternions.
+|v1| : calculates the norm or magnitude of the vector.
+#Mathematical functions
+sin, cos, tan : sine, cosine and tangent function of a value in radians. These functions will be applied on all components.
+asin, acos, atan : arc sine, arc cosine and arc tangent function. Returns an angle in radians. These functions will be applied on all components.
+sqrt : calculates the square root of all the components.
+abs : calculates the absolute value of all the components.
+con : calculates the conjugate of a quaternion.
+inv : calculates the inverse of a variable. For a scalar this is 1/x, for a 2d vector [1/x,1/y], for a quaternion this is the actual inverse.
+rad2deg : converts a value in radians to degrees.
+deg2rad : converts a value in degrees to radians.
+
+#Here ends the shift of the friendly neighbourhood help.
