@@ -1,3 +1,17 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+#documentation ignores
 node_modules
-.vscode
 docs/.vitepress/dist
+#vscode ignores
+.vscode
+#visual studio ignores
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+/VecMathREPLCpp/out/build/x64-Debug
+/VecMathREPLCpp/.vs
+/VecMathREPLCpp/out/install/x64-Debug/bin
+

@@ -1,5 +1,6 @@
 #pragma once
 #include "VecMathParserBaseListener.h"
+#include "JokeGenerator.h"
 #include <map>
 #include <stack>
 #include "IMatrix.h"
@@ -11,6 +12,7 @@ public:
 	VecMathListener();
 
 	void prompt(const std::string& text);
+	void readHelp();
 	bool isExit() {
 		return m_Exit;
 	}
@@ -20,10 +22,13 @@ public:
 	}
 
 	void setCurrentCodeLine(std::string codeLine);
+	void exec(std::string code);
+	IMatrix* getVariable(const std::string& id)const;
 
 	void exitCommand(VecMath::VecMathParser::CommandContext* /*ctx*/) override;
 	void exitAssign(VecMath::VecMathParser::AssignContext* ctx) override;
 	void exitPrint(VecMath::VecMathParser::PrintContext* ctx) override;
+	void exitClear(VecMath::VecMathParser::ClearContext* ctx) override;
 	void exitLiteral(VecMath::VecMathParser::LiteralContext* ctx) override;
 	void exitVector(VecMath::VecMathParser::VectorContext* ctx) override;
 	void exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)override;
@@ -35,6 +40,7 @@ public:
 	void printInfo(const std::string& message);
 	void printText(const std::string& message);
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
+	void printMarkDown(const std::string& text);
 
 	IMatrix* popFromStack();
 	void pushToStack(IMatrix* toPush);
@@ -46,6 +52,9 @@ private:
 	std::map<std::string, IMatrix*> m_Constants;
 	std::stack<IMatrix*> m_ExprStack;
 	std::string m_CurrentCodeLine;
+	std::string m_HelpString;
+
+	JokeGenerator m_JokeGenerator;
 
 
 	static const int ERRORCOLOR{ 12 };

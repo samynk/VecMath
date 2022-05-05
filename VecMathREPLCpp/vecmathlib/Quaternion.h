@@ -10,6 +10,7 @@ public:
 	void set(int ri, int ci, float value) override;
 	void print(HANDLE console)override;
 	Quaternion* conjugate()override;
+	Quaternion* inverse()override;
 private:
 	float m_X{ 0 };
 	float m_Y{ 0 };

@@ -27,13 +27,26 @@ find_package(ANTLR REQUIRED)
 # Call macro to add lexer and grammar to your build dependencies.
 
 # include generated files in project environment
-add_subdirectory(main)
+add_subdirectory(vecmathlib)
+add_subdirectory(vecmathmain)
+
+add_subdirectory(unittests)
+add_dependencies(VecMathMain VecMathLib UnitTestsRun)
+
+target_include_directories (VecMathMain PUBLIC 
+	${VecMathLibIncludeDir}
+)
+target_include_directories (UnitTests PUBLIC 
+	${VecMathLibIncludeDir}
+)
+
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/License.txt")
 set(CPACK_PACKAGE_VENDOR "Digital Arts and Entertainment")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "2")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "2")
 set (CPACK_PACKAGE_INSTALL_DIRECTORY "VecMath")
 
 set(CPACK_CREATE_DESKTOP_LINKS VecMath "VecMath REPL shell")
