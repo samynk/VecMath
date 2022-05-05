@@ -4,6 +4,7 @@
 #include <catch2/catch_approx.hpp>
 
 #include "AssignmentTests.h"
+#include "UnitTestVector.h"
 #include "UnitTestQuaternion.h"
 
 

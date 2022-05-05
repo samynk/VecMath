@@ -9,7 +9,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(UnitTests UnitTestMain.cpp  "AssignmentTests.h" "TestUtil.h" "UnitTestQuaternion.h")
+add_executable(UnitTests UnitTestMain.cpp  "AssignmentTests.h" "TestUtil.h" "UnitTestQuaternion.h" "UnitTestVector.h")
 target_link_libraries(UnitTests PRIVATE VecMathLib Catch2::Catch2WithMain)
 
 #configure_file(week1.json week1.json)
