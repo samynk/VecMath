@@ -34,9 +34,8 @@ void test2DVector(VecMathListener& vecMath, std::string id, float x, float y)
 	REQUIRE(yVal == Catch::Approx(y).epsilon(1e-4));
 }
 
-void test3DVector(VecMathListener& vecMath, std::string id, float x, float y, float z)
+void check3DVector(VecMathListener& vecMath, std::string id, float x, float y, float z)
 {
-	vecMath.exec(id + "=[" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "]");
 	IMatrix* var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float xVal = var->get(0, 0);
@@ -45,6 +44,12 @@ void test3DVector(VecMathListener& vecMath, std::string id, float x, float y, fl
 	REQUIRE(xVal == Catch::Approx(x).epsilon(1e-4));
 	REQUIRE(yVal == Catch::Approx(y).epsilon(1e-4));
 	REQUIRE(zVal == Catch::Approx(z).epsilon(1e-4));
+}
+
+void test3DVector(VecMathListener& vecMath, std::string id, float x, float y, float z)
+{
+	vecMath.exec(id + "=[" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "]");
+	check3DVector(vecMath, id, x, y, z);
 }
 
 void checkQuaternion(VecMathListener& vecMath, std::string id, float x, float y, float z, float w) {

@@ -6,6 +6,7 @@
 #include "AssignmentTests.h"
 #include "UnitTestVector.h"
 #include "UnitTestQuaternion.h"
+#include "UnitTestVector.h"
 
 
 
