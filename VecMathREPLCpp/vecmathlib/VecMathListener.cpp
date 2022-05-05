@@ -97,8 +97,10 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 
 void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 {
-	if (ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR
-		&& ctx->ASSIGN()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
+	auto idToken = ctx->ID();
+	auto assignToken = ctx->ASSIGN();
+	if (idToken != nullptr && idToken->getTreeType() != antlr4::tree::ParseTreeType::ERROR &&
+		assignToken != nullptr && ctx->ASSIGN()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
 	{
 		std::string varId = ctx->ID()->getText();
 		if (stackIsValid()) {
