@@ -1,12 +1,17 @@
 #pragma once
 
-void testScalar(VecMathListener& vecMath, std::string id, float expected)
-{
-	vecMath.exec(id + "=" + std::to_string(expected));
+
+void checkScalar(VecMathListener& vecMath, std::string id, float expected) {
 	IMatrix* var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float varValue = var->get(0, 0);
 	REQUIRE(varValue == Catch::Approx(expected).epsilon(1e-4));
+}
+
+void testScalar(VecMathListener& vecMath, std::string id, float expected)
+{
+	vecMath.exec(id + "=" + std::to_string(expected));
+	checkScalar(vecMath, id, expected);
 }
 
 void test1DVector(VecMathListener& vecMath, std::string id, float expected)

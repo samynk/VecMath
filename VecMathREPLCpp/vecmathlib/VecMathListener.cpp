@@ -319,7 +319,7 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 		}
 		}
 	}
-	else if (ctx->f != nullptr && stackIsValid()) {
+	else if (ctx->f != nullptr && !m_ExprStack.empty()) {
 		IMatrix* op = popFromStack();
 		IMatrix* result = nullptr;
 		auto ctxFunc = ctx->f;
