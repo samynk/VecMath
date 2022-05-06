@@ -2,8 +2,11 @@
 
 #Available commands
 help : prints this very helpful message.
-print variableName: prints the value of the variable name to output.
+print variableName : prints the value of the variable name to output.
 printAll : prints the values of all the current variables to output.
+clear : clears all the variables
+clear variableName : clears one specific variable.
+joke : prints a random funny (not funny) joke.
 exit or bye : stops this fine REPL shell.
 Variables
 a=1.0 -> creates a scalar value, internally this will be stored as a one dimensional vector.
@@ -18,7 +21,7 @@ q=[3,(2,3,9)] -> creates a quaternion with i=2, j=3, k=9 and w=3.
 - : component wise subtraction, unary negation.
 ^ : raise vector, matrix or quaternion to a power.
 . : dot product for vectors, complex multiplication for quaternions.
-# : cross product for vectors.
+ # : cross product for vectors.
 |v1| : calculates the norm or magnitude of the vector.
 #Mathematical functions
 sin, cos, tan : sine, cosine and tangent function of a value in radians. These functions will be applied on all components.
