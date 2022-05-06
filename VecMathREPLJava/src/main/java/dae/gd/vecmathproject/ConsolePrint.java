@@ -1,7 +1,7 @@
 package dae.gd.vecmathproject;
 
 /**
- *
+ * Helper method and constants to print colored text in console.
  * @author Koen.Samyn
  */
 public class ConsolePrint {
@@ -78,24 +78,40 @@ public class ConsolePrint {
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
+    /**
+     * Prints an error message on the console.
+     * @param message the message to print.
+     */
     public static void printError(String message) {
         System.out.print(RED);
         System.out.print(message);
         System.out.print(RESET);
     }
 
+    /**
+     * Prints an info message on the console.
+     * @param message the message to print.
+     */
     public static void printInfo(String message) {
         System.out.print(GREEN);
         System.out.print(message);
         System.out.print(RESET);
     }
 
+    /**
+     * Prints standard text on the console.
+     * @param message the message to print.
+     */
     public static void printText(String message) {
         System.out.print(WHITE);
         System.out.print(message);
         System.out.print(RESET);
     }
 
+    /**
+     * Print a prompt message on the console.
+     * @param text the message to print.
+     */
     static void printPrompt(String text) {
         System.out.print(BLUE);
         System.out.print(text);

@@ -24,6 +24,9 @@ public class VecMathListener extends VecMathParserBaseListener {
     private boolean errorFlagged = false;
     private String currentCodeLine;
 
+    /**
+     * Creates a new VecMathListener object with a number of constants.
+     */
     VecMathListener() {
         float piVal = (float) Math.PI;
         constants.put("Pi", new Scalar(piVal));
@@ -32,19 +35,34 @@ public class VecMathListener extends VecMathParserBaseListener {
         constants.put("e", new Scalar((float) Math.E));
     }
 
+    /**
+     * Prints a prompt text.
+     * @param text the text to print.
+     */
     public void prompt(String text) {
         ConsolePrint.printPrompt(text);
         errorFlagged = false;
     }
 
+    /**
+     * Sets the current code line.
+     * @param codeLine the code line to sets.
+     */
     public void setCurrentCodeLine(String codeLine) {
         this.currentCodeLine = codeLine;
     }
 
+    /**
+     * Creates a newline on the console.
+     */
     public void newline() {
         System.out.print("\n");
     }
 
+    /**
+     * Exit of the command rule.
+     * @param ctx the Command Context
+     */
     public void exitCommand(VecMathParser.CommandContext ctx) {
         if (ctx.EXIT() != null) {
             exit = true;
@@ -105,6 +123,10 @@ public class VecMathListener extends VecMathParserBaseListener {
         }
     }
 
+    /**
+     * Checks if the stack is valid for assignment (size equal to 1).
+     * @return true if the stack is valid for assignment, false otherwise.
+     */
     private boolean stackIsValid() {
         return this.calculationStack.size() == 1;
     }
@@ -289,6 +311,10 @@ public class VecMathListener extends VecMathParserBaseListener {
         }
     }
 
+    /**
+     * Remove an element from the stack and return it.
+     * @return the top value of the stacks.
+     */
     private IMatrix popFromStack() {
         if (calculationStack.size() > 0) {
             IMatrix r = calculationStack.pop();
@@ -298,6 +324,10 @@ public class VecMathListener extends VecMathParserBaseListener {
         }
     }
 
+    /**
+     * Add value to the stack.
+     * @param toPush the value to push.
+     */
     void pushToStack(IMatrix toPush) {
         calculationStack.push(toPush);
     }
