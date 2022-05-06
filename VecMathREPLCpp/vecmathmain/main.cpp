@@ -13,8 +13,8 @@ void printTokens(
 
 int main()
 {
-	std::cout << "VecMath REPL shell - Koen Samyn - 2022\n";
-	std::cout << "Mail any bugs to koen.samyn@howest.be\n";
+	std::cout << "VecMath REPL shell 1.0.2 - Koen Samyn - 2022\n";
+	std::cout << "please report issues at https://github.com/samynk/VecMath\n";
 	std::string codeLine;
 	int tokenType = -1;
 	using namespace antlr4;

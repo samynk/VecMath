@@ -25,7 +25,10 @@ JokeGenerator::JokeGenerator()
 
 void JokeGenerator::printRandomJoke(HANDLE consoleHandle)
 {
-	std::uniform_int_distribution<std::size_t> distribution(0,m_Jokes.size()-1);
-	std::size_t number = distribution(m_Generator);
-	m_Jokes[number].printJoke(consoleHandle);
+	if (m_Jokes.size() > 0)
+	{
+		std::uniform_int_distribution<std::size_t> distribution(0, m_Jokes.size() - 1);
+		std::size_t number = distribution(m_Generator);
+		m_Jokes[number].printJoke(consoleHandle);
+	}
 }

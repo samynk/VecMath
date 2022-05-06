@@ -8,4 +8,4 @@ add_custom_command(
     $<TARGET_FILE_DIR:VecMathMain>/resources
     )
 target_link_libraries(VecMathMain VecMathLib)
-install(TARGETS VecMathMain DESTINATION bin)
+set_target_properties(VecMathMain PROPERTIES OUTPUT_NAME "VecMath")
