@@ -5,6 +5,7 @@ import dae.gd.vecmathproject.IMatrix.Type;
 
 /**
  * A class to support Quaternion operations.
+ *
  * @author Koen.Samyn
  */
 public class Quaternion extends IMatrix {
@@ -19,12 +20,13 @@ public class Quaternion extends IMatrix {
     }
 
     /**
-     * Creates a quaternion with the provided parameters, defined
-     * as : w+ i*x +j*y + k*z
+     * Creates a quaternion with the provided parameters, defined as : w+ i*x
+     * +j*y + k*z
+     *
      * @param x the x value of the quaternion.
      * @param y
      * @param z
-     * @param w 
+     * @param w
      */
     public Quaternion(float x, float y, float z, float w) {
         super(Type.QUATERNION, AddressMode.BORDER, 0, 1, 4);
@@ -35,8 +37,9 @@ public class Quaternion extends IMatrix {
     }
 
     /**
-     * Returns a sub value of the quaternion. Out of bounds cells will be determined
-     * by the address mode property.
+     * Returns a sub value of the quaternion. Out of bounds cells will be
+     * determined by the address mode property.
+     *
      * @param ri the row index.
      * @param ci the column index.
      * @return the value of the cell.
@@ -75,6 +78,7 @@ public class Quaternion extends IMatrix {
 
     /**
      * Sets a value in this quaternion. Out of bounds values will be ignored.
+     *
      * @param ri the row index.
      * @param ci the column index.
      * @param value the value to set.
@@ -83,7 +87,7 @@ public class Quaternion extends IMatrix {
         if (inRange(ri, ci)) {
             switch (ci) {
                 case 0:
-                    x= value;
+                    x = value;
                     break;
                 case 1:
                     y = value;
@@ -125,9 +129,15 @@ public class Quaternion extends IMatrix {
 
     /**
      * Calculates the conjugate of this quaternion.
+     *
      * @return a new conjugated quaternion.
      */
     public Quaternion conjugate() {
         return new Quaternion(-x, -y, -z, w);
+    }
+
+    public Quaternion inverse() {
+        float magSqr = x * x + y * y + z * z + w * w;
+        return new Quaternion(-x / magSqr, -y / magSqr, -z / magSqr, w / magSqr);
     }
 }

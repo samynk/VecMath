@@ -1,6 +1,5 @@
 lexer grammar VecMathLexer;
 @header{package dae.gd;}
-
 channels{
     whitespace
 }
@@ -21,6 +20,7 @@ DIV: '/';
 DOT: '.';
 ABS: '|';
 POWER: '^';
+CROSS: '#';
 
 COS: 'cos';
 SIN: 'sin';
@@ -35,8 +35,9 @@ SQRT: 'sqrt';
 
 PRINT: 'print';
 PRINTALL: 'printAll';
-CLEAR: 'clear';
 EXIT: 'bye' | 'exit';
+CLEAR: 'clear';
+JOKE: 'joke';
 HELP: 'help';
  
 ID : [a-zA-Z]+ [a-zA-Z0-9]* ;

@@ -17,3 +17,5 @@ docs/.vitepress/dist
 
 /VecMathREPLCpp/out/build/x64-Release
 /VecMathREPLJava/target
+/VecMathREPLJava/nbproject/
+/VecMathREPLJava/start.bat

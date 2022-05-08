@@ -12,6 +12,8 @@ package dae.gd.vecmathproject;
  */
 public abstract class IMatrix {
 
+    
+
     private int rows;
     private int columns;
     protected Type type = Type.VECTOR;
@@ -132,6 +134,17 @@ public abstract class IMatrix {
      */
     public IMatrix conjugate() {
         return new Scalar(Float.NaN);
+    }
+    
+    /**
+     * Calculates the inverse of this matrix, for an ordinary matrix this is
+     * the matrix of 1/x, for a quaternion this is the actual quaternion.
+     * @return the inverse of the matrix.
+     */
+    public IMatrix inverse() {
+        IMatrix result = maxMatrix(this, null);
+	IMatrix.unaryOp(this, (float x)-> {return 1/x; }, result);
+	return result;
     }
 
     /**
@@ -348,6 +361,37 @@ public abstract class IMatrix {
             return x1 * x2;
         }, result);
         return result;
+    }
+    
+    /**
+     * Convenience function to calculate the cross product 
+     * @param op1 the first operand of the cross product.
+     * @param op2 the second operand of the cross product.
+     * @return the result of the cross product.
+     */
+    static IMatrix cross(IMatrix op1, IMatrix op2) {
+        // result is always 3D vector.
+	int nrOfVectors = Math.max(op1.rows, op2.rows);
+	if (nrOfVectors == 1) {
+		float x1 = op1.get(0, 0);
+		float y1 = op1.get(0, 1);
+		float z1 = op1.get(0, 2);
+
+		float x2 = op2.get(0, 0);
+		float y2 = op2.get(0, 1);
+		float z2 = op2.get(0, 2);
+		Vector3D result = new Vector3D(
+			y1*z2-y2*z1,
+			z1*x2-z2*x1,
+			x1*y2-x2*y1
+		);
+	
+		return result;
+	}
+	else {
+		// todo add matrix functionality
+		return null;
+	}
     }
 
     /**
