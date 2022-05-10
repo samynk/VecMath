@@ -33,4 +33,30 @@ TEST_CASE("Vector tests", "[vector_operations]") {
 
 
 	}
+
+	SECTION("Vector cross") {
+		test3DVector(listener, "v1", x1, y1, z1);
+		test3DVector(listener, "v2", x2, y2, z2);
+
+		listener.exec("n= v1#v2");
+		check3DVector(listener,"n",-5.7f, -18.9f,16.6f);
+
+		listener.exec("d1=v1.n");
+		checkScalar(listener,"d1", 0);
+		listener.exec("d2=v2.n");
+		checkScalar(listener, "d2", 0);
+
+		listener.exec("nn=n/|n|");
+		check3DVector(listener, "nn", -0.22099f, -0.73277f, 0.64359f);
+
+		listener.exec("ln = |nn|");
+		checkScalar(listener, "ln", 1.0f);
+
+		test3DVector(listener, "v3", -3.43f, 7.71f, -0.002f);
+		listener.exec("n2 = v1#v3");
+		check3DVector(listener, "n2", -69.404f, -30.864f, 47.14f);
+
+	}
+
+
 }
