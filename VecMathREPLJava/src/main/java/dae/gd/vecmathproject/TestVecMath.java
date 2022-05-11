@@ -14,7 +14,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 public class TestVecMath {
 
     public static void main(String[] args) {
-        System.out.println("VecMath REPL shell - v1.0 (Koen Samyn - 2022)");
+        System.out.println("VecMath REPL shell - v1.0.3 (Koen Samyn - 2022)");
         Scanner in = new Scanner(System.in);
         VecMathListener listener = new VecMathListener();
         int token = -1;
