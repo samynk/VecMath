@@ -34,6 +34,7 @@ CON : 'con';
 SQRT: 'sqrt';
 
 PRINT: 'print';
+PRECISION: 'precision';
 PRINTALL: 'printAll';
 EXIT: 'bye' | 'exit';
 CLEAR: 'clear';

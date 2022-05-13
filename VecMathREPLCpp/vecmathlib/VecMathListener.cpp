@@ -4,6 +4,7 @@
 #include "Vector3D.h"
 #include "Quaternion.h"
 #include "VecMathLexer.h"
+#include <iomanip>
 
 #undef ERROR
 
@@ -386,6 +387,25 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 void VecMathListener::exitFunction(VecMath::VecMathParser::FunctionContext* ctx)
 {
 
+}
+
+void VecMathListener::exitPrecision(VecMath::VecMathParser::PrecisionContext* ctx)
+{
+	if (ctx->FLOAT() != nullptr) {
+		float p = std::stof(ctx->FLOAT()->getText());
+		int precision = round(p);
+		if (precision >= 0) {
+			std::cout << std::fixed << std::showpoint << std::setprecision(precision);
+		}
+		else {
+			printInfo("The precision must be a positive number, specifying the number of decimal places.");
+			printInfo("For example: precision 4");
+		}
+	}
+	else {
+		printInfo("Specify the number of decimal places for this shell.");
+		printInfo("For example : precision 3");
+	}
 }
 
 void VecMathListener::visitErrorNode(antlr4::tree::ErrorNode* node) {

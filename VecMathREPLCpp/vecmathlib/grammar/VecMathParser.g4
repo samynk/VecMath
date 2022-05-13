@@ -19,6 +19,7 @@ value:
  | ID;
 
 function: SIN|COS|TAN|ASIN|ACOS|ATAN|RADTODEG|DEGTORAD|CON|SQRT|ID;
-command : print | PRINTALL | EXIT | JOKE | clear | HELP;
+command : print | PRINTALL | EXIT | JOKE | clear | precision | HELP;
 print: PRINT ID;
+precision: PRECISION FLOAT;
 clear: CLEAR ID?;

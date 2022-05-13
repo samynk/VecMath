@@ -34,6 +34,7 @@ public:
 	void exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)override;
 	void exitValue(VecMath::VecMathParser::ValueContext* ctx) override;
 	void exitFunction(VecMath::VecMathParser::FunctionContext* ctx)override;
+	void exitPrecision(VecMath::VecMathParser::PrecisionContext* ctx)override;
 	void visitErrorNode(antlr4::tree::ErrorNode* node) override;
 
 	void printError(const std::string& message);
