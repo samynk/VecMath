@@ -125,7 +125,7 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 
 void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 {
-	if (ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
+	if (ctx->ID() != nullptr && ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
 	{
 		std::string id = ctx->ID()->getText();
 		if (m_VarMap.find(id) != m_VarMap.end()) {
