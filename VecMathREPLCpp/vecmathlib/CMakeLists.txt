@@ -26,4 +26,5 @@ message(${ANTLR_VecMathLexer_OUTPUT_DIR})
 
 
     
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/" DESTINATION "bin/resources")
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/" DESTINATION "resources")
