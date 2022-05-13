@@ -19,19 +19,21 @@ import org.antlr.v4.runtime.tree.ErrorNode;
  * @author Koen.Samyn
  */
 public class VecMathListener extends VecMathParserBaseListener {
-    
+
     private HashMap<String, IMatrix> constants = new HashMap<>();
     private HashMap<String, IMatrix> varMap = new HashMap<>();
-    
+
     private Stack<IMatrix> exprStack = new Stack();
     private boolean exit = false;
-    
+    private int decimalPlaces = 6;
+    private String floatFormat = "%."+decimalPlaces+"f";
+
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
     private boolean errorFlagged = false;
     private String currentCodeLine;
     private String helpString;
-    
+
     private JokeGenerator jokeGenerator = new JokeGenerator();
 
     /**
@@ -56,7 +58,7 @@ public class VecMathListener extends VecMathParserBaseListener {
         errorFlagged = false;
         exprStack.clear();
     }
-    
+
     private void readHelp() {
         try {
             InputStream in = this.getClass().getClassLoader()
@@ -75,17 +77,17 @@ public class VecMathListener extends VecMathParserBaseListener {
     public void setCurrentCodeLine(String codeLine) {
         this.currentCodeLine = codeLine;
     }
-    
+
     public void exec(String code) {
         VecMathLexer vmLexer = new VecMathLexer(CharStreams.fromString(code));
         setCurrentCodeLine(code);
         CommonTokenStream stream = new CommonTokenStream(vmLexer);
-        
+
         VecMathParser parser = new VecMathParser(stream);
         parser.addParseListener(this);
         parser.expression();
     }
-    
+
     public IMatrix getVariable(String id) {
         if (varMap.containsKey(id)) {
             return varMap.get(id);
@@ -113,7 +115,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             for (var pair : varMap.entrySet()) {
                 prompt(pair.getKey());
                 prompt(" = ");
-                pair.getValue().print();
+                pair.getValue().print(floatFormat);
                 newline();
             }
         } else if (ctx.JOKE() != null) {
@@ -122,7 +124,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             printMarkDown(helpString);
         }
     }
-    
+
     void printMarkDown(String text) {
         if (text == null || text.isBlank()) {
             return;
@@ -136,7 +138,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             }
         }
     }
-    
+
     public void exitAssign(VecMathParser.AssignContext ctx) {
         var idToken = ctx.ID();
         var assignToken = ctx.ASSIGN();
@@ -174,25 +176,43 @@ public class VecMathListener extends VecMathParserBaseListener {
     private boolean checkStackSize(int size) {
         return exprStack.size() >= size;
     }
-    
+
     public void exitPrint(VecMathParser.PrintContext ctx) {
         if (ctx.ID() != null) {
             String id = ctx.ID().getText();
             if (varMap.containsKey(id)) {
                 printInfo(id, false);
                 printInfo(" = ", false);
-                varMap.get(id).print();
+                varMap.get(id).print(floatFormat);
                 newline();
             } else {
                 printError("Could not find variable " + id + ",are you sure it exists?", true);
                 printInfo("Use the 'printAll' command to see the current list of variables.", true);
-                
+
             }
         } else {
             printError("Use the print statement with a variable id, for example: 'print var'", true);
         }
     }
-    
+
+    @Override
+    public void exitPrecision(VecMathParser.PrecisionContext ctx) {
+        if (ctx.FLOAT() != null) {
+            float p = Float.parseFloat(ctx.FLOAT().getText());
+            int precision = Math.round(p);
+            if (precision >= 0) {
+                decimalPlaces = precision;
+                floatFormat = "%."+decimalPlaces+"f";
+            } else {
+                printInfo("The precision must be a positive number, specifying the number of decimal places.", true);
+                printInfo("For example: precision 4", true);
+            }
+        } else {
+            printInfo("Specify the number of decimal places for this shell.", true);
+            printInfo("For example : precision 3", true);
+        }
+    }
+
     @Override
     public void exitClear(VecMathParser.ClearContext ctx) {
         if (ctx.ID() != null) {
@@ -202,7 +222,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             varMap.clear();
         }
     }
-    
+
     public void exitLiteral(VecMathParser.LiteralContext ctx) {
         if (ctx.FLOAT() != null) {
             float x = Float.parseFloat(ctx.FLOAT().getText());
@@ -210,7 +230,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             exprStack.push(s);
         }
     }
-    
+
     public void exitVector(VecMathParser.VectorContext ctx) {
         int dim = ctx.value().size();
         switch (dim) {
@@ -221,7 +241,7 @@ public class VecMathListener extends VecMathParserBaseListener {
                 break;
             }
             case 2: {
-                
+
                 IMatrix y = popFromStack();
                 IMatrix x = popFromStack();
                 Vector2D v2d = new Vector2D(x.get(0, 0), y.get(0, 0));
@@ -238,7 +258,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             }
         }
     }
-    
+
     public void exitQuaternion(VecMathParser.QuaternionContext ctx) {
         IMatrix z = popFromStack();
         IMatrix y = popFromStack();
@@ -247,7 +267,7 @@ public class VecMathListener extends VecMathParserBaseListener {
         Quaternion q = new Quaternion(x.get(0, 0), y.get(0, 0), z.get(0, 0), w.get(0, 0));
         exprStack.push(q);
     }
-    
+
     public void exitValue(VecMathParser.ValueContext ctx) {
         if (ctx.ID() != null) {
             String id = ctx.ID().getText();
@@ -260,7 +280,7 @@ public class VecMathListener extends VecMathParserBaseListener {
                 exprStack.push(new Scalar(0));
             }
         } else if (ctx.op != null) {
-            
+
             switch (ctx.op.getType()) {
                 case VecMathLexer.ABS: {
                     IMatrix op2 = popFromStack();
@@ -272,7 +292,7 @@ public class VecMathListener extends VecMathParserBaseListener {
                     }
                     break;
                 }
-                
+
                 case VecMathLexer.ADD: {
                     // unary case: do nothing leave value on stack.
                     if (ctx.op2 != null && checkStackSize(2)) {
@@ -318,7 +338,7 @@ public class VecMathListener extends VecMathParserBaseListener {
                     }
                     break;
                 }
-                
+
                 case VecMathLexer.DIV: {
                     if (checkStackSize(2)) {
                         IMatrix op2 = popFromStack();
@@ -422,16 +442,16 @@ public class VecMathListener extends VecMathParserBaseListener {
     void pushToStack(IMatrix toPush) {
         exprStack.push(toPush);
     }
-    
+
     @Override
     public void visitErrorNode(ErrorNode node) {
         if (errorFlagged) {
-            
+
             return;
         }
         int type = node.getSymbol().getType();
         var interval = node.getSourceInterval();
-        
+
         switch (type) {
             case VecMathLexer.COMMA:
                 printErrorLoc(interval.a, interval.b, currentCodeLine);
@@ -449,21 +469,21 @@ public class VecMathListener extends VecMathParserBaseListener {
                 break;
         }
     }
-    
+
     private void printError(String text, boolean newLine) {
         ConsolePrint.printError(text);
         if (newLine) {
             System.out.print("\n");
         }
     }
-    
+
     void printInfo(String text, boolean newLine) {
         ConsolePrint.printInfo(text);
         if (newLine) {
             System.out.print("\n");
         }
     }
-    
+
     private void printErrorLoc(int start, int end, String message) {
         for (int pc = 0; pc < message.length(); ++pc) {
             if (pc < start || pc > end) {
@@ -474,7 +494,7 @@ public class VecMathListener extends VecMathParserBaseListener {
         }
         System.out.println("\n");
     }
-    
+
     private void printText(String text, boolean newLine) {
         ConsolePrint.printText(text);
         if (newLine) {

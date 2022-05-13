@@ -83,8 +83,9 @@ public abstract class IMatrix {
 
     /**
      * Prints the contents of this matrix to the console.
+     * @param precision the precision for the output of floats.
      */
-    public void print() {
+    public void print(String floatFormat) {
         //SetConsoleTextAttribute(console, 8);
         if (rows > 1) {
             System.out.print("{");
@@ -93,7 +94,7 @@ public abstract class IMatrix {
             System.out.print("[");
             for (int c = 0; c < columns; ++c) {
                 //SetConsoleTextAttribute(console, 10);
-                System.out.print(get(r, c));
+                System.out.printf(java.util.Locale.US,floatFormat, get(r, c));
                 if (c + 1 < columns) {
                     //SetConsoleTextAttribute(console, 8);
                     System.out.print(",");

@@ -105,23 +105,23 @@ public class Quaternion extends IMatrix {
     /**
      * Prints the value of the quaternion to the console.
      */
-    public void print() {
+    public void print(String floatFormat) {
         //SetConsoleTextAttribute(console, 8);
         System.out.print("[");
         //SetConsoleTextAttribute(console, 7);
-        System.out.print(w);
+        System.out.printf(java.util.Locale.US,floatFormat,w);
         //SetConsoleTextAttribute(console, 8);
         System.out.print(" ,( ");
         //SetConsoleTextAttribute(console, 12);
-        System.out.print(x);
+        System.out.printf(java.util.Locale.US,floatFormat,x);
         //SetConsoleTextAttribute(console, 8);
         System.out.print(" , ");
         //SetConsoleTextAttribute(console, 10);
-        System.out.print(y);
+        System.out.printf(java.util.Locale.US,floatFormat,y);
         //SetConsoleTextAttribute(console, 8);
         System.out.print(" , ");
         //SetConsoleTextAttribute(console, 3);
-        System.out.print(z);
+        System.out.printf(java.util.Locale.US,floatFormat,z);
         //SetConsoleTextAttribute(console, 8);
         System.out.print(" )]");
 
