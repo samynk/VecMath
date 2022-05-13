@@ -39,7 +39,7 @@ PRINTALL: 'printAll';
 EXIT: 'bye' | 'exit';
 CLEAR: 'clear';
 JOKE: 'joke';
-HELP: 'help';
+HELP: 'help' | '?';
  
 ID : [a-zA-Z]+ [a-zA-Z0-9]* ;
 FLOAT: [0-9]+ ('.'  [0-9]+)?;
