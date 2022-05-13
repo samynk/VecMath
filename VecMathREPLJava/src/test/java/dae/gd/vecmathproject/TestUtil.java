@@ -29,14 +29,18 @@ public class TestUtil {
         assertEquals(varValue, expected, 1e-4);
     }
 
-    public static void test2DVector(VecMathListener vecMath, String id, float x, float y) {
-        vecMath.exec(id + "=[" + Float.toString(x) + "," + Float.toString(y) + "]");
+    public static void check2DVector(VecMathListener vecMath, String id, float x, float y) {
         IMatrix var = vecMath.getVariable(id);
         assertNotNull(var);
         float xVal = var.get(0, 0);
         float yVal = var.get(0, 1);
         assertEquals(xVal, x, 1e-4);
         assertEquals(yVal, y, 1e-4);
+    }
+
+    public static void test2DVector(VecMathListener vecMath, String id, float x, float y) {
+        vecMath.exec(id + "=[" + Float.toString(x) + "," + Float.toString(y) + "]");
+        check2DVector(vecMath, id, x, y);
     }
 
     public static void check3DVector(VecMathListener vecMath, String id, float x, float y, float z) {
