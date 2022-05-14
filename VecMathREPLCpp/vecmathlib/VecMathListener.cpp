@@ -125,7 +125,6 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 		SetConsoleTextAttribute(m_ConsoleHandle, 8);
 		result->print(m_ConsoleHandle);
 		std::cout << std::endl;
-		delete result;
 	}
 	else
 	{
