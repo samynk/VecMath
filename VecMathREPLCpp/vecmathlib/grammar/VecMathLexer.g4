@@ -11,7 +11,8 @@ LBRACKET: '[' ;
 RBRACKET: ']' ;
 LPAREN: '(';
 RPAREN: ')';
-COMMA: ',' ; 
+COMMA: ',' ;
+SEMI: ';';
 
 ADD: '+';
 MINUS: '-';

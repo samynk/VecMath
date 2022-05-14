@@ -3,7 +3,7 @@ options{tokenVocab=VecMathLexer;}
 
 expression : (assign | command) EOF;
 
-assign : ID ASSIGN value;
+assign : (ID ASSIGN)? value SEMI?;
 
 quaternion: LBRACKET w=value COMMA LPAREN x=value COMMA y=value COMMA z=value RPAREN RBRACKET;
 vector : LBRACKET value (COMMA value)* RBRACKET;

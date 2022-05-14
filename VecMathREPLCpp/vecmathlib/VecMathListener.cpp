@@ -105,7 +105,11 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 	{
 		std::string varId = ctx->ID()->getText();
 		if (stackIsValid()) {
-			m_VarMap[varId] = popFromStack();
+			IMatrix* result = popFromStack();
+			m_VarMap[varId] = result;
+			if (ctx->SEMI() == nullptr) {
+				printVariable(varId);
+			}
 		}
 		else {
 			SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
@@ -115,6 +119,13 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 			std::cout << "Type 'help' for a list of commands.\n";
 			std::cout << "If you want this to be a variable you need the following format: b = 7\n";
 		}
+	}
+	else if (ctx->value() != nullptr) {
+		IMatrix* result = popFromStack();
+		SetConsoleTextAttribute(m_ConsoleHandle, 8);
+		result->print(m_ConsoleHandle);
+		std::cout << std::endl;
+		delete result;
 	}
 	else
 	{
@@ -129,25 +140,29 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 	if (ctx->ID() != nullptr && ctx->ID()->getTreeType() != antlr4::tree::ParseTreeType::ERROR)
 	{
 		std::string id = ctx->ID()->getText();
-		if (m_VarMap.find(id) != m_VarMap.end()) {
-			SetConsoleTextAttribute(m_ConsoleHandle, 7);
-			std::cout << id;
-			SetConsoleTextAttribute(m_ConsoleHandle, 7);
-			std::cout << " = ";
-			SetConsoleTextAttribute(m_ConsoleHandle, 8);
-			m_VarMap[id]->print(m_ConsoleHandle);
-			std::cout << std::endl;
-		}
-		else {
-			SetConsoleTextAttribute(m_ConsoleHandle, 10);
-			std::cout << "Could not find variable " << id << ",are you sure it exists? \n";
-			std::cout << "Use the 'printAll' command to see the current list of variables.\n ";
-
-		}
+		printVariable(id);
 	}
 	else {
 		SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
 		std::cout << "Use the print statement with a variable id, for example: 'print var'\n";
+	}
+}
+
+void VecMathListener::printVariable(const std::string& id)
+{
+	if (m_VarMap.find(id) != m_VarMap.end()) {
+		SetConsoleTextAttribute(m_ConsoleHandle, 7);
+		std::cout << id;
+		SetConsoleTextAttribute(m_ConsoleHandle, 7);
+		std::cout << " = ";
+		SetConsoleTextAttribute(m_ConsoleHandle, 8);
+		m_VarMap[id]->print(m_ConsoleHandle);
+		std::cout << std::endl;
+	}
+	else {
+		SetConsoleTextAttribute(m_ConsoleHandle, 10);
+		std::cout << "Could not find variable " << id << ",are you sure it exists? \n";
+		std::cout << "Use the 'printAll' command to see the current list of variables.\n ";
 	}
 }
 

@@ -12,6 +12,7 @@ RBRACKET: ']' ;
 LPAREN: '(';
 RPAREN: ')';
 COMMA: ',' ; 
+SEMI: ';' ;
 
 ADD: '+';
 MINUS: '-';

@@ -26,7 +26,7 @@ public class VecMathListener extends VecMathParserBaseListener {
     private Stack<IMatrix> exprStack = new Stack();
     private boolean exit = false;
     private int decimalPlaces = 6;
-    private String floatFormat = "%."+decimalPlaces+"f";
+    private String floatFormat = "%." + decimalPlaces + "f";
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -146,12 +146,18 @@ public class VecMathListener extends VecMathParserBaseListener {
             String varId = ctx.ID().getText();
             if (stackIsValid()) {
                 varMap.put(varId, popFromStack());
+                if (ctx.SEMI() == null){
+                    printVariable(varId);
+                }
             } else {
                 printError("I do not know " + varId, true);
                 printInfo("If you meant this as a command, this is a command I do not understand.", true);
                 printInfo("Type 'help' for a list of commands.", true);
                 printInfo("If you want this to be a variable you need the following format: b = 7", true);
             }
+        } else if (ctx.value() != null) {
+            IMatrix result = popFromStack();
+            result.print(floatFormat);
         } else {
             printError("Assigning a new variable should be done with the equals sign.", true);
             printInfo("For example : a = 10", true);
@@ -180,18 +186,22 @@ public class VecMathListener extends VecMathParserBaseListener {
     public void exitPrint(VecMathParser.PrintContext ctx) {
         if (ctx.ID() != null) {
             String id = ctx.ID().getText();
-            if (varMap.containsKey(id)) {
-                printInfo(id, false);
-                printInfo(" = ", false);
-                varMap.get(id).print(floatFormat);
-                newline();
-            } else {
-                printError("Could not find variable " + id + ",are you sure it exists?", true);
-                printInfo("Use the 'printAll' command to see the current list of variables.", true);
-
-            }
+            printVariable(id);
         } else {
             printError("Use the print statement with a variable id, for example: 'print var'", true);
+        }
+    }
+
+    private void printVariable(String id) {
+        if (varMap.containsKey(id)) {
+            printInfo(id, false);
+            printInfo(" = ", false);
+            varMap.get(id).print(floatFormat);
+            newline();
+        } else {
+            printError("Could not find variable " + id + ",are you sure it exists?", true);
+            printInfo("Use the 'printAll' command to see the current list of variables.", true);
+            
         }
     }
 
@@ -202,7 +212,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             int precision = Math.round(p);
             if (precision >= 0) {
                 decimalPlaces = precision;
-                floatFormat = "%."+decimalPlaces+"f";
+                floatFormat = "%." + decimalPlaces + "f";
             } else {
                 printInfo("The precision must be a positive number, specifying the number of decimal places.", true);
                 printInfo("For example: precision 4", true);
