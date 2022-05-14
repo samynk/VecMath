@@ -8,6 +8,7 @@
 #include "UnitTestQuaternion.h"
 #include "UnitTestVector.h"
 #include "UnitTestFunctions.h"
+#include "UnitTestOperator.h"
 
 
 

@@ -11,7 +11,7 @@ TEST_CASE("Function tests", "[mathematical_functions]") {
         vm.exec("b=abs([9,-3.2])");
         check2DVector(vm, "b", 9, 3.2f);
 
-        vm.exec("c=[9,-3.2,-2.107])");
+        vm.exec("c=[9,-3.2,-2.107]");
         vm.exec("absc=abs(c)");
         check3DVector(vm, "absc", 9, 3.2f, 2.107f);
 

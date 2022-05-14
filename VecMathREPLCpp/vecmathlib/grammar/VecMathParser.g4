@@ -10,8 +10,8 @@ vector : LBRACKET value (COMMA value)* RBRACKET;
 literal: FLOAT|vector|quaternion;
 value: 
  op=ABS value ABS
- | op1=value op=(MUL | DIV | DOT) op2=value  
  | op1=value op=POWER op2=value
+ | op1=value op=(MUL | DIV | DOT) op2=value  
  | op1=value op=(ADD | MINUS | CROSS) op2=value
  | op=(ADD|MINUS) op1=value
  | (f=function)? LPAREN op1=value RPAREN

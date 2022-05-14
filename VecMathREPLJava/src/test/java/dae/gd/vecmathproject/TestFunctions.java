@@ -24,7 +24,7 @@ public class TestFunctions {
         listener.exec("b=abs([9,-3.2])");
         check2DVector(listener,"b",9,3.2f);
         
-        listener.exec("c=[9,-3.2,-2.107])");
+        listener.exec("c=[9,-3.2,-2.107]");
         listener.exec("absc=abs(c)");
         check3DVector(listener,"absc",9,3.2f,2.107f);
         
