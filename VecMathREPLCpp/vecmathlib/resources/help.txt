@@ -9,12 +9,15 @@ clear : clears all the variables
 clear variableName : clears one specific variable.
 joke : prints a random funny (not funny) joke.
 exit or bye : stops this fine REPL shell.
-Variables
+#Variables
 a=1.0 -> creates a scalar value, internally this will be stored as a one dimensional vector.
 b=[1.0] -> creates a scalar value (a one dimensional vector).
 c=[2,3] -> creates a two dimensional vector.
 d=[2,3,9] -> creates a three dimensional vector.
 q=[3,(2,3,9)] -> creates a quaternion with i=2, j=3, k=9 and w=3.
+#Constants:
+pi, Pi or PI : the well known cake value
+e : eulers number.
 #Operators
 * : component wise multiplication.
 / : component wise division.
