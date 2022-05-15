@@ -3,6 +3,7 @@
 #include "Scalar.h"
 #include "Vector2D.h"
 #include "Vector3D.h"
+#include "Complex.h"
 #include "Quaternion.h"
 
 IMatrix::IMatrix(Type type, AddressMode mode, int rows, int columns)
@@ -50,7 +51,7 @@ float IMatrix::magnitude()
 	for (int r = 0; r < m_Rows; ++r) {
 		for (int c = 0; c < m_Columns; ++c) {
 			float value = get(r, c);
-			sum += (value*value);
+			sum += (value * value);
 		}
 	}
 	return sqrt(sum);
@@ -64,7 +65,7 @@ IMatrix* IMatrix::conjugate()
 IMatrix* IMatrix::inverse()
 {
 	IMatrix* result = maxMatrix(this, nullptr);
-	IMatrix::unaryOp(this, [](float x) {return 1/x; }, result);
+	IMatrix::unaryOp(this, [](float x) {return 1 / x; }, result);
 	return result;
 
 }
@@ -214,13 +215,24 @@ IMatrix* IMatrix::quatMul(IMatrix* op1, IMatrix* op2)
 	float y2 = op2->get(0, 1);
 	float z2 = op2->get(0, 2);
 	float w2 = op2->get(0, 3);
-	
+
 	float qX = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2;
 	float qY = w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2;
 	float qZ = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2;
 	float qW = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2;
-	Quaternion* result = new Quaternion(qX,qY,qZ,qW);
+	Quaternion* result = new Quaternion(qX, qY, qZ, qW);
 	return result;
+}
+
+IMatrix* IMatrix::complexMul(IMatrix* op1, IMatrix* op2)
+{
+	float r1 = op1->get(0, 0);
+	float i1 = op1->get(0, 1);
+
+	float r2 = op2->get(0, 0);
+	float i2 = op2->get(0, 1);
+
+	return new Complex(r1 * r2 - i1 * i2, r1 * i2 + r2 * i1);
 }
 
 IMatrix* IMatrix::divide(IMatrix* op1, IMatrix* op2)
@@ -240,16 +252,22 @@ IMatrix* IMatrix::dot(IMatrix* op1, IMatrix* op2)
 		reduceToSum(op1, op2, [](float x1, float x2) {return x1 * x2; }, result);
 		return result;
 	}
-	else {
+	else if (op1->m_Type == Type::COMPLEX && op2->m_Type == Type::COMPLEX) {
+		return complexMul(op1, op2);
+	}
+	else if (op1->m_Type == Type::QUATERNION || op2->m_Type == Type::QUATERNION) {
 		return quatMul(op1, op2);
 	}
-	
+	else {
+		
+	}
+
 }
 
 IMatrix* IMatrix::power(IMatrix* op1, IMatrix* op2)
 {
 	float power = op2->get(0, 0);
-	auto powerFunc = [power](float x1) {return powf(x1,power); };
+	auto powerFunc = [power](float x1) {return powf(x1, power); };
 	IMatrix* result = maxMatrix(op1, nullptr);
 	IMatrix::unaryOp(op1, powerFunc, result);
 	return result;
@@ -268,11 +286,11 @@ IMatrix* IMatrix::cross(IMatrix* op1, IMatrix* op2)
 		float y2 = op2->get(0, 1);
 		float z2 = op2->get(0, 2);
 		Vector3D* result = new Vector3D(
-			y1*z2-y2*z1,
-			z1*x2-z2*x1,
-			x1*y2-x2*y1
+			y1 * z2 - y2 * z1,
+			z1 * x2 - z2 * x1,
+			x1 * y2 - x2 * y1
 		);
-	
+
 		return result;
 	}
 	else {

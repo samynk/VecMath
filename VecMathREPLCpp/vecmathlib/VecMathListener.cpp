@@ -2,6 +2,7 @@
 #include "Scalar.h"
 #include "Vector2D.h"
 #include "Vector3D.h"
+#include "Complex.h"
 #include "Quaternion.h"
 #include "VecMathLexer.h"
 #include <iomanip>
@@ -217,6 +218,16 @@ void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 		}
 		break;
 	}
+	}
+}
+
+void VecMathListener::exitComplex(VecMath::VecMathParser::ComplexContext* ctx)
+{
+	if (m_ExprStack.size() >= 2) {
+		IMatrix* i = popFromStack();
+		IMatrix* r = popFromStack();
+		Complex* q = new Complex(r->get(0, 0), i->get(0, 0));
+		m_ExprStack.push(q);
 	}
 }
 

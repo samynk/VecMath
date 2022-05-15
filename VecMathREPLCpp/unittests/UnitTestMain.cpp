@@ -9,6 +9,7 @@
 #include "UnitTestVector.h"
 #include "UnitTestFunctions.h"
 #include "UnitTestOperator.h"
+#include "UnitTestComplex.h"
 
 
 

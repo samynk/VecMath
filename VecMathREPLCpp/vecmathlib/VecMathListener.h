@@ -31,6 +31,7 @@ public:
 	void exitClear(VecMath::VecMathParser::ClearContext* ctx) override;
 	void exitLiteral(VecMath::VecMathParser::LiteralContext* ctx) override;
 	void exitVector(VecMath::VecMathParser::VectorContext* ctx) override;
+	void exitComplex(VecMath::VecMathParser::ComplexContext* ctx) override;
 	void exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)override;
 	void exitValue(VecMath::VecMathParser::ValueContext* ctx) override;
 	void exitFunction(VecMath::VecMathParser::FunctionContext* ctx)override;
