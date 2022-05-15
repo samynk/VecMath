@@ -7,9 +7,10 @@ expression : (assign | command) EOF;
 
 assign : (ID ASSIGN)? value SEMI?;
 
+complex: LBRACKET x=value COMMA LPAREN y=value RPAREN RBRACKET;
 quaternion: LBRACKET w=value COMMA LPAREN x=value COMMA y=value COMMA z=value RPAREN RBRACKET;
 vector : LBRACKET value (COMMA value)* RBRACKET;
-literal: FLOAT|vector|quaternion;
+literal: FLOAT|complex|vector|quaternion;
 value: 
  op=ABS value ABS
  | op1=value op=POWER op2=value

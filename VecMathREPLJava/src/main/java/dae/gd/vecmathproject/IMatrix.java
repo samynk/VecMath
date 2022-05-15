@@ -1,13 +1,13 @@
 package dae.gd.vecmathproject;
 
 /**
- * An abstract class that models a two-dimensional matrix.
- * The class supports the implementation of vectors, quaternions
- * and transformation matrices.
- * The addressmode feature of the matrix makes it possible to define
- * what happens when a cell is accessed that is outside of the bounds
- * of the matrix. The resulting value can be clamped, or a constant border
- * value can be defined, or the operation can result in an error.
+ * An abstract class that models a two-dimensional matrix. The class supports
+ * the implementation of vectors, quaternions and transformation matrices. The
+ * addressmode feature of the matrix makes it possible to define what happens
+ * when a cell is accessed that is outside of the bounds of the matrix. The
+ * resulting value can be clamped, or a constant border value can be defined, or
+ * the operation can result in an error.
+ *
  * @author Koen.Samyn
  */
 public abstract class IMatrix {
@@ -24,7 +24,7 @@ public abstract class IMatrix {
      * The type of the matrix
      */
     public enum Type {
-        MATRIX, VECTOR, QUATERNION
+        MATRIX, VECTOR, COMPLEX, QUATERNION
     };
 
     /**
@@ -35,24 +35,26 @@ public abstract class IMatrix {
     };
 
     /**
-     * Creates a new matrix of a given type, address mode and a given
-     * number of rows of columns.
+     * Creates a new matrix of a given type, address mode and a given number of
+     * rows of columns.
+     *
      * @param type the type of the matrix, can be matrix, vector or quaternion.
      * @param mode the mode of the matrix, either clamp, border or boundserror.
      * @param rows the number of rows in this matrix.
      * @param columns the number of columns in this matrix.
      */
     public IMatrix(Type type, AddressMode mode, int rows, int columns) {
-        this(type,mode,0,rows,columns);
+        this(type, mode, 0, rows, columns);
     }
 
     /**
-     * Creates a new matrix of a given type, address mode and a given
-     * number of rows of columns.
+     * Creates a new matrix of a given type, address mode and a given number of
+     * rows of columns.
+     *
      * @param type the type of the matrix, can be matrix, vector or quaternion.
      * @param mode the mode of the matrix, either clamp, border or boundserror.
-     * @param borderValue the constant value that will be returned if an out of bounds
-     * cell value is accessed.
+     * @param borderValue the constant value that will be returned if an out of
+     * bounds cell value is accessed.
      * @param rows the number of rows in this matrix.
      * @param columns the number of columns in this matrix.
      */
@@ -66,15 +68,18 @@ public abstract class IMatrix {
 
     /**
      * Gets a value from this matrix.
+     *
      * @param ri the index of the row (zero based).
      * @param ci the index of the column (zero based).
-     * @return the resulting value of the cell, taking into account the address mode.
+     * @return the resulting value of the cell, taking into account the address
+     * mode.
      */
     public abstract float get(int ri, int ci);
 
     /**
      * Sets a value in this matrix. If the row index and column index is out of
      * bounds no operation will be executed.
+     *
      * @param ri the index of the row (zero based).
      * @param ci the index of the column (zero based).
      * @param value the value to set.
@@ -83,6 +88,7 @@ public abstract class IMatrix {
 
     /**
      * Prints the contents of this matrix to the console.
+     *
      * @param precision the precision for the output of floats.
      */
     public void print(String floatFormat) {
@@ -94,7 +100,7 @@ public abstract class IMatrix {
             System.out.print("[");
             for (int c = 0; c < columns; ++c) {
                 //SetConsoleTextAttribute(console, 10);
-                System.out.printf(java.util.Locale.US,floatFormat, get(r, c));
+                System.out.printf(java.util.Locale.US, floatFormat, get(r, c));
                 if (c + 1 < columns) {
                     //SetConsoleTextAttribute(console, 8);
                     System.out.print(",");
@@ -115,6 +121,7 @@ public abstract class IMatrix {
 
     /**
      * The square root of the sum of squares of all the elements in this matrix.
+     *
      * @return the magnitude of this matrix.
      */
     public float magnitude() {
@@ -129,32 +136,38 @@ public abstract class IMatrix {
     }
 
     /**
-     * The conjugate value of this matrix, only applicable if the matrix is 
-     * a quaternion.
+     * The conjugate value of this matrix, only applicable if the matrix is a
+     * quaternion.
+     *
      * @return a conjugate value of this matrix.
      */
     public IMatrix conjugate() {
         return new Scalar(Float.NaN);
     }
-    
+
     /**
-     * Calculates the inverse of this matrix, for an ordinary matrix this is
-     * the matrix of 1/x, for a quaternion this is the actual quaternion.
+     * Calculates the inverse of this matrix, for an ordinary matrix this is the
+     * matrix of 1/x, for a quaternion this is the actual quaternion.
+     *
      * @return the inverse of the matrix.
      */
     public IMatrix inverse() {
         IMatrix result = maxMatrix(this, null);
-	IMatrix.unaryOp(this, (float x)-> {return 1/x; }, result);
-	return result;
+        IMatrix.unaryOp(this, (float x) -> {
+            return 1 / x;
+        }, result);
+        return result;
     }
 
     /**
-     * Utility function that creates a new matrix for support of Hadamard functions.
-     * The new matrix will have a maximum number of rows of the two provided matrices,
-     * and the maximum number of columns.
+     * Utility function that creates a new matrix for support of Hadamard
+     * functions. The new matrix will have a maximum number of rows of the two
+     * provided matrices, and the maximum number of columns.
+     *
      * @param op1 the first matrix.
      * @param op2 the second matrix.
-     * @return a new matrix with dimension [max(op1.row,op2.row),max(op1.column, op2.column)]
+     * @return a new matrix with dimension [max(op1.row,op2.row),max(op1.column,
+     * op2.column)]
      */
     static IMatrix maxMatrix(IMatrix op1, IMatrix op2) {
         int rows = Math.max(
@@ -184,11 +197,13 @@ public abstract class IMatrix {
     }
 
     /**
-     * Utility function that creates a new matrix for support of for example magnitude function,
-     * for example calculate the magnitude of a matrix where vectors are stored in rows, and
-     * the calculated magnitude is stored into a matrix with the same number of rows and one column.
-     * The new matrix will have a maximum number of rows of the two provided matrices,
-     * and a number of columns of one.
+     * Utility function that creates a new matrix for support of for example
+     * magnitude function, for example calculate the magnitude of a matrix where
+     * vectors are stored in rows, and the calculated magnitude is stored into a
+     * matrix with the same number of rows and one column. The new matrix will
+     * have a maximum number of rows of the two provided matrices, and a number
+     * of columns of one.
+     *
      * @param op1 the first matrix.
      * @param op2 the second matrix.
      * @return a new matrix with dimension [max(op1.row,op2.row),1]
@@ -218,8 +233,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Utility function that creates a new matrix on the basis of the columns
-     * of the two matrix parameters.
+     * Utility function that creates a new matrix on the basis of the columns of
+     * the two matrix parameters.
+     *
      * @param op1 the first matrix.
      * @param op2 the second matrix.
      * @return a new matrix with dimension [1,max(op1.columns,op2.columns)]
@@ -249,12 +265,14 @@ public abstract class IMatrix {
     }
 
     /**
-     * Applies a binary operation component wise operation on the op1 and op2 
+     * Applies a binary operation component wise operation on the op1 and op2
      * parameters. The BinaryOp parameter can be provided as a lambda.
+     *
      * @param op1 the first operand matrix for the binary operation.
      * @param op2 the second operand matrix for the binary operation.
      * @param func the function to apply.
-     * @param result the matrix where the result of the operation will be stored.
+     * @param result the matrix where the result of the operation will be
+     * stored.
      */
     static void binaryOp(IMatrix op1, IMatrix op2, BinaryOp func, IMatrix result) {
         for (int r = 0; r < result.rows; ++r) {
@@ -268,10 +286,13 @@ public abstract class IMatrix {
     }
 
     /**
-     * Applies an unary operation on the op1 matrix and stores it into the result matrix.
+     * Applies an unary operation on the op1 matrix and stores it into the
+     * result matrix.
+     *
      * @param op1 the first operand matrix for the binary operation.
      * @param func the function to apply.
-     * @param result the matrix where the result of the operation will be stored.
+     * @param result the matrix where the result of the operation will be
+     * stored.
      */
     static void unaryOp(IMatrix op1, UnaryOp func, IMatrix result) {
         for (int r = 0; r < result.rows; ++r) {
@@ -284,8 +305,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Applies a component wise binary operation on two matrices and adds
-     * the results together.
+     * Applies a component wise binary operation on two matrices and adds the
+     * results together.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @param func the binary function to apply.
@@ -306,8 +328,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Convenience function which calculates a new matrix that is the
-     * negative version of the provided matrix.
+     * Convenience function which calculates a new matrix that is the negative
+     * version of the provided matrix.
+     *
      * @param op1 the matrix to negate.
      * @return a new matrix with the negated values of the first matrix.
      */
@@ -320,8 +343,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Convenience function to add two matrices together. The dimension of
-     * the resulting matrix is determined by the maxMatrix function.
+     * Convenience function to add two matrices together. The dimension of the
+     * resulting matrix is determined by the maxMatrix function.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return the resulting (new) matrix.
@@ -335,8 +359,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Convenience function to subtract two matrices. The dimension of
-     * the resulting matrix is determined by the maxMatrix function.
+     * Convenience function to subtract two matrices. The dimension of the
+     * resulting matrix is determined by the maxMatrix function.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return the resulting (new) matrix.
@@ -350,8 +375,9 @@ public abstract class IMatrix {
     }
 
     /**
-     * Convenience function to multiply two matrices. The dimension of
-     * the resulting matrix is determined by the maxMatrix function.
+     * Convenience function to multiply two matrices. The dimension of the
+     * resulting matrix is determined by the maxMatrix function.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return the resulting (new) matrix.
@@ -363,40 +389,57 @@ public abstract class IMatrix {
         }, result);
         return result;
     }
-    
+
     /**
-     * Convenience function to calculate the cross product 
+     * Convenience function to calculate the cross product
+     *
      * @param op1 the first operand of the cross product.
      * @param op2 the second operand of the cross product.
      * @return the result of the cross product.
      */
     static IMatrix cross(IMatrix op1, IMatrix op2) {
         // result is always 3D vector.
-	int nrOfVectors = Math.max(op1.rows, op2.rows);
-	if (nrOfVectors == 1) {
-		float x1 = op1.get(0, 0);
-		float y1 = op1.get(0, 1);
-		float z1 = op1.get(0, 2);
+        int nrOfVectors = Math.max(op1.rows, op2.rows);
+        if (nrOfVectors == 1) {
+            float x1 = op1.get(0, 0);
+            float y1 = op1.get(0, 1);
+            float z1 = op1.get(0, 2);
 
-		float x2 = op2.get(0, 0);
-		float y2 = op2.get(0, 1);
-		float z2 = op2.get(0, 2);
-		Vector3D result = new Vector3D(
-			y1*z2-y2*z1,
-			z1*x2-z2*x1,
-			x1*y2-x2*y1
-		);
-	
-		return result;
-	}
-	else {
-		// todo add matrix functionality
-		return null;
-	}
+            float x2 = op2.get(0, 0);
+            float y2 = op2.get(0, 1);
+            float z2 = op2.get(0, 2);
+            Vector3D result = new Vector3D(
+                    y1 * z2 - y2 * z1,
+                    z1 * x2 - z2 * x1,
+                    x1 * y2 - x2 * y1
+            );
+
+            return result;
+        } else {
+            // todo add matrix functionality
+            return null;
+        }
+    }
+    
+    /**
+     * Convenience function to multiply two complex numbers.
+     * @param op1 the first complex number.
+     * @param op2 the second complex number.
+     * @return the result of the multiplication.
+     */
+    private static IMatrix complexMul(IMatrix op1, IMatrix op2) {
+        float r1 = op1.get(0, 0);
+	float i1 = op1.get(0, 1);
+
+	float r2 = op2.get(0, 0);
+	float i2 = op2.get(0, 1);
+
+	return new Complex(r1 * r2 - i1 * i2, r1 * i2 + r2 * i1);
     }
 
     /**
      * Convenience function to multiply two quaternions together.
+     *
      * @param op1 the first quaternion operand.
      * @param op2 the second quaternion operand.
      * @return the resulting (new) quaternion.
@@ -419,56 +462,69 @@ public abstract class IMatrix {
         Quaternion result = new Quaternion(qX, qY, qZ, qW);
         return result;
     }
-    
+
     /**
-     * Convenience function to divide two matrices. The dimension of
-     * the resulting matrix is determined by the maxMatrix function.
+     * Convenience function to divide two matrices. The dimension of the
+     * resulting matrix is determined by the maxMatrix function.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return the resulting (new) matrix.
      */
-    static IMatrix divide(IMatrix  op1, IMatrix op2){
-	IMatrix result = maxMatrix(op1, op2);
-	IMatrix.binaryOp(op1, op2, (float x1, float x2)-> {return x1 / x2; }, result);
-	return result;
+    static IMatrix divide(IMatrix op1, IMatrix op2) {
+        IMatrix result = maxMatrix(op1, op2);
+        IMatrix.binaryOp(op1, op2, (float x1, float x2) -> {
+            return x1 / x2;
+        }, result);
+        return result;
     }
 
     /**
-     * The dot function is a contextual operation. For two vectors, this is
-     * the matrix multiplication with the transposed second operand. For quaternions,
-     * this is the quaternion operation.
+     * The dot function is a contextual operation. For two vectors, this is the
+     * matrix multiplication with the transposed second operand. For
+     * quaternions, this is the quaternion operation.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return the resulting matrix.
      */
-    static IMatrix dot(IMatrix op1, IMatrix op2){
+    static IMatrix dot(IMatrix op1, IMatrix op2) {
         if ((op1.type == Type.VECTOR || op1.type == Type.MATRIX)
-		&& (op2.type == Type.VECTOR || op2.type == Type.MATRIX))
-	{
-		IMatrix result = maxRowMatrix(op1, op2);
-		reduceToSum(op1, op2, (float x1, float x2)-> {return x1 * x2; }, result);
-		return result;
-	}
-	else {
-		return quatMul(op1, op2);
-	}
+                && (op2.type == Type.VECTOR || op2.type == Type.MATRIX)) {
+            IMatrix result = maxRowMatrix(op1, op2);
+            reduceToSum(op1, op2, (float x1, float x2) -> {
+                return x1 * x2;
+            }, result);
+            return result;
+        } else if (op1.type == Type.COMPLEX && op2.type == Type.COMPLEX) {
+            return complexMul(op1, op2);
+        } else if (op1.type == Type.QUATERNION || op2.type == Type.QUATERNION) {
+            return quatMul(op1, op2);
+        } else {
+            // todo print error message.
+            return new Scalar();
+        }
     }
-	
+
     /**
      * Raises all the elements of the matrix to a power.
+     *
      * @param op1 the first matrix operand.
      * @param op2 the second matrix operand.
      * @return a new matrix with all the elements raised to the power.
      */
-    static IMatrix power(IMatrix op1, IMatrix op2){
+    static IMatrix power(IMatrix op1, IMatrix op2) {
         float power = op2.get(0, 0);
-	IMatrix result = maxMatrix(op1, null);
-	IMatrix.unaryOp(op1, (var x1) -> {return (float)Math.pow(x1,power); }, result);
-	return result;
+        IMatrix result = maxMatrix(op1, null);
+        IMatrix.unaryOp(op1, (var x1) -> {
+            return (float) Math.pow(x1, power);
+        }, result);
+        return result;
     }
 
     /**
      * Checks if the cell defined by (ri,ci) is in the range of this matrix.
+     *
      * @param ri the row index.
      * @param ci the column index.
      * @return true if the cell is in range, false otherwise.

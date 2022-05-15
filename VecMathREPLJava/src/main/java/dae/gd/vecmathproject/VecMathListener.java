@@ -146,7 +146,7 @@ public class VecMathListener extends VecMathParserBaseListener {
             String varId = ctx.ID().getText();
             if (stackIsValid()) {
                 varMap.put(varId, popFromStack());
-                if (ctx.SEMI() == null){
+                if (ctx.SEMI() == null) {
                     printVariable(varId);
                 }
             } else {
@@ -201,7 +201,7 @@ public class VecMathListener extends VecMathParserBaseListener {
         } else {
             printError("Could not find variable " + id + ",are you sure it exists?", true);
             printInfo("Use the 'printAll' command to see the current list of variables.", true);
-            
+
         }
     }
 
@@ -269,6 +269,17 @@ public class VecMathListener extends VecMathParserBaseListener {
         }
     }
 
+    @Override
+    public void exitComplex(VecMathParser.ComplexContext ctx) {
+        if (checkStackSize(2)) {
+            IMatrix i = popFromStack();
+            IMatrix r = popFromStack();
+            Complex c = new Complex(r.get(0, 0), i.get(0, 0));
+            exprStack.push(c);
+        }
+    }
+
+    @Override
     public void exitQuaternion(VecMathParser.QuaternionContext ctx) {
         IMatrix z = popFromStack();
         IMatrix y = popFromStack();
@@ -278,6 +289,7 @@ public class VecMathListener extends VecMathParserBaseListener {
         exprStack.push(q);
     }
 
+    @Override
     public void exitValue(VecMathParser.ValueContext ctx) {
         if (ctx.ID() != null) {
             String id = ctx.ID().getText();
