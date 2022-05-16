@@ -174,6 +174,7 @@ void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)
 	}
 	else {
 		m_VarMap.clear();
+		clearScreen();
 	}
 }
 
@@ -512,6 +513,39 @@ void VecMathListener::printMarkDown(const std::string& text)
 			printText(token);
 		}
 	}
+}
+
+void VecMathListener::clearScreen()
+{
+	// source : https://www.cplusplus.com/articles/4z18T05o/
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	DWORD                      count;
+	DWORD                      cellCount;
+	COORD                      homeCoords = { 0, 0 };
+	/* Get the number of cells in the current buffer */
+	if (!GetConsoleScreenBufferInfo(m_ConsoleHandle, &csbi)) return;
+	cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+	/* Fill the entire buffer with spaces */
+	if (!FillConsoleOutputCharacter(
+		m_ConsoleHandle,
+		(TCHAR)' ',
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Fill the entire buffer with the current colors and attributes */
+	if (!FillConsoleOutputAttribute(
+		m_ConsoleHandle,
+		csbi.wAttributes,
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Move the cursor home */
+	SetConsoleCursorPosition(m_ConsoleHandle, homeCoords);
 }
 
 void VecMathListener::printInfo(const std::string& message)
