@@ -13,8 +13,7 @@ void printTokens(
 
 int main()
 {
-	std::cout << "VecMath REPL shell 1.0.4 - Koen Samyn - 2022\n";
-	std::cout << "please report issues at https://github.com/samynk/VecMath\n";
+	
 	std::string codeLine;
 	int tokenType = -1;
 	using namespace antlr4;
@@ -22,6 +21,7 @@ int main()
 
 	VecMathListener listener{};
 	VecMathErrorListener errorListener;
+	listener.promptHeader();
 	do {
 		listener.prompt("vecmath>");
 		std::getline(std::cin, codeLine);

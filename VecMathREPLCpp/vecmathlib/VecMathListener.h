@@ -12,6 +12,7 @@ public:
 	VecMathListener();
 
 	void prompt(const std::string& text);
+	void promptHeader() const;
 	void readHelp();
 	bool isExit() {
 		return m_Exit;
@@ -38,10 +39,10 @@ public:
 	void exitPrecision(VecMath::VecMathParser::PrecisionContext* ctx)override;
 	void visitErrorNode(antlr4::tree::ErrorNode* node) override;
 
-	void printError(const std::string& message);
-	void printInfo(const std::string& message);
-	void printText(const std::string& message);
-	void printVariable(const std::string& id);
+	void printError(const std::string& message) const;
+	void printInfo(const std::string& message) const;
+	void printText(const std::string& message) const;
+	void printVariable(const std::string& id) const;
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
 	void clearScreen();

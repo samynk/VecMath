@@ -30,6 +30,12 @@ void VecMathListener::prompt(const std::string& text)
 	}
 }
 
+void VecMathListener::promptHeader() const
+{
+	printInfo("VecMath REPL shell 1.0.4 - Koen Samyn - 2022");
+	printInfo("please report issues at https://github.com/samynk/VecMath");
+}
+
 void VecMathListener::readHelp()
 {
 	std::ifstream helpFile{ "resources/help.txt" };
@@ -148,15 +154,15 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 	}
 }
 
-void VecMathListener::printVariable(const std::string& id)
+void VecMathListener::printVariable(const std::string& id) const
 {
-	if (m_VarMap.find(id) != m_VarMap.end()) {
+	if ( m_VarMap.find(id) != m_VarMap.end()) {
 		SetConsoleTextAttribute(m_ConsoleHandle, 7);
 		std::cout << id;
 		SetConsoleTextAttribute(m_ConsoleHandle, 7);
 		std::cout << " = ";
 		SetConsoleTextAttribute(m_ConsoleHandle, 8);
-		m_VarMap[id]->print(m_ConsoleHandle);
+		m_VarMap.at(id)->print(m_ConsoleHandle);
 		std::cout << std::endl;
 	}
 	else {
@@ -175,6 +181,7 @@ void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)
 	else {
 		m_VarMap.clear();
 		clearScreen();
+		promptHeader();
 	}
 }
 
@@ -548,19 +555,19 @@ void VecMathListener::clearScreen()
 	SetConsoleCursorPosition(m_ConsoleHandle, homeCoords);
 }
 
-void VecMathListener::printInfo(const std::string& message)
+void VecMathListener::printInfo(const std::string& message) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, INFOCOLOR);
 	std::cout << message << "\n";
 }
 
-void VecMathListener::printError(const std::string& message)
+void VecMathListener::printError(const std::string& message) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
 	std::cout << message << "\n";
 }
 
-void VecMathListener::printText(const std::string& message)
+void VecMathListener::printText(const std::string& message) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, TEXTCOLOR);
 	std::cout << message << "\n";
