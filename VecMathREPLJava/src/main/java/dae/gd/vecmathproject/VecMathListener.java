@@ -434,32 +434,32 @@ public class VecMathListener extends VecMathParserBaseListener {
                     result = new Scalar(op.magnitude());
                 } else if ("inv".equals(funcName)) {
                     result = op.inverse();
-                } else if (funcName == "sind") {
+                } else if ("sind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)Math.sin(x * DEGTORAD);
                     }, result);
-                } else if (funcName == "cosd") {
+                } else if ("cosd".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)Math.cos(x * DEGTORAD);
                     }, result);
-                } else if (funcName == "tand") {
+                } else if ("tand".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)Math.tan(x * DEGTORAD);
                     }, result);
-                } else if (funcName == "asind") {
+                } else if ("asind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)(RADTODEG * Math.asin(x));
                     }, result);
-                } else if (funcName == "acosd") {
+                } else if ("acosd".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)(RADTODEG * Math.acos(x));
                     }, result);
-                } else if (funcName == "atand") {
+                } else if ("atand".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
                         return (float)(RADTODEG * Math.atan(x));
