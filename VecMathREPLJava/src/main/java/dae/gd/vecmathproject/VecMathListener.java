@@ -25,6 +25,8 @@ public class VecMathListener extends VecMathParserBaseListener {
 
     private Stack<IMatrix> exprStack = new Stack();
     private boolean exit = false;
+    private static final double RADTODEG= 180/Math.PI;
+    private static final double DEGTORAD= Math.PI/180;
     private int decimalPlaces = 6;
     private String floatFormat = "%." + decimalPlaces + "f";
 
@@ -432,6 +434,37 @@ public class VecMathListener extends VecMathParserBaseListener {
                     result = new Scalar(op.magnitude());
                 } else if ("inv".equals(funcName)) {
                     result = op.inverse();
+                } else if (funcName == "sind") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)Math.sin(x * DEGTORAD);
+                    }, result);
+                } else if (funcName == "cosd") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)Math.cos(x * DEGTORAD);
+                    }, result);
+                } else if (funcName == "tand") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)Math.tan(x * DEGTORAD);
+                    }, result);
+                } else if (funcName == "asind") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)(RADTODEG * Math.asin(x));
+                    }, result);
+                } else if (funcName == "acosd") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)(RADTODEG * Math.acos(x));
+                    }, result);
+                } else if (funcName == "atand") {
+                    result = IMatrix.maxMatrix(op, null);
+                    IMatrix.unaryOp(op, (float x) -> {
+                        return (float)(RADTODEG * Math.atan(x));
+                    }, result);
+
                 } else {
                     printError("There is no function called " + funcName + " (yet)!", true);
                     printInfo("Maybe you made a typo? (type 'help' for a list of functions)", true);
