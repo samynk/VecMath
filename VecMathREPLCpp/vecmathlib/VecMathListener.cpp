@@ -392,10 +392,34 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 				IMatrix::unaryOp(op, [](float x) {return abs(x); }, result);
 			}
 			else if (funcName == "norm") {
-				result = new Scalar( op->magnitude());
+				result = new Scalar(op->magnitude());
 			}
 			else if (funcName == "inv") {
 				result = op->inverse();
+			}
+			else if (funcName == "sind") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return sin(x * m_DegToRad); }, result);
+			}
+			else if (funcName == "cosd") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return cos(x * m_DegToRad); }, result);
+			}
+			else if (funcName == "tand") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return tan(x * m_DegToRad); }, result);
+			}
+			else if (funcName == "asind") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * asin(x); }, result);
+			}
+			else if (funcName == "acosd") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * acos(x); }, result);
+			}
+			else if (funcName == "atand") {
+				result = IMatrix::maxMatrix(op, nullptr);
+				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * atan(x); }, result);
 			}
 			else {
 				printError("There is no function called " + funcName + " (yet)!");

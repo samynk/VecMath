@@ -6,7 +6,7 @@
 #include "IMatrix.h"
 #include <windows.h>
 
-class VecMathListener: public VecMath::VecMathParserBaseListener
+class VecMathListener : public VecMath::VecMathParserBaseListener
 {
 public:
 	VecMathListener();
@@ -56,6 +56,8 @@ private:
 	std::stack<IMatrix*> m_ExprStack;
 	std::string m_CurrentCodeLine;
 	std::string m_HelpString;
+	static constexpr float m_DegToRad{ M_PI / 180 };
+	static constexpr float m_RadToDeg{ 180 / M_PI };
 
 	JokeGenerator m_JokeGenerator;
 
