@@ -31,7 +31,11 @@ e : eulers number.
 #Mathematical functions
 sin, cos, tan : sine, cosine and tangent function of a value in radians. 
 	These functions will be applied on all components.
+sind, cosd, tand : sine, cosine and tangent function of a value in degrees. 
+	These functions will be applied on all components.
 asin, acos, atan : arc sine, arc cosine and arc tangent function. Returns an angle in radians. 
+	These functions will be applied on all components.
+asind, acosd, atand : arc sine, arc cosine and arc tangent function. Returns an angle in degrees. 
 	These functions will be applied on all components.
 norm : calculate the length of a vector, alternative for the | | notation.
 sqrt : calculates the square root of all the components.
