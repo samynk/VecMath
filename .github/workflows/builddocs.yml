@@ -10,7 +10,9 @@ on:
     paths:
       - 'docs/**.md'
   
-permissions: read-all|write-all
+permissions: 
+  pages: write
+  contents: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
