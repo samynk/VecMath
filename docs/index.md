@@ -3,7 +3,7 @@
 Contributors:
 Test
 ### Versions
-v1.0.3
+v1.0.3: first version with Java and C++ executables.
 
 v1.0.4
 
