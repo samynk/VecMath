@@ -31,5 +31,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo Building docs
-          /home/runner/work/VecMath/deploy.sh
+          /home/runner/work/VecMath/VecMath/deploy.sh
 
