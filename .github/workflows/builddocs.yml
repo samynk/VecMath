@@ -33,6 +33,6 @@ jobs:
           echo Building docs
           cd /home/runner/work/VecMath/VecMath
           pwd
-          chmod u+x deploy.sh
-          deploy.sh
+          chmod u+x ./deploy.sh
+          ./deploy.sh
 
