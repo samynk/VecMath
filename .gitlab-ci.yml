@@ -1,0 +1,14 @@
+image: node:16.5.0
+pages:
+  stage: deploy
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - yarn install # npm install
+    - yarn docs:build # npm run docs:build
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
