@@ -31,4 +31,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo Building docs
-          pwd
+          cd /home/runner/work/VecMath
+          deploy.sh
+
