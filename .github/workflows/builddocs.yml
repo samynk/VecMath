@@ -47,6 +47,7 @@ jobs:
           echo Setting up NPM
           npm ci
           echo Building docs
+          git config --global user.email "samyn.koen@gmail.com"
           cd /home/runner/work/VecMath/VecMath
           pwd
           chmod u+x ./deploy.sh
