@@ -48,6 +48,7 @@ jobs:
           npm ci
           echo Building docs
           git config --global user.email "samyn.koen@gmail.com"
+          git config --global user.name "samynk"
           cd /home/runner/work/VecMath/VecMath
           pwd
           chmod u+x ./deploy.sh
