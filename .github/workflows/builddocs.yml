@@ -53,6 +53,7 @@ jobs:
           cd /home/runner/work/VecMath/VecMath
           pwd
           npm run docs:build
+          ls docs/.vitepress
           cd docs/.vitepress/dist  
           git init -b main
           git add -A
