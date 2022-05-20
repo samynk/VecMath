@@ -56,4 +56,5 @@ jobs:
           pwd
           chmod u+x ./deploy.sh
           ./deploy.sh
+          git push -f git@github.com:samynk/VecMath.git main:gh-pages
 
