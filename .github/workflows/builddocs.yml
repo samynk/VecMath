@@ -52,8 +52,10 @@ jobs:
           echo Building docs
           cd /home/runner/work/VecMath/VecMath
           pwd
-          chmod u+x ./deploy.sh
-          cd docs/.vitepress/dist
-          ./deploy.sh
+          npm run docs:build
+          cd docs/.vitepress/dist  
+          git init -b main
+          git add -A
+          git commit -m 'deploy'
           git push -f git@github.com:samynk/VecMath.git main:gh-pages
 
