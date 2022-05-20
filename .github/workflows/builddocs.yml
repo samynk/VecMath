@@ -58,5 +58,5 @@ jobs:
           git config user.name "DAE Vitepress Documentation Bot"
           git config user.email "<>"
           git commit -m 'deploy'
-          git push main:gh-pages
+          git push origin gh-pages
 
