@@ -57,6 +57,8 @@ jobs:
           cd docs/.vitepress/dist  
           git init -b main
           git add -A
+          git config user.name "DAE Vitepress Documentation Bot"
+          git config user.email "<>"
           git commit -m 'deploy'
           git push -f git@github.com:samynk/VecMath.git main:gh-pages
 
