@@ -43,8 +43,6 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo Setting up NPM
           npm ci
@@ -55,9 +53,12 @@ jobs:
           ls docs/.vitepress
           cd docs/.vitepress/dist  
           git init -b main
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git remote -v
           git add -A
           git config user.name "DAE Vitepress Documentation Bot"
           git config user.email "<>"
           git commit -m 'deploy'
-          git push -f ${{ secrets.GITHUB_TOKEN }}@github.com:samynk/VecMath.git main:gh-pages main:gh-pages
+          echo Pushing to gh-pages 
+          git push -f origin main:gh-pages
 

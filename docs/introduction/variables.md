@@ -3,16 +3,18 @@
 For now, only floating point values are supported in the VecMath shell. Vector, matrix and quaternion
 types can be entered with a syntax that is similar to C/C++.
 
-For now there are only four types of variables in the vecmathtool:
+There are only five types of variables in the vecmathtool:
 
 - Scalar: This variable is a single float value. This type can also be entered as an array with one
 element. This is off course perfectly valid because you can see scalars as one dimensional vectors.
 
 - 2D vector: This variable must be entered as an array with two elements.
 
+- Complex number: This type of variable is an array, but the complex part is defined between parentheses. 
+
 - 3D vector: This variable must be entered as an array with three elements.
 
-- Quaternion: This type is again an array, but the complex parts have to be defined between parentheses
+- Quaternion: This type is again an array, but the complex parts have to be defined between parentheses.
 
 ## Scalar
 
@@ -57,6 +59,19 @@ The result is :
 ```cpp
 v = [7.0,2.3]
 ```
+
+## Complex number
+
+A complex number is defined as an array of two floats, but in contrast to the 2D vector, the complex part
+is defined between two parentheses:
+
+```cpp
+vecmath> c1 = [ 1, (2)];
+vecmath> c2 = [ 3, (4)];
+vecmath> c = c1.c2
+c = [-5,10]
+```
+#### This corresponds to the quaternion: -5 + <span style="color:red">10i</span>
 
 ## 3D Vector
 A 3d vector is defined as an array of two floats (or two operations that result in a float).
