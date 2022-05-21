@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,a as e}from"./app.744777a9.js";const k='{"title":"Power","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/power.md","lastUpdated":1651606220000}',p={},o=e("",9),r=[o];function t(c,l,i,u,d,m){return a(),n("div",null,r)}var h=s(p,[["render",t]]);export{k as __pageData,h as default};

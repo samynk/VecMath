@@ -1,0 +1,1 @@
+import{_ as n,c as s,o as a,a as p}from"./app.744777a9.js";const m='{"title":"Add","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/add.md","lastUpdated":1651606220000}',e={},t=p("",10),o=[t];function c(r,l,u,i,k,d){return a(),s("div",null,o)}var v=n(e,[["render",c]]);export{m as __pageData,v as default};

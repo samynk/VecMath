@@ -43,6 +43,7 @@ public:
 	void printInfo(const std::string& message) const;
 	void printText(const std::string& message) const;
 	void printVariable(const std::string& id) const;
+	void printVariable(const std::string& id, IMatrix* matrix) const;
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
 	void clearScreen();

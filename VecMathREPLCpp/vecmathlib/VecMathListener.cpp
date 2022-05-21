@@ -113,9 +113,13 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 		std::string varId = ctx->ID()->getText();
 		if (stackIsValid()) {
 			IMatrix* result = popFromStack();
-			m_VarMap[varId] = result;
-			if (ctx->SEMI() == nullptr) {
-				printVariable(varId);
+			// check if the id is not a constant.
+			if (m_Constants.find(varId) == m_Constants.end())
+			{
+				m_VarMap[varId] = result;
+				if (ctx->SEMI() == nullptr) {
+					printVariable(varId);
+				}
 			}
 		}
 		else {
@@ -157,19 +161,27 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 void VecMathListener::printVariable(const std::string& id) const
 {
 	if ( m_VarMap.find(id) != m_VarMap.end()) {
-		SetConsoleTextAttribute(m_ConsoleHandle, 7);
-		std::cout << id;
-		SetConsoleTextAttribute(m_ConsoleHandle, 7);
-		std::cout << " = ";
-		SetConsoleTextAttribute(m_ConsoleHandle, 8);
-		m_VarMap.at(id)->print(m_ConsoleHandle);
-		std::cout << std::endl;
+		printVariable(id, m_VarMap.at(id));
+	}
+	else if (m_Constants.find(id) != m_Constants.end()) {
+		printVariable(id, m_Constants.at(id));
 	}
 	else {
 		SetConsoleTextAttribute(m_ConsoleHandle, 10);
 		std::cout << "Could not find variable " << id << ",are you sure it exists? \n";
 		std::cout << "Use the 'printAll' command to see the current list of variables.\n ";
 	}
+}
+
+void VecMathListener::printVariable(const std::string& id, IMatrix* matrix) const
+{
+	SetConsoleTextAttribute(m_ConsoleHandle, 7);
+	std::cout << id;
+	SetConsoleTextAttribute(m_ConsoleHandle, 7);
+	std::cout << " = ";
+	SetConsoleTextAttribute(m_ConsoleHandle, 8);
+	matrix->print(m_ConsoleHandle);
+	std::cout << std::endl;
 }
 
 void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)

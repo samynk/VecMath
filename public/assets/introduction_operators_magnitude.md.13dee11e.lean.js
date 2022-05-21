@@ -1,0 +1,1 @@
+import{_ as n,c as a,o as s,a as p}from"./app.744777a9.js";const b='{"title":"Magnitude","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/magnitude.md","lastUpdated":1651606220000}',e={},t=p("",17),o=[t];function r(c,l,i,u,m,d){return s(),a("div",null,o)}var v=n(e,[["render",r]]);export{b as __pageData,v as default};
