@@ -38,3 +38,15 @@ A: Nice belt!
 S: My kid swallowed 31 small plastic horses. It was tough, but he is stable now.
 Q: A float was sitting at the bar, and a double approached her and said: "Do you want to go out with me?"
 A: The float answered "No! You're not my type!"
+S: I'm afraid for the calendar. Its days are numbered.
+S: My wife said I should do lunges to stay in shape. That would be a big step forward.
+Q: Why do fathers take an extra pair of socks when they go golfing?
+A: In case they get a hole in one!
+S: Singing in the shower is fun until you get soap in your mouth. Then it's a soap opera.
+Q: What do a tick and the Eiffel Tower have in common?
+A: They're both Paris sites.
+S: I sneaked this in a pull request ~Arne Six
+Q: What do you call a fish wearing a bowtie?
+A: Sofishticated.
+Q: How do you follow Will Smith in the snow?
+A: You follow the fresh prints.
