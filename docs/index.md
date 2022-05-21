@@ -1,12 +1,6 @@
-## VecMathREPL
+## VecMath REPL shell
 
-Contributors:
-Test28
-### Versions
-v1.0.3: first version with Java and C++ executables.
-
-v1.0.4
-
-### Planning
-
-v1.0.5 : quality of life features
+## Features
+The VecMath REPL shell is a tool developed specifically for students Game Development at Digital Arts and Entertainment. 
+The goal is to make it easier to execute the typical vector operations such as cross and dot products, linear combinations 
+and calculating 3D rotations with quaternions.
