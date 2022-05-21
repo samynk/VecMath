@@ -61,5 +61,5 @@ jobs:
           git config user.email "<>"
           git commit -m 'deploy'
           echo Committing with user ${GITHUB_ACTOR}
-          git push -f git@github.com:${GITHUB_ACTOR}/VecMath.git main:gh-pages main:gh-pages
+          git push -f git@github.com:${GITHUB_ACTOR}/VecMath.git main:gh-pages
 
