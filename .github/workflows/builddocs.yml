@@ -60,5 +60,5 @@ jobs:
           git config user.email "<>"
           git commit -m 'deploy'
           echo Pushing to gh-pages 
-          git push -f  main:gh-pages
+          git push -f origin main:gh-pages
 
