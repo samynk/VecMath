@@ -6,3 +6,11 @@ The goal is to make it easier to execute the typical vector operations such as c
 and calculating 3D rotations with quaternions.
 
 ## Quick examples
+
+```cpp
+vecmath>v1=[2,3,4]
+vecmath>v2=[3,4,5]
+vecmath>d = v1.v2
+vecmath>print d
+[38]
+```
