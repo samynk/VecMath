@@ -34,9 +34,9 @@ int main()
 
 			CommonTokenStream stream{ &lexer };
 			VecMathParser parser(&stream);
-			//parser.removeErrorListeners();
+			parser.removeErrorListeners();
 			parser.addParseListener(&listener);
-			//parser.addErrorListener(&errorListener);
+			parser.addErrorListener(&listener);
 			parser.expression();
 			stream.fill();
 			//printTokens(stream,lexer.getVocabulary());

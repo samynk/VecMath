@@ -6,7 +6,9 @@
 #include "IMatrix.h"
 #include <windows.h>
 
-class VecMathListener : public VecMath::VecMathParserBaseListener
+class VecMathListener : 
+	public VecMath::VecMathParserBaseListener,
+	public antlr4::ANTLRErrorListener
 {
 public:
 	VecMathListener();
@@ -47,6 +49,17 @@ public:
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
 	void clearScreen();
+
+	// error listener
+
+	void syntaxError(antlr4::Recognizer* recognizer, antlr4::Token* offendingSymbol, size_t line,
+		size_t charPositionInLine, const std::string& msg, std::exception_ptr e) override;
+	void reportAmbiguity(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex, bool exact,
+		const antlrcpp::BitSet& ambigAlts, antlr4::atn::ATNConfigSet* configs) override;
+	void reportAttemptingFullContext(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex,
+		const antlrcpp::BitSet& conflictingAlts, antlr4::atn::ATNConfigSet* configs) override;
+	virtual void reportContextSensitivity(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex,
+		size_t prediction, antlr4::atn::ATNConfigSet* configs) override;
 
 	IMatrix* popFromStack();
 	void pushToStack(IMatrix* toPush);

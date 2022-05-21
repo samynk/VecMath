@@ -61,9 +61,9 @@ void VecMathListener::exec(std::string code)
 
 	CommonTokenStream stream{ &lexer };
 	VecMathParser parser(&stream);
-	//parser.removeErrorListeners();
+	parser.removeErrorListeners();
 	parser.addParseListener(this);
-	//parser.addErrorListener(&errorListener);
+	parser.addErrorListener(this);
 	parser.expression();
 }
 
@@ -483,6 +483,7 @@ void VecMathListener::visitErrorNode(antlr4::tree::ErrorNode* node) {
 		return;
 	}
 	size_t type = node->getSymbol()->getType();
+	
 	auto interval = node->getSourceInterval();
 
 
@@ -567,6 +568,7 @@ void VecMathListener::clearScreen()
 	SetConsoleCursorPosition(m_ConsoleHandle, homeCoords);
 }
 
+
 void VecMathListener::printInfo(const std::string& message) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, INFOCOLOR);
@@ -583,6 +585,50 @@ void VecMathListener::printText(const std::string& message) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, TEXTCOLOR);
 	std::cout << message << "\n";
+}
+
+void VecMathListener::syntaxError(antlr4::Recognizer* recognizer, antlr4::Token* offendingSymbol, size_t line, size_t charPositionInLine, const std::string& msg, std::exception_ptr e)
+{
+	// basic check of matched brackets and parenthesis.
+	size_t lp = std::count(m_CurrentCodeLine.begin(), m_CurrentCodeLine.end(), '(');
+	size_t rp = std::count(m_CurrentCodeLine.begin(), m_CurrentCodeLine.end(), ')');
+	if (lp != rp)
+	{
+		printErrorLoc(charPositionInLine, charPositionInLine, m_CurrentCodeLine);
+		if (rp < lp) {
+			printInfo("Missing ')', this became apparent at location " + std::to_string(charPositionInLine));
+		}
+		else {
+			printInfo("Missing '(', this became apparent at location " + std::to_string(charPositionInLine));
+		}
+		
+		m_ErrorFlagged = true;
+	}
+	size_t lb = std::count(m_CurrentCodeLine.begin(), m_CurrentCodeLine.end(), '[');
+	size_t rb = std::count(m_CurrentCodeLine.begin(), m_CurrentCodeLine.end(), ']');
+	if (lb != rb)
+	{
+		printErrorLoc(charPositionInLine, charPositionInLine, m_CurrentCodeLine);
+		if (rb < lb) {
+			printInfo("Missing ']', this became apparent at location " + std::to_string(charPositionInLine));
+		}
+		else {
+			printInfo("Missing '[', this became apparent at location " + std::to_string(charPositionInLine));
+		}
+		m_ErrorFlagged = true;
+	}
+}
+
+void VecMathListener::reportAmbiguity(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex, bool exact, const antlrcpp::BitSet& ambigAlts, antlr4::atn::ATNConfigSet* configs)
+{
+}
+
+void VecMathListener::reportAttemptingFullContext(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex, const antlrcpp::BitSet& conflictingAlts, antlr4::atn::ATNConfigSet* configs)
+{
+}
+
+void VecMathListener::reportContextSensitivity(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex, size_t prediction, antlr4::atn::ATNConfigSet* configs)
+{
 }
 
 IMatrix* VecMathListener::popFromStack()
