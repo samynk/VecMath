@@ -24,3 +24,11 @@ vecmath>n = v1 # v2
 vecmath>print n
 n = [-1,2,-1]
 ```
+
+## Normalize
+
+```cpp
+vecmath>v1=[2,3,4]
+vecmath>v1n = v1 / |v1|
+v1n = [0.371391,0.557086,0.742781]
+```
