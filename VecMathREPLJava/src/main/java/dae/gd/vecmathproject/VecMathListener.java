@@ -6,19 +6,26 @@ import dae.gd.VecMathParserBaseListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ErrorNode;
 
 /**
  *
  * @author Koen.Samyn
  */
-public class VecMathListener extends VecMathParserBaseListener {
+public class VecMathListener extends VecMathParserBaseListener implements ANTLRErrorListener{
 
     private HashMap<String, IMatrix> constants = new HashMap<>();
     private HashMap<String, IMatrix> varMap = new HashMap<>();
@@ -88,6 +95,8 @@ public class VecMathListener extends VecMathParserBaseListener {
 
         VecMathParser parser = new VecMathParser(stream);
         parser.addParseListener(this);
+        parser.removeErrorListeners();
+        parser.addErrorListener(this);
         parser.expression();
     }
 
@@ -560,5 +569,43 @@ public class VecMathListener extends VecMathParserBaseListener {
         if (newLine) {
             System.out.print("\n");
         }
+    }
+
+    @Override
+    public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int lineNr, int posInLine, String message, RecognitionException re) {
+        checkBalance('(',')',posInLine );
+        checkBalance('[',']',posInLine);
+    }
+    
+    private void checkBalance(char left, char right, int posInLine)
+    {
+        long leftCount = currentCodeLine.chars().filter(ch -> ch == left).count();
+	long rightCount = currentCodeLine.chars().filter(ch -> ch == right).count();
+	if (leftCount != rightCount)
+	{
+		printErrorLoc(posInLine, posInLine, currentCodeLine);
+		if (rightCount < leftCount) {
+			printInfo("Missing '"+left+"', this became apparent at location " + posInLine,true);
+		}
+		else {
+			printInfo("Missing '"+right+"', this became apparent at location " + posInLine,true);
+		}
+		errorFlagged = true;
+	}
+    }
+
+    @Override
+    public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
+        
+    }
+
+    @Override
+    public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
+        
+    }
+
+    @Override
+    public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
+        
     }
 }

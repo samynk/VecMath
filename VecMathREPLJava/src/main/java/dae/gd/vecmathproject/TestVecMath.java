@@ -21,13 +21,7 @@ public class TestVecMath {
         do {
             listener.prompt("vecmath>");
             String line = in.nextLine();
-            listener.setCurrentCodeLine(line);
-            VecMathLexer vmLexer = new VecMathLexer(CharStreams.fromString(line));
-            CommonTokenStream stream = new CommonTokenStream(vmLexer);
-
-            VecMathParser parser = new VecMathParser(stream);
-            parser.addParseListener(listener);
-            parser.expression();
+            listener.exec(line);
         } while (token != VecMathLexer.EXIT);
         System.out.println("Now closing the VecMath REPL shell");
         System.out.println("Thanks for using");
