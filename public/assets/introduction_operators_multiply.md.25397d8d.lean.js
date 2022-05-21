@@ -1,1 +1,0 @@
-import{_ as n,c as s,o as a,a as p}from"./app.744777a9.js";const d='{"title":"Multiply","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/multiply.md","lastUpdated":1651606220000}',e={},t=p("",14),o=[t];function c(l,r,u,i,k,m){return a(),s("div",null,o)}var h=n(e,[["render",c]]);export{d as __pageData,h as default};

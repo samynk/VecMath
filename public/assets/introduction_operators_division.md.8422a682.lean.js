@@ -1,1 +1,0 @@
-import{_ as a,c as n,o as s,a as e}from"./app.744777a9.js";const b='{"title":"Division","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/operators/division.md","lastUpdated":1651606220000}',p={},o=e("",12),t=[o];function r(c,i,l,d,u,m){return s(),n("div",null,t)}var k=a(p,[["render",r]]);export{b as __pageData,k as default};
