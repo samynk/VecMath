@@ -7,6 +7,7 @@ and calculating 3D rotations with quaternions.
 
 ## Quick examples
 
+### Vectors and dot product
 ```cpp
 vecmath>v1=[2,3,4]
 vecmath>v2=[3,4,5]
