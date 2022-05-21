@@ -45,6 +45,7 @@ jobs:
       - name: Run a multi-line script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
         run: |
           echo Setting up NPM
           npm ci
@@ -59,5 +60,6 @@ jobs:
           git config user.name "DAE Vitepress Documentation Bot"
           git config user.email "<>"
           git commit -m 'deploy'
-          git push -f ${{ secrets.GITHUB_TOKEN }}@github.com:samynk/VecMath.git main:gh-pages main:gh-pages
+          echo Committing with user ${GITHUB_ACTOR}
+          git push -f git@github.com:${GITHUB_ACTOR}/VecMath.git main:gh-pages main:gh-pages
 
