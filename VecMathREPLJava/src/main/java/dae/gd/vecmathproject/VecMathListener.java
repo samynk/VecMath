@@ -25,8 +25,8 @@ public class VecMathListener extends VecMathParserBaseListener {
 
     private Stack<IMatrix> exprStack = new Stack();
     private boolean exit = false;
-    private static final double RADTODEG= 180/Math.PI;
-    private static final double DEGTORAD= Math.PI/180;
+    private static final double RADTODEG = 180 / Math.PI;
+    private static final double DEGTORAD = Math.PI / 180;
     private int decimalPlaces = 6;
     private String floatFormat = "%." + decimalPlaces + "f";
 
@@ -81,6 +81,7 @@ public class VecMathListener extends VecMathParserBaseListener {
     }
 
     public void exec(String code) {
+        this.exprStack.clear();
         VecMathLexer vmLexer = new VecMathLexer(CharStreams.fromString(code));
         setCurrentCodeLine(code);
         CommonTokenStream stream = new CommonTokenStream(vmLexer);
@@ -147,9 +148,13 @@ public class VecMathListener extends VecMathParserBaseListener {
         if (idToken != null && assignToken != null) {
             String varId = ctx.ID().getText();
             if (stackIsValid()) {
-                varMap.put(varId, popFromStack());
-                if (ctx.SEMI() == null) {
-                    printVariable(varId);
+                if (!constants.containsKey(varId)) {
+                    varMap.put(varId, popFromStack());
+                    if (ctx.SEMI() == null) {
+                        printVariable(varId);
+                    }
+                } else {
+                    printError("You cannot change a constant, it would break the universe.", true);
                 }
             } else {
                 printError("I do not know " + varId, true);
@@ -437,32 +442,32 @@ public class VecMathListener extends VecMathParserBaseListener {
                 } else if ("sind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)Math.sin(x * DEGTORAD);
+                        return (float) Math.sin(x * DEGTORAD);
                     }, result);
                 } else if ("cosd".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)Math.cos(x * DEGTORAD);
+                        return (float) Math.cos(x * DEGTORAD);
                     }, result);
                 } else if ("tand".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)Math.tan(x * DEGTORAD);
+                        return (float) Math.tan(x * DEGTORAD);
                     }, result);
                 } else if ("asind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)(RADTODEG * Math.asin(x));
+                        return (float) (RADTODEG * Math.asin(x));
                     }, result);
                 } else if ("acosd".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)(RADTODEG * Math.acos(x));
+                        return (float) (RADTODEG * Math.acos(x));
                     }, result);
                 } else if ("atand".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
-                        return (float)(RADTODEG * Math.atan(x));
+                        return (float) (RADTODEG * Math.atan(x));
                     }, result);
 
                 } else {
