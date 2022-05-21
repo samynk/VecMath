@@ -23,6 +23,7 @@ float Scalar::get(int ri, int ci)
 		case AddressMode::CLAMP:return m_Value;
 		case AddressMode::BORDER:return m_BorderValue;
 		case AddressMode::BOUNDSERROR:return NAN;
+		default: return NAN;
 		}
 	}
 }

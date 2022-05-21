@@ -6,8 +6,8 @@ TEST_CASE("Vector tests", "[vector_operations]") {
 	float y1 = 7;
 	float z1 = 9;
 	float x2 = -1;
-	float y2 = 3.2;
-	float z2 = 3.3;
+	float y2 = 3.2f;
+	float z2 = 3.3f;
 	VecMathListener listener;
 	SECTION("Vector operations") {
 		test3DVector(listener, "v1", x1, y1, z1);
@@ -29,7 +29,7 @@ TEST_CASE("Vector tests", "[vector_operations]") {
 		checkScalar(listener, "d", x1 * x2 + y1 * y2 + z1 * z2);
 
 		listener.exec("a=rad2deg(acos(v1.v2/(|v1|*|v2|)))");
-		checkScalar(listener, "a", 27.71332);
+		checkScalar(listener, "a", 27.71332f);
 
 
 	}

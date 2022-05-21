@@ -16,7 +16,7 @@ TEST_CASE("Operators", "operators") {
 		check3DVector(vm, "a3", 1, 8, 27);
 
 		vm.exec("a4 = [2.1,-3]^4");
-		check2DVector(vm, "a4", 19.4481, 81);
+		check2DVector(vm, "a4", 19.4481f, 81);
 
 		vm.exec("a5=-6^2");
 		checkScalar(vm, "a5", -36);

@@ -12,10 +12,11 @@
 VecMathListener::VecMathListener()
 {
 	m_ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	m_Constants["Pi"] = new Scalar(M_PI);
-	m_Constants["PI"] = new Scalar(M_PI);
-	m_Constants["pi"] = new Scalar(M_PI);
-	m_Constants["e"] = new Scalar(M_E);
+	float fPI = static_cast<float>(M_PI);
+	m_Constants["Pi"] = new Scalar(fPI);
+	m_Constants["PI"] = new Scalar(fPI);
+	m_Constants["pi"] = new Scalar(fPI);
+	m_Constants["e"] = new Scalar(static_cast<float>(M_E));
 	readHelp();
 }
 
@@ -208,7 +209,7 @@ void VecMathListener::exitLiteral(VecMath::VecMathParser::LiteralContext* ctx)
 
 void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 {
-	int dim = ctx->value().size();
+	size_t dim = ctx->value().size();
 	switch (dim) {
 	case 1: {
 		if (stackIsValid()) {
@@ -462,7 +463,7 @@ void VecMathListener::exitPrecision(VecMath::VecMathParser::PrecisionContext* ct
 {
 	if (ctx->FLOAT() != nullptr) {
 		float p = std::stof(ctx->FLOAT()->getText());
-		int precision = round(p);
+		int precision = static_cast<int>(round(p));
 		if (precision >= 0) {
 			std::cout << std::fixed << std::showpoint << std::setprecision(precision);
 		}

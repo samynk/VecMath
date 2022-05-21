@@ -86,6 +86,7 @@ IMatrix* IMatrix::maxMatrix(IMatrix* op1, IMatrix* op2)
 		case 2:return new Vector2D();
 		case 3:return new Vector3D();
 		case 4:return new Quaternion();
+		default:return new Scalar(NAN);
 		}
 	}
 	else {
@@ -106,6 +107,7 @@ IMatrix* IMatrix::maxRowMatrix(IMatrix* op1, IMatrix* op2)
 		case 2:return new Vector2D();
 		case 3:return new Vector3D();
 		case 4:return new Quaternion();
+		default:return new Scalar(NAN);
 		}
 	}
 	else {
@@ -126,6 +128,7 @@ IMatrix* IMatrix::maxColumnMatrix(IMatrix* op1, IMatrix* op2)
 		case 2:return new Vector2D();
 		case 3:return new Vector3D();
 		case 4:return new Quaternion();
+		default: return new Scalar(NAN);
 		}
 	}
 	else {
@@ -259,7 +262,7 @@ IMatrix* IMatrix::dot(IMatrix* op1, IMatrix* op2)
 		return quatMul(op1, op2);
 	}
 	else {
-		
+		return new Scalar();
 	}
 
 }

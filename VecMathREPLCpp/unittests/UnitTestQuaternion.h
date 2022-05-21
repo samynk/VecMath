@@ -5,19 +5,19 @@ TEST_CASE("Quaternion tests", "[quaternion_operations]") {
 
 	float x1 = 0;
 	float y1 = 0;
-	float z1 = sin(M_PI / 4);
-	float w1 = cos(M_PI / 4);
+	float z1 = sin(static_cast<float>(M_PI / 4));
+	float w1 = cos(static_cast<float>(M_PI / 4));
 
-	float x3 = 3.8771;
-	float y3 = -2.9248;
-	float z3 = 8.190;
+	float x3 = 3.8771f;
+	float y3 = -2.9248f;
+	float z3 = 8.190f;
 	float w3 = 1;
 	// (3.8771,-2.9248,8.190,1)
 
-	float x4 = -1.3;
-	float y4 = 7.2;
+	float x4 = -1.3f;
+	float y4 = 7.2f;
 	float z4 = 23;
-	float w4 = 6.10;
+	float w4 = 6.10f;
 	// (-1.3,7.2,23,6.10)
 
 	SECTION("Create quaternions") {
@@ -40,9 +40,9 @@ TEST_CASE("Quaternion tests", "[quaternion_operations]") {
 		listener.exec("q12=q1.q2");
 		checkQuaternion(listener, "q12", 0, 0, 0, 1);
 		listener.exec("q34=q3.q4");
-		checkQuaternion(listener, "q34", -103.88809, -110.46158, +97.07188, -156.17121);
+		checkQuaternion(listener, "q34", -103.88809f, -110.46158f, +97.07188f, -156.17121f);
 		listener.exec("q43=q4.q3");
-		checkQuaternion(listener, "q43", 148.58871, 89.17902, 48.84612, -156.17121);
+		checkQuaternion(listener, "q43", 148.58871f, 89.17902f, 48.84612f, -156.17121f);
 	}
 
 	SECTION("Norm of quaternions") {
@@ -59,18 +59,18 @@ TEST_CASE("Quaternion tests", "[quaternion_operations]") {
 		checkScalar(listener, "mq2", 1);
 
 		listener.exec("mq3=|q3|");
-		checkScalar(listener, "mq3", 9.574);
+		checkScalar(listener, "mq3", 9.574f);
 
 		listener.exec("mq3=norm(q3)");
-		checkScalar(listener, "mq3", 9.574);
+		checkScalar(listener, "mq3", 9.574f);
 	}
 
 	SECTION("Inverse of quaternions") {
 		listener.exec("iq3=inv(q3)");
-		checkQuaternion(listener, "iq3", -0.04229758, 0.03190837, -0.08934956, 0.01090959);
+		checkQuaternion(listener, "iq3", -0.04229758f, 0.03190837f, -0.08934956f, 0.01090959f);
 
 		listener.exec("iq4=inv(q4)");
-		checkQuaternion(listener, "iq4", 0.0020976f, -0.011618, -0.037112, 0.009843);
+		checkQuaternion(listener, "iq4", 0.0020976f, -0.011618f, -0.037112f, 0.009843f);
 	}
 
 	SECTION("Quaternion rotation") {

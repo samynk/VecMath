@@ -15,7 +15,7 @@ int main()
 {
 	
 	std::string codeLine;
-	int tokenType = -1;
+	size_t tokenType = -1;
 	using namespace antlr4;
 	using namespace VecMath;
 
