@@ -104,14 +104,12 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.9.1</version>
-                
                 <executions>
                     <execution>
                         <id>antlr</id>
                         <phase>process-resources</phase>
                         <configuration>
                             <outputDirectory> ${project.build.directory}/generated-sources/antlr4/dae/gd</outputDirectory>
-                            <libDirectory>../VecMathCommon/antlr4</libDirectory>
                             <arguments>
                                 <argument>-package</argument>
                                 <argument>dae.gd</argument>
@@ -120,11 +118,10 @@
                         <goals>
                             <goal>antlr4</goal>
                         </goals>
-                        
                     </execution>
                 </executions>
                 <configuration>
-                    <skip>true</skip>
+                    <sourceDirectory>${basedir}/../VecMathCommon/antlr4</sourceDirectory>
                 </configuration>
             </plugin>
             <plugin>
