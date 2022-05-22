@@ -1,5 +1,5 @@
 parser grammar VecMathParser;
-@header{package dae.gd;}
+/** @header{package dae.gd;} */
 
 options{tokenVocab=VecMathLexer;}
 

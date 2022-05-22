@@ -111,6 +111,11 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <outputDirectory> ${project.build.directory}/generated-sources/antlr4/dae/gd</outputDirectory>
+                            <libDirectory>../VecMathCommon/antlr4</libDirectory>
+                            <arguments>
+                                <argument>-package</argument>
+                                <argument>dae.gd</argument>
+                            </arguments>
                         </configuration>
                         <goals>
                             <goal>antlr4</goal>

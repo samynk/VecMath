@@ -1,5 +1,5 @@
 lexer grammar VecMathLexer;
-@header{package dae.gd;}
+/** @header{package dae.gd;} */
 channels{
     whitespace
 }
