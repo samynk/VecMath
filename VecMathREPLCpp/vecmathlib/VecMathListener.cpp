@@ -393,10 +393,10 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 				IMatrix::unaryOp(op, [](float x) {return atan(x); }, result);
 			}
 			else if (ctxFunc->DEGTORAD() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return x * M_PI / 180.0f; }, result);
+				IMatrix::unaryOp(op, [](float x) {return x * m_DegToRad; }, result);
 			}
 			else if (ctxFunc->RADTODEG() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return x * 180 / M_PI; }, result);
+				IMatrix::unaryOp(op, [](float x) {return x * m_RadToDeg; }, result);
 			}
 			else if (ctxFunc->SQRT() != nullptr) {
 				IMatrix::unaryOp(op, [](float x) {return sqrt(x); }, result);

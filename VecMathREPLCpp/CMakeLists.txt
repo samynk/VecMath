@@ -25,9 +25,10 @@ set(ANTLR_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/antlr/antlr-4.10.1-c
 # add macros to generate ANTLR Cpp code from grammar
 find_package(ANTLR REQUIRED)
 
-# Call macro to add lexer and grammar to your build dependencies.
+set(VECMATH_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../VecMathCommon")
+set(VECMATH_COMMON_GRAMMAR_DIR "${VECMATH_COMMON_DIR}/antlr4")
+set(VECMATH_COMMON_RESOURCE_DIR "${VECMATH_COMMON_DIR}/resources")
 
-# include generated files in project environment
 add_subdirectory(vecmathlib)
 add_subdirectory(vecmathmain)
 
