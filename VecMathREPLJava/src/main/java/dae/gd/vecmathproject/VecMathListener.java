@@ -42,6 +42,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     private boolean errorFlagged = false;
     private String currentCodeLine;
     private String helpString;
+    private String version;
 
     private JokeGenerator jokeGenerator = new JokeGenerator();
 
@@ -55,6 +56,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
         constants.put("pi", new Scalar(piVal));
         constants.put("e", new Scalar((float) Math.E));
         readHelp();
+        readVersion();
     }
 
     /**
@@ -66,6 +68,24 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
         ConsolePrint.printPrompt(text);
         errorFlagged = false;
         exprStack.clear();
+    }
+    
+    void promptHeader()
+    {
+	printInfo("VecMath REPL shell ",false);
+        printInfo(version, false);
+        printInfo(" - Koen Samyn - 2022",true);
+	printInfo("please report issues at https://github.com/samynk/VecMath",true);
+    }
+    
+    private void readVersion() {
+        try {
+            InputStream in = this.getClass().getClassLoader()
+                    .getResourceAsStream("version.txt");
+            version = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            Logger.getLogger(VecMathListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void readHelp() {

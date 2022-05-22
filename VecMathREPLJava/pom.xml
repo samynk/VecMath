@@ -28,6 +28,14 @@
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
     <build>
+        <resources>
+            <resource>
+                <directory>../VecMathCommon/antlr4</directory>
+            </resource>
+            <resource>
+                <directory>../VecMathCommon/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
