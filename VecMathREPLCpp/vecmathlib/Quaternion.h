@@ -1,5 +1,7 @@
 #pragma once
 #include "IMatrix.h"
+#include "Vector3D.h"
+#include "Scalar.h"
 class Quaternion:public IMatrix
 {
 public:
@@ -11,6 +13,8 @@ public:
 	void print(HANDLE console)override;
 	Quaternion* conjugate()override;
 	Quaternion* inverse()override;
+	Vector3D* imaginary() override;
+	Scalar* real() override;
 private:
 	float m_X{ 0 };
 	float m_Y{ 0 };

@@ -93,3 +93,13 @@ Quaternion* Quaternion::inverse()
 	float magSqr = m_X * m_X + m_Y * m_Y + m_Z * m_Z + m_W * m_W;
 	return new Quaternion(-m_X/magSqr,-m_Y/magSqr,-m_Z/magSqr,m_W/magSqr);
 }
+
+Vector3D* Quaternion::imaginary()
+{
+	return new Vector3D(m_X,m_Y,m_Z);
+}
+
+Scalar* Quaternion::real()
+{
+	return new Scalar(m_W);
+}

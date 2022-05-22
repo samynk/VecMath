@@ -61,6 +61,16 @@ Complex* Complex::inverse()
 	return new Complex(m_R / sqrNorm, -m_I / sqrNorm);
 }
 
+Scalar* Complex::real()
+{
+	return new Scalar(m_R);
+}
+
+Scalar* Complex::imaginary()
+{
+	return new Scalar(m_I);
+}
+
 void Complex::print(HANDLE console)
 {
 	SetConsoleTextAttribute(console, 8);

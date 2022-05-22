@@ -21,6 +21,8 @@ public:
 	virtual float magnitude();
 	virtual IMatrix* conjugate();
 	virtual IMatrix* inverse();
+	virtual IMatrix* real();
+	virtual IMatrix* imaginary();
 
 
 	static IMatrix* maxMatrix(IMatrix* op1, IMatrix* op2);

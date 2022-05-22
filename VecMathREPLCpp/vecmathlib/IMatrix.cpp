@@ -70,6 +70,16 @@ IMatrix* IMatrix::inverse()
 
 }
 
+IMatrix* IMatrix::real()
+{
+	return new Scalar(NAN);
+}
+
+IMatrix* IMatrix::imaginary()
+{
+	return new Scalar(NAN);
+}
+
 IMatrix* IMatrix::maxMatrix(IMatrix* op1, IMatrix* op2)
 {
 	int rows = std::max(

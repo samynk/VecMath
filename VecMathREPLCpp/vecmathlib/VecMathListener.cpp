@@ -418,6 +418,12 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			else if (funcName == "inv") {
 				result = op->inverse();
 			}
+			else if (funcName == "im") {
+				result = op->imaginary();
+			}
+			else if (funcName == "re") {
+				result = op->real();
+			}
 			else if (funcName == "sind") {
 				result = IMatrix::maxMatrix(op, nullptr);
 				IMatrix::unaryOp(op, [](float x) {return sin(x * m_DegToRad); }, result);

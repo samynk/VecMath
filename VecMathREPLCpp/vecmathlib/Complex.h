@@ -1,5 +1,6 @@
 #pragma once
 #include "IMatrix.h"
+#include "Scalar.h"
 class Complex: public IMatrix
 {
 public:
@@ -12,6 +13,8 @@ public:
 	
 	Complex* conjugate()override;
 	Complex* inverse()override;
+	Scalar* real() override;
+	Scalar* imaginary() override;
 private:
 	float m_R{ 0 };
 	float m_I{ 0 };
