@@ -29,4 +29,12 @@ TEST_CASE("Complex tests", "[complex_operations]") {
 		check2DVector(vm, "z2", -3, -8.2f);
 		
 	}
+
+	SECTION("Imaginary and real parts") {
+		vm.exec("q1=[1,(2)]");
+		vm.exec("r=re(q1)");
+		checkScalar(vm, "r", 1);
+		vm.exec("i=im(q1)");
+		checkScalar(vm, "i", 2);
+	}
 }

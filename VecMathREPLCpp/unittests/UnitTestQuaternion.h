@@ -79,4 +79,12 @@ TEST_CASE("Quaternion tests", "[quaternion_operations]") {
 		listener.exec("pr=q1.p.con(q1)");
 		checkQuaternion(listener, "pr", 0, 1, 0, 0);
 	}
+
+	SECTION("Imaginary and real parts") {
+		listener.exec("q1=[1,(2,3,4)]");
+		listener.exec("w=re(q1)");
+		checkScalar(listener, "w", 1);
+		listener.exec("v=im(q1)");
+		check3DVector(listener, "v", 2, 3, 4);
+	}
 }

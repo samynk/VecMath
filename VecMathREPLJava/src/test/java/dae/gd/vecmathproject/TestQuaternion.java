@@ -3,6 +3,7 @@ package dae.gd.vecmathproject;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
+import static dae.gd.vecmathproject.TestUtil.*;
 
 /**
  *
@@ -100,5 +101,14 @@ public class TestQuaternion {
         listener.exec("p=[1,0,0]");
         listener.exec("pr=q1.p.con(q1)");
         TestUtil.checkQuaternion(listener, "pr", 0, 1, 0, 0);
+    }
+
+    @Test
+    public void testRealAndImaginary() {
+        listener.exec("q1=[1,(2,3,4)]");
+        listener.exec("w=re(q1)");
+        checkScalar(listener, "w", 1);
+        listener.exec("v=im(q1)");
+        check3DVector(listener, "v", 2, 3, 4);
     }
 }
