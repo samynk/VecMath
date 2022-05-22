@@ -64,4 +64,14 @@ public class Complex extends IMatrix {
         float sqrNorm = r * r + i * i;
         return new Complex(r / sqrNorm, -i / sqrNorm);
     }
+    
+    @Override
+    public Scalar real() {
+        return new Scalar(r);
+    }
+
+    @Override
+    public Scalar imaginary() {
+        return new Scalar(i);
+    }
 }

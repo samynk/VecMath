@@ -140,4 +140,16 @@ public class Quaternion extends IMatrix {
         float magSqr = x * x + y * y + z * z + w * w;
         return new Quaternion(-x / magSqr, -y / magSqr, -z / magSqr, w / magSqr);
     }
+
+    @Override
+    public Scalar real() {
+        return new Scalar(w);
+    }
+
+    @Override
+    public Vector3D imaginary() {
+        return new Vector3D(x,y,z);
+    }
+    
+    
 }

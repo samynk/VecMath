@@ -468,6 +468,10 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                     result = new Scalar(op.magnitude());
                 } else if ("inv".equals(funcName)) {
                     result = op.inverse();
+                }else if ("im".equals(funcName)){
+                    result = op.imaginary();
+                }else if ("re".equals(funcName)){
+                    result = op.real();
                 } else if ("sind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {

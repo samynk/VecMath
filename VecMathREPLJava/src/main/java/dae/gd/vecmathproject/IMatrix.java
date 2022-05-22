@@ -20,6 +20,8 @@ public abstract class IMatrix {
     protected AddressMode addressMode = AddressMode.CLAMP;
     protected float borderValue = 0;
 
+    
+
     /**
      * The type of the matrix
      */
@@ -64,6 +66,24 @@ public abstract class IMatrix {
         this.borderValue = borderValue;
         this.rows = rows;
         this.columns = columns;
+    }
+    
+    /**
+     * Returns the imaginary part of this matrix.
+     * @return the imaginary part, a vector3d for quaternions, a scalar for complex numbers,
+     * a NaN scalar for all other cases.
+     */
+    IMatrix imaginary() {
+        return new Scalar(Float.NaN);
+    }
+
+    /**
+     * Returns the real part of this matrix.
+     * @return the real part, a scalar for quaternions and complex numbers,
+     * a NaN scalar for all other cases.
+     */
+    IMatrix real() {
+        return new Scalar(Float.NaN);
     }
 
     /**
