@@ -1,18 +1,18 @@
 #include "Quaternion.h"
 #include <iostream>
 
-Quaternion::Quaternion() :Quaternion(0, 0, 0,1)
+Quaternion::Quaternion() :Quaternion(0, 0, 0, 1)
 {
 }
 
-Quaternion::Quaternion(float x, float y, float z,float w) : IMatrix(
+Quaternion::Quaternion(float x, float y, float z, float w) : IMatrix(
 	Type::QUATERNION,
 	AddressMode::BORDER,
 	0,
 	1,
 	4
 ),
-m_X(x), m_Y(y), m_Z(z),m_W(w)
+m_X(x), m_Y(y), m_Z(z), m_W(w)
 {
 }
 
@@ -63,7 +63,7 @@ void Quaternion::set(int ri, int ci, float value)
 void Quaternion::print(HANDLE console)
 {
 	SetConsoleTextAttribute(console, 8);
-	std::cout << "[";   
+	std::cout << "[";
 	SetConsoleTextAttribute(console, 7);
 	std::cout << m_W;
 	SetConsoleTextAttribute(console, 8);
@@ -91,15 +91,31 @@ Quaternion* Quaternion::conjugate()
 Quaternion* Quaternion::inverse()
 {
 	float magSqr = m_X * m_X + m_Y * m_Y + m_Z * m_Z + m_W * m_W;
-	return new Quaternion(-m_X/magSqr,-m_Y/magSqr,-m_Z/magSqr,m_W/magSqr);
+	return new Quaternion(-m_X / magSqr, -m_Y / magSqr, -m_Z / magSqr, m_W / magSqr);
 }
 
 Vector3D* Quaternion::imaginary()
 {
-	return new Vector3D(m_X,m_Y,m_Z);
+	return new Vector3D(m_X, m_Y, m_Z);
 }
 
 Scalar* Quaternion::real()
 {
 	return new Scalar(m_W);
+}
+
+Scalar* Quaternion::angle()
+{
+	return new Scalar(2 * acos(m_W));
+}
+
+Scalar* Quaternion::angled()
+{
+	return new Scalar(static_cast<float>(2 * acos(m_W)*180/M_PI));
+}
+
+Vector3D* Quaternion::axis()
+{
+	float denom = sqrtf(1 - m_W * m_W);
+	return new Vector3D(m_X / denom, m_Y / denom, m_Z / denom);
 }

@@ -87,4 +87,41 @@ TEST_CASE("Quaternion tests", "[quaternion_operations]") {
 		listener.exec("v=im(q1)");
 		check3DVector(listener, "v", 2, 3, 4);
 	}
+
+	SECTION("Conversion to axis angle") {
+		listener.exec("q1=[cosd(33),(0,sind(33),0)]");
+		listener.exec("arad=angle(q1)");
+		listener.exec("adeg=angled(q1)");
+		listener.exec("axis=axis(q1)");
+
+		checkScalar(listener, "arad", static_cast<float>(66 * M_PI / 180));
+		checkScalar(listener, "adeg", static_cast<float>(66));
+		check3DVector(listener, "axis", 0, 1, 0);
+
+		float x1 = 3;
+		float y1 = 7;
+		float z1 = -1;
+		float norm = sqrt(x1*x1+y1*y1+z1*z1);
+		float nx1 = x1 / norm;
+		float ny1 = y1 / norm;
+		float nz1 = z1 / norm;
+		
+		float a2rad = static_cast<float>(21 * M_PI / 180);
+		float s = sin(a2rad);
+
+		listener.exec("q1=[cosd(21),("
+			+ std::to_string(nx1 * s)
+			+ ","
+			+ std::to_string(ny1 * s)
+			+ ","
+			+ std::to_string(nz1 * s)
+			+ ")]");
+		listener.exec("a2rad=angle(q1)");
+		listener.exec("a2deg=angled(q1)");
+		listener.exec("axis2=axis(q1)");
+
+		checkScalar(listener,"a2rad",2*a2rad);
+		checkScalar(listener, "a2deg", 42);
+		check3DVector(listener, "axis2", nx1, ny1, nz1);
+	}
 }

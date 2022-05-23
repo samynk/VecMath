@@ -15,6 +15,9 @@ public:
 	Quaternion* inverse()override;
 	Vector3D* imaginary() override;
 	Scalar* real() override;
+	Scalar* angle() override;
+	Scalar* angled() override;
+	Vector3D* axis() override;
 private:
 	float m_X{ 0 };
 	float m_Y{ 0 };

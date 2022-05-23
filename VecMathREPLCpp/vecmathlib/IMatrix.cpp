@@ -80,6 +80,21 @@ IMatrix* IMatrix::imaginary()
 	return new Scalar(NAN);
 }
 
+IMatrix* IMatrix::angle()
+{
+	return new Scalar(NAN);
+}
+
+IMatrix* IMatrix::angled()
+{
+	return new Scalar(NAN);
+}
+
+IMatrix* IMatrix::axis()
+{
+	return new Scalar(NAN);
+}
+
 IMatrix* IMatrix::maxMatrix(IMatrix* op1, IMatrix* op2)
 {
 	int rows = std::max(

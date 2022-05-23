@@ -23,6 +23,9 @@ public:
 	virtual IMatrix* inverse();
 	virtual IMatrix* real();
 	virtual IMatrix* imaginary();
+	virtual IMatrix* angle();
+	virtual IMatrix* angled();
+	virtual IMatrix* axis();
 
 
 	static IMatrix* maxMatrix(IMatrix* op1, IMatrix* op2);

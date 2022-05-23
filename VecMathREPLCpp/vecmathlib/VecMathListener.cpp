@@ -424,6 +424,15 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			else if (funcName == "re") {
 				result = op->real();
 			}
+			else if (funcName == "axis") {
+				result = op->axis();
+			}
+			else if (funcName == "angle") {
+				result = op->angle();
+			}
+			else if (funcName == "angled") {
+				result = op->angled();
+			}
 			else if (funcName == "sind") {
 				result = IMatrix::maxMatrix(op, nullptr);
 				IMatrix::unaryOp(op, [](float x) {return sin(x * m_DegToRad); }, result);
