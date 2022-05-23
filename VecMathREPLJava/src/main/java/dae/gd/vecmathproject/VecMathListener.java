@@ -25,7 +25,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
  *
  * @author Koen.Samyn
  */
-public class VecMathListener extends VecMathParserBaseListener implements ANTLRErrorListener{
+public class VecMathListener extends VecMathParserBaseListener implements ANTLRErrorListener {
 
     private HashMap<String, IMatrix> constants = new HashMap<>();
     private HashMap<String, IMatrix> varMap = new HashMap<>();
@@ -69,15 +69,14 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
         errorFlagged = false;
         exprStack.clear();
     }
-    
-    void promptHeader()
-    {
-	printInfo("VecMath REPL shell ",false);
+
+    void promptHeader() {
+        printInfo("VecMath REPL shell ", false);
         printInfo(version, false);
-        printInfo(" - Koen Samyn - 2022",true);
-	printInfo("please report issues at https://github.com/samynk/VecMath",true);
+        printInfo(" - Koen Samyn - 2022", true);
+        printInfo("please report issues at https://github.com/samynk/VecMath", true);
     }
-    
+
     private void readVersion() {
         try {
             InputStream in = this.getClass().getClassLoader()
@@ -468,10 +467,16 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                     result = new Scalar(op.magnitude());
                 } else if ("inv".equals(funcName)) {
                     result = op.inverse();
-                }else if ("im".equals(funcName)){
+                } else if ("im".equals(funcName)) {
                     result = op.imaginary();
-                }else if ("re".equals(funcName)){
+                } else if ("re".equals(funcName)) {
                     result = op.real();
+                } else if ("axis".equals(funcName)) {
+                    result = op.axis();
+                } else if ("angle".equals(funcName)) {
+                    result = op.angle();
+                } else if ("angled".equals(funcName)) {
+                    result = op.angled();
                 } else if ("sind".equals(funcName)) {
                     result = IMatrix.maxMatrix(op, null);
                     IMatrix.unaryOp(op, (float x) -> {
@@ -597,39 +602,36 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
 
     @Override
     public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int lineNr, int posInLine, String message, RecognitionException re) {
-        checkBalance('(',')',posInLine );
-        checkBalance('[',']',posInLine);
+        checkBalance('(', ')', posInLine);
+        checkBalance('[', ']', posInLine);
     }
-    
-    private void checkBalance(char left, char right, int posInLine)
-    {
+
+    private void checkBalance(char left, char right, int posInLine) {
         long leftCount = currentCodeLine.chars().filter(ch -> ch == left).count();
-	long rightCount = currentCodeLine.chars().filter(ch -> ch == right).count();
-	if (leftCount != rightCount)
-	{
-		printErrorLoc(posInLine, posInLine, currentCodeLine);
-		if (rightCount < leftCount) {
-			printInfo("Missing '"+left+"', this became apparent at location " + posInLine,true);
-		}
-		else {
-			printInfo("Missing '"+right+"', this became apparent at location " + posInLine,true);
-		}
-		errorFlagged = true;
-	}
+        long rightCount = currentCodeLine.chars().filter(ch -> ch == right).count();
+        if (leftCount != rightCount) {
+            printErrorLoc(posInLine, posInLine, currentCodeLine);
+            if (rightCount < leftCount) {
+                printInfo("Missing '" + left + "', this became apparent at location " + posInLine, true);
+            } else {
+                printInfo("Missing '" + right + "', this became apparent at location " + posInLine, true);
+            }
+            errorFlagged = true;
+        }
     }
 
     @Override
     public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
-        
+
     }
 
     @Override
     public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
-        
+
     }
 
     @Override
     public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
-        
+
     }
 }

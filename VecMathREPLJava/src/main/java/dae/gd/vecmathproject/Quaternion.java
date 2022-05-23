@@ -151,5 +151,29 @@ public class Quaternion extends IMatrix {
         return new Vector3D(x,y,z);
     }
     
+    /**
+     * Returns the angle of a quaternion in radians, NAN scalar for other matrices.
+     * @return the angle of the quaternion in radians.
+     */
+    Scalar angle(){
+        return new Scalar((float)(2 * Math.acos(w)));
+    }
+    
+    /**
+     * Returns the angle of a quaternion in degrees, NAN scalar for other matrices.
+     * @return the angle of the quaternion in radians.
+     */
+    Scalar angled(){
+        return new Scalar((float)(2 * Math.acos(w)*180/Math.PI));
+    }
+    
+    /**
+     * Returns the axis of a quaternion, 
+     * @return 
+     */
+    Vector3D axis(){
+        float denom = (float)Math.sqrt(1-w*w);
+        return new Vector3D(x/denom,y/denom,z/denom);
+    }
     
 }

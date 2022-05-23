@@ -111,4 +111,42 @@ public class TestQuaternion {
         listener.exec("v=im(q1)");
         check3DVector(listener, "v", 2, 3, 4);
     }
+
+    @Test
+    public void testAxisAngle() {
+        listener.exec("q1=[cosd(33),(0,sind(33),0)]");
+        listener.exec("arad=angle(q1)");
+        listener.exec("adeg=angled(q1)");
+        listener.exec("axis=axis(q1)");
+
+        checkScalar(listener, "arad", (float) (66 * Math.PI / 180));
+        checkScalar(listener, "adeg", (float) (66));
+        check3DVector(listener, "axis", 0, 1, 0);
+
+        float x1 = 3;
+        float y1 = 7;
+        float z1 = -1;
+        float norm = (float) Math.sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+        float nx1 = x1 / norm;
+        float ny1 = y1 / norm;
+        float nz1 = z1 / norm;
+
+        float a2rad = (float) (21 * Math.PI / 180);
+        float s = (float) Math.sin(a2rad);
+
+        listener.exec("q1=[cosd(21),("
+                + (nx1 * s)
+                + ","
+                + (ny1 * s)
+                + ","
+                + (nz1 * s)
+                + ")]");
+        listener.exec("a2rad=angle(q1)");
+        listener.exec("a2deg=angled(q1)");
+        listener.exec("axis2=axis(q1)");
+
+        checkScalar(listener, "a2rad", 2 * a2rad);
+        checkScalar(listener, "a2deg", 42);
+        check3DVector(listener, "axis2", nx1, ny1, nz1);
+    }
 }

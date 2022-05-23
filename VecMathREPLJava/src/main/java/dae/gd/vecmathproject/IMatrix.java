@@ -85,6 +85,31 @@ public abstract class IMatrix {
     IMatrix real() {
         return new Scalar(Float.NaN);
     }
+    
+    /**
+     * Returns the angle of a quaternion in radians, NAN scalar for other matrices.
+     * @return the angle of the quaternion in radians.
+     */
+    Scalar angle(){
+        return new Scalar(Float.NaN);
+    }
+    
+    /**
+     * Returns the angle of a quaternion in degrees, NAN scalar for other matrices.
+     * @return the angle of the quaternion in radians.
+     */
+    Scalar angled(){
+        return new Scalar(Float.NaN);
+    }
+    
+    /**
+     * Returns the axis of a quaternion, 
+     * @return 
+     */
+    Vector3D axis(){
+        return new Vector3D(Float.NaN,Float.NaN,Float.NaN);
+    }
+    
 
     /**
      * Gets a value from this matrix.

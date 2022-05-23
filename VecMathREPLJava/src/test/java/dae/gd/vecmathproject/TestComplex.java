@@ -14,7 +14,7 @@ import static dae.gd.vecmathproject.TestUtil.*;
  */
 public class TestComplex {
 
-    VecMathListener vm;
+    VecMathListener vm = new VecMathListener();
 
     @Test
     public void complexMultiplication() {
