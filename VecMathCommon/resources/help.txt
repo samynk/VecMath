@@ -45,6 +45,9 @@ inv : calculates the inverse of a variable.
     For a scalar this is 1/x, 
     for a 2d vector [1/x,1/y], 
     for a complex number or quaternion this is the actual inverse.
+angle : analyzes the rotation angle of a quaternion, returns the result in radians.
+angled : anaylyzes the rotaiton angle of a quaternion, returns the result in degrees.
+axis : analyzes the rotation axis of a quaternion, returns the result as a 3D vector.
 rad2deg : converts a value in radians to degrees.
 deg2rad : converts a value in degrees to radians.
 
