@@ -7,4 +7,4 @@ and trying out 3D rotations with quaternions.
 
 ## Documentation
 
-Documentation on how to use the VecMath REPL shell can be found at: [Documentation](https://samynk.github.io/VecMath/)
+Documentation on how to use the VecMath REPL shell can be found at: [VecMath Documentation](https://samynk.github.io/VecMath/)
