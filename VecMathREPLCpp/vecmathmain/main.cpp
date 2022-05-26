@@ -4,8 +4,6 @@
 #include "VecMathListener.h"
 #include "Vocabulary.h"
 #include "ANTLRInputStream.h"
-#include "FValue.h"
-#include "VecMathErrorListener.h"
 
 void printTokens(
 	antlr4::CommonTokenStream& stream,
@@ -20,7 +18,6 @@ int main()
 	using namespace VecMath;
 
 	VecMathListener listener{};
-	VecMathErrorListener errorListener;
 	listener.promptHeader();
 	do {
 		listener.prompt("vecmath>");
