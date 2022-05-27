@@ -172,6 +172,8 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     }
 
     public void exitAssign(VecMathParser.AssignContext ctx) {
+        if (errorFlagged)
+            return;
         var idToken = ctx.ID();
         var assignToken = ctx.ASSIGN();
         if (idToken != null && assignToken != null) {
@@ -192,8 +194,10 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                 printInfo("If you want this to be a variable you need the following format: b = 7", true);
             }
         } else if (ctx.value() != null) {
-            IMatrix result = popFromStack();
-            result.print(floatFormat);
+            if (stackIsValid()) {
+                IMatrix result = popFromStack();
+                result.print(floatFormat);
+            }
         } else {
             printError("Assigning a new variable should be done with the equals sign.", true);
             printInfo("For example : a = 10", true);
@@ -515,7 +519,9 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                     errorFlagged = true;
                 }
             }
-            pushToStack(result);
+            if (!errorFlagged) {
+                pushToStack(result);
+            }
         }
     }
 
