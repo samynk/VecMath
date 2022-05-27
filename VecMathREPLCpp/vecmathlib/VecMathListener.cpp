@@ -33,7 +33,7 @@ void VecMathListener::prompt(const std::string& text)
 
 void VecMathListener::promptHeader() const
 {
-	printInfo("VecMath REPL shell 1.0.5 - Koen Samyn - 2022");
+	printInfo("VecMath REPL shell 1.0.6 - Koen Samyn - 2022");
 	printInfo("please report issues at https://github.com/samynk/VecMath");
 }
 
