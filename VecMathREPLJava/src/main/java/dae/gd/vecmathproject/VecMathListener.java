@@ -82,6 +82,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
             InputStream in = this.getClass().getClassLoader()
                     .getResourceAsStream("version.txt");
             version = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            version = version.trim();
         } catch (IOException ex) {
             Logger.getLogger(VecMathListener.class.getName()).log(Level.SEVERE, null, ex);
         }
