@@ -134,9 +134,12 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 	}
 	else if (ctx->value() != nullptr) {
 		IMatrix* result = popFromStack();
-		SetConsoleTextAttribute(m_ConsoleHandle, 8);
-		result->print(m_ConsoleHandle);
-		std::cout << std::endl;
+		if (result != nullptr)
+		{
+			SetConsoleTextAttribute(m_ConsoleHandle, 8);
+			result->print(m_ConsoleHandle);
+			std::cout << std::endl;
+		}
 	}
 	else
 	{
@@ -161,7 +164,7 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 
 void VecMathListener::printVariable(const std::string& id) const
 {
-	if ( m_VarMap.find(id) != m_VarMap.end()) {
+	if (m_VarMap.find(id) != m_VarMap.end()) {
 		printVariable(id, m_VarMap.at(id));
 	}
 	else if (m_Constants.find(id) != m_Constants.end()) {
@@ -499,7 +502,7 @@ void VecMathListener::visitErrorNode(antlr4::tree::ErrorNode* node) {
 		return;
 	}
 	size_t type = node->getSymbol()->getType();
-	
+
 	auto interval = node->getSourceInterval();
 
 
@@ -617,7 +620,7 @@ void VecMathListener::syntaxError(antlr4::Recognizer* recognizer, antlr4::Token*
 		else {
 			printInfo("Missing '(', this became apparent at location " + std::to_string(charPositionInLine));
 		}
-		
+
 		m_ErrorFlagged = true;
 	}
 	size_t lb = std::count(m_CurrentCodeLine.begin(), m_CurrentCodeLine.end(), '[');
