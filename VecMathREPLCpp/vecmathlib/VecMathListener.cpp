@@ -106,6 +106,9 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 
 void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 {
+	if (m_ErrorFlagged) {
+		return;
+	}
 	auto idToken = ctx->ID();
 	auto assignToken = ctx->ASSIGN();
 	if (idToken != nullptr && idToken->getTreeType() != antlr4::tree::ParseTreeType::ERROR &&
