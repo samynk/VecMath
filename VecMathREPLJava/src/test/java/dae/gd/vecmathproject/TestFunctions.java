@@ -59,4 +59,15 @@ public class TestFunctions {
         vm.exec("at2=atand(-3.189)");
         checkScalar(vm, "at2", -72.58972f);
     }
+
+    @Test
+    public void nonExistantFunctions() {
+        // test will fail if this results in crash.
+        VecMathListener vm = new VecMathListener();
+        vm.exec("q=[1,(2,4,5)]");
+        vm.exec("r(q)");
+        vm.exec("r1=r(q)");
+        IMatrix var = vm.getVariable("r1");
+        assertNull(var);
+    }
 }

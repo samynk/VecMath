@@ -44,4 +44,14 @@ TEST_CASE("Function tests", "[mathematical_functions]") {
 		vm.exec("at2=atand(-3.189)");
 		checkScalar(vm, "at2", -72.58972f);
 	}
+
+	SECTION("Non existant functions") {
+		// test will fail if this results in crash.
+		VecMathListener vm;
+		vm.exec("q=[1,(2,4,5)]");
+		vm.exec("r(q)");
+		vm.exec("r1=r(q)");
+		IMatrix* var = vm.getVariable("r1");
+		REQUIRE(var == nullptr);
+	}
 }
