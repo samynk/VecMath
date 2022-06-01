@@ -74,7 +74,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>JVecMathREPL-1.0.6</finalName>
+                    <finalName>JVecMathREPL-1.0.7</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
