@@ -322,7 +322,7 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 		}
 		case VecMathLexer::MINUS: {
 			// can be unary minus!
-			if (ctx->op2 == nullptr) {
+			if (ctx->op1 == nullptr) {
 				if (m_ExprStack.size() >= 1) {
 					IMatrix* op = popFromStack();
 					m_ExprStack.push(IMatrix::neg(op));
