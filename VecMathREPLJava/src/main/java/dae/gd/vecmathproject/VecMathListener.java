@@ -197,6 +197,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
             if (stackIsValid()) {
                 IMatrix result = popFromStack();
                 result.print(floatFormat);
+                newline();
             }
         } else {
             printError("Assigning a new variable should be done with the equals sign.", true);
