@@ -51,7 +51,7 @@ TEST_CASE("Function tests", "[mathematical_functions]") {
 		vm.exec("q=[1,(2,4,5)]");
 		vm.exec("r(q)");
 		vm.exec("r1=r(q)");
-		IMatrix* var = vm.getVariable("r1");
+		auto var = vm.getVariable("r1");
 		REQUIRE(var == nullptr);
 	}
 }
