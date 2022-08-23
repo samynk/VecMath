@@ -49,6 +49,7 @@ public:
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
 	void clearScreen();
+	void clearVariables();
 
 	// error listener
 

@@ -57,6 +57,7 @@ void VecMathListener::exec(std::string code)
 {
 	using namespace VecMath;
 	using namespace antlr4;
+	try {
 	ANTLRInputStream is{ code };
 	VecMath::VecMathLexer lexer{ &is };
 
@@ -66,6 +67,10 @@ void VecMathListener::exec(std::string code)
 	parser.addParseListener(this);
 	parser.addErrorListener(this);
 	parser.expression();
+	}
+	catch (IllegalArgumentException ex) {
+		printError("Illegal character in code, best to use ASCII characters only. ");
+	}
 }
 
 IMatrix* VecMathListener::getVariable(const std::string& id) const
@@ -588,6 +593,18 @@ void VecMathListener::clearScreen()
 
 	/* Move the cursor home */
 	SetConsoleCursorPosition(m_ConsoleHandle, homeCoords);
+}
+
+void VecMathListener::clearVariables()
+{
+	for (auto pair : m_VarMap) {
+		delete pair.second;
+	}
+	m_VarMap.clear();
+	for (auto pair : m_Constants) {
+		delete pair.second;
+	}
+	m_Constants.clear();
 }
 
 
