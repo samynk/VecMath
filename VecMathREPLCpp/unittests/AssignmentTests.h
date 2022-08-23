@@ -14,5 +14,6 @@ TEST_CASE("Assignment tests", "[assign_variables]") {
 		test2DVector(listener, "v1", -9.21f, 3.41f);
 		test2DVector(listener, "v2", 10.87557f, -3.41f);
 		test3DVector(listener, "v3", 1.234f, 0.789f, -2.341f);
+		//checkMemory(listener);
 	}
 }

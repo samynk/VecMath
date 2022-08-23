@@ -10,6 +10,7 @@ TEST_CASE("Complex tests", "[complex_operations]") {
 		check2DVector(vm, "z2", 3,4);
 		vm.exec("z3=z1.z2");
 		check2DVector(vm, "z3", -9, 13);
+		//checkMemory(vm);
 	}
 
 	SECTION("Inverse") {
