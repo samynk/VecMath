@@ -2,7 +2,7 @@
 
 
 void checkScalar(VecMathListener& vecMath, std::string id, float expected) {
-	IMatrix* var = vecMath.getVariable(id);
+	auto var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float varValue = var->get(0, 0);
 	REQUIRE(varValue == Catch::Approx(expected).epsilon(1e-4));
@@ -17,7 +17,7 @@ void testScalar(VecMathListener& vecMath, std::string id, float expected)
 void test1DVector(VecMathListener& vecMath, std::string id, float expected)
 {
 	vecMath.exec(id + "=[" + std::to_string(expected) + "]");
-	IMatrix* var = vecMath.getVariable(id);
+	auto var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float varValue = var->get(0, 0);
 	REQUIRE(varValue == Catch::Approx(expected).epsilon(1e-4));
@@ -25,7 +25,7 @@ void test1DVector(VecMathListener& vecMath, std::string id, float expected)
 
 void check2DVector(VecMathListener& vecMath, std::string id, float x, float y)
 {
-	IMatrix* var = vecMath.getVariable(id);
+	auto var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float xVal = var->get(0, 0);
 	float yVal = var->get(0, 1);
@@ -41,7 +41,7 @@ void test2DVector(VecMathListener& vecMath, std::string id, float x, float y)
 
 void check3DVector(VecMathListener& vecMath, std::string id, float x, float y, float z)
 {
-	IMatrix* var = vecMath.getVariable(id);
+	auto var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float xVal = var->get(0, 0);
 	float yVal = var->get(0, 1);
@@ -58,7 +58,7 @@ void test3DVector(VecMathListener& vecMath, std::string id, float x, float y, fl
 }
 
 void checkQuaternion(VecMathListener& vecMath, std::string id, float x, float y, float z, float w) {
-	IMatrix* var = vecMath.getVariable(id);
+	auto var = vecMath.getVariable(id);
 	REQUIRE(var != nullptr);
 	float xVal = var->get(0, 0);
 	float yVal = var->get(0, 1);
@@ -78,5 +78,11 @@ void testQuaternion(VecMathListener& vecMath, std::string id, float x, float y, 
 	std::string sw = std::to_string(w);
 	vecMath.exec(id + "=[" + sw + ",(" +sx + "," + sy + "," + sz + ")]");
 	checkQuaternion(vecMath, id, x, y, z, w);
+}
+
+void checkMemory(VecMathListener& vecMath,size_t expected)
+{
+	vecMath.clearVariables();
+	REQUIRE(IMatrix::m_Count == expected);
 }
 
