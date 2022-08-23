@@ -21,4 +21,11 @@ TEST_CASE("Operators", "operators") {
 		vm.exec("a5=-6^2");
 		checkScalar(vm, "a5", 36);
 	}
+
+	SECTION("SCALAR")
+	{
+		VecMathListener vm;
+		vm.exec("a=-3+1");
+		checkScalar(vm, "a", -2);
+	}
 }
