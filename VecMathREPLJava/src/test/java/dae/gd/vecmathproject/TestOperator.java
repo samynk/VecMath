@@ -29,6 +29,13 @@ public class TestOperator {
         check2DVector(vm, "a4", 19.4481f, 81);
 
         vm.exec("a5=-6^2");
-        checkScalar(vm, "a5", -36);
+        checkScalar(vm, "a5", 36);
+    }
+    
+    @Test
+    public void testScalar(){
+        VecMathListener vm = new VecMathListener();
+        vm.exec("a=-4+1");
+        checkScalar(vm,"a",-3);
     }
 }

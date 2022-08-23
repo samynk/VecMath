@@ -366,7 +366,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                 }
                 case VecMathLexer.MINUS: {
                     // can be unary minus!
-                    if (ctx.op2 == null && checkStackSize(1)) {
+                    if (ctx.op1 == null && checkStackSize(1)) {
                         IMatrix op = popFromStack();
                         exprStack.push(IMatrix.neg(op));
                     } else if (checkStackSize(2)) {
