@@ -19,6 +19,6 @@ TEST_CASE("Operators", "operators") {
 		check2DVector(vm, "a4", 19.4481f, 81);
 
 		vm.exec("a5=-6^2");
-		checkScalar(vm, "a5", -36);
+		checkScalar(vm, "a5", 36);
 	}
 }
