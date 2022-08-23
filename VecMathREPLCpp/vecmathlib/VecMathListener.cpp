@@ -13,10 +13,10 @@ VecMathListener::VecMathListener()
 {
 	m_ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	float fPI = static_cast<float>(M_PI);
-	m_Constants["Pi"] = new Scalar(fPI);
-	m_Constants["PI"] = new Scalar(fPI);
-	m_Constants["pi"] = new Scalar(fPI);
-	m_Constants["e"] = new Scalar(static_cast<float>(M_E));
+	addToConstantMap("Pi", new Scalar(fPI));
+	addToConstantMap("PI", new Scalar(fPI));
+	addToConstantMap("pi", new Scalar(fPI));
+	addToConstantMap("e", new Scalar(static_cast<float>(M_E)));
 	readHelp();
 }
 
@@ -26,6 +26,10 @@ void VecMathListener::prompt(const std::string& text)
 	std::cout << text;
 	SetConsoleTextAttribute(m_ConsoleHandle, 8);
 	m_ErrorFlagged = false;
+	if (!m_ExprStack.empty())
+	{
+		std::cout << "Expression stack not empty :" << m_ExprStack.size();
+	}
 	while (!m_ExprStack.empty()) {
 		m_ExprStack.pop();
 	}
@@ -58,22 +62,23 @@ void VecMathListener::exec(std::string code)
 	using namespace VecMath;
 	using namespace antlr4;
 	try {
-	ANTLRInputStream is{ code };
-	VecMath::VecMathLexer lexer{ &is };
+		ANTLRInputStream is{ code };
+		VecMath::VecMathLexer lexer{ &is };
 
-	CommonTokenStream stream{ &lexer };
-	VecMathParser parser(&stream);
-	parser.removeErrorListeners();
-	parser.addParseListener(this);
-	parser.addErrorListener(this);
-	parser.expression();
+		CommonTokenStream stream{ &lexer };
+		VecMathParser parser(&stream);
+		parser.removeErrorListeners();
+		parser.addParseListener(this);
+		parser.addErrorListener(this);
+		parser.expression();
+		
 	}
 	catch (IllegalArgumentException ex) {
 		printError("Illegal character in code, best to use ASCII characters only. ");
 	}
 }
 
-IMatrix* VecMathListener::getVariable(const std::string& id) const
+std::shared_ptr<IMatrix> VecMathListener::getVariable(const std::string& id) const
 {
 	if (m_VarMap.find(id) != m_VarMap.end()) {
 		return m_VarMap.at(id);
@@ -121,7 +126,7 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 	{
 		std::string varId = ctx->ID()->getText();
 		if (stackIsValid()) {
-			IMatrix* result = popFromStack();
+			auto result = popFromStack();
 			// check if the id is not a constant.
 			if (m_Constants.find(varId) == m_Constants.end())
 			{
@@ -140,8 +145,8 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 			std::cout << "If you want this to be a variable you need the following format: b = 7\n";
 		}
 	}
-	else if (ctx->value() != nullptr) {
-		IMatrix* result = popFromStack();
+	else if (ctx->value() != nullptr && stackIsValid()) {
+		auto result = popFromStack();
 		if (result != nullptr)
 		{
 			SetConsoleTextAttribute(m_ConsoleHandle, 8);
@@ -185,7 +190,7 @@ void VecMathListener::printVariable(const std::string& id) const
 	}
 }
 
-void VecMathListener::printVariable(const std::string& id, IMatrix* matrix) const
+void VecMathListener::printVariable(const std::string& id, std::shared_ptr<IMatrix> matrix) const
 {
 	SetConsoleTextAttribute(m_ConsoleHandle, 7);
 	std::cout << id;
@@ -214,7 +219,7 @@ void VecMathListener::exitLiteral(VecMath::VecMathParser::LiteralContext* ctx)
 	if (ctx->FLOAT() != nullptr) {
 		float x = std::stof(ctx->FLOAT()->getText());
 		Scalar* s = new Scalar(x);
-		m_ExprStack.push(s);
+		pushToExprStack(s);
 	}
 }
 
@@ -224,29 +229,29 @@ void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 	switch (dim) {
 	case 1: {
 		if (stackIsValid()) {
-			IMatrix* f = popFromStack();
+			auto f = popFromStack();
 			Scalar* s = new Scalar(f->get(0, 0));
-			m_ExprStack.push(s);
+			pushToExprStack(s);
 		}
 		break;
 	}
 	case 2: {
 		if (m_ExprStack.size() >= 2) {
-			IMatrix* y = popFromStack();
-			IMatrix* x = popFromStack();
+			auto y = popFromStack();
+			auto x = popFromStack();
 
 			Vector2D* v2d = new Vector2D(x->get(0, 0), y->get(0, 0));
-			m_ExprStack.push(v2d);
+			pushToExprStack(v2d);
 		}
 		break;
 	}
 	case 3: {
 		if (m_ExprStack.size() >= 3) {
-			IMatrix* z = popFromStack();
-			IMatrix* y = popFromStack();
-			IMatrix* x = popFromStack();
+			auto z = popFromStack();
+			auto y = popFromStack();
+			auto x = popFromStack();
 			Vector3D* v3d = new Vector3D(x->get(0, 0), y->get(0, 0), z->get(0, 0));
-			m_ExprStack.push(v3d);
+			pushToExprStack(v3d);
 		}
 		break;
 	}
@@ -256,22 +261,22 @@ void VecMathListener::exitVector(VecMath::VecMathParser::VectorContext* ctx)
 void VecMathListener::exitComplex(VecMath::VecMathParser::ComplexContext* ctx)
 {
 	if (m_ExprStack.size() >= 2) {
-		IMatrix* i = popFromStack();
-		IMatrix* r = popFromStack();
+		auto i = popFromStack();
+		auto r = popFromStack();
 		Complex* q = new Complex(r->get(0, 0), i->get(0, 0));
-		m_ExprStack.push(q);
+		pushToExprStack(q);
 	}
 }
 
 void VecMathListener::exitQuaternion(VecMath::VecMathParser::QuaternionContext* ctx)
 {
 	if (m_ExprStack.size() >= 4) {
-		IMatrix* z = popFromStack();
-		IMatrix* y = popFromStack();
-		IMatrix* x = popFromStack();
-		IMatrix* w = popFromStack();
+		auto z = popFromStack();
+		auto y = popFromStack();
+		auto x = popFromStack();
+		auto w = popFromStack();
 		Quaternion* q = new Quaternion(x->get(0, 0), y->get(0, 0), z->get(0, 0), w->get(0, 0));
-		m_ExprStack.push(q);
+		pushToExprStack(q);
 	}
 }
 
@@ -288,7 +293,7 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 		}
 		else {
 			// yeah this is an error , what to do
-			m_ExprStack.push(new Scalar(0));
+			pushToExprStack(new Scalar(0));
 		}
 	}
 	else if (ctx->op != nullptr) {
@@ -297,10 +302,10 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 
 		switch (ctx->op->getType()) {
 		case VecMathLexer::ABS: {
-			IMatrix* op2 = popFromStack();
+			auto op2 = popFromStack();
 			if (op2 != nullptr) {
 				Scalar* s = new Scalar(op2->magnitude());
-				m_ExprStack.push(s);
+				pushToExprStack(s);
 			}
 			else {
 				printError("An error occurred, maybe you forgot to asssign the value to a variable?");
@@ -313,9 +318,9 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			// unary case: do nothing leave value on stack.
 			if (ctx->op2 != nullptr) {
 				if (m_ExprStack.size() >= 2) {
-					IMatrix* op2 = popFromStack();
-					IMatrix* op1 = popFromStack();
-					m_ExprStack.push(IMatrix::add(op1, op2));
+					auto op2 = popFromStack();
+					auto op1 = popFromStack();
+					pushToExprStack(IMatrix::add(op1.get(), op2.get()));
 				}
 			}
 			break;
@@ -324,93 +329,94 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			// can be unary minus!
 			if (ctx->op1 == nullptr) {
 				if (m_ExprStack.size() >= 1) {
-					IMatrix* op = popFromStack();
-					m_ExprStack.push(IMatrix::neg(op));
+					auto op = popFromStack();
+					pushToExprStack(IMatrix::neg(op.get()));
 				}
 			}
 			else {
 				if (m_ExprStack.size() >= 2) {
-					IMatrix* op2 = popFromStack();
-					IMatrix* op1 = popFromStack();
-					m_ExprStack.push(IMatrix::subtract(op1, op2));
+					auto op2 = popFromStack();
+					auto op1 = popFromStack();
+					pushToExprStack(IMatrix::subtract(op1.get(), op2.get()));
 				}
 			}
 			break;
 		}
 		case VecMathLexer::MUL: {
 			if (m_ExprStack.size() >= 2) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::mul(op1, op2));
+				auto op2 = popFromStack();
+				auto op1 = popFromStack();
+				pushToExprStack(IMatrix::mul(op1.get(), op2.get()));
 			}
 			break;
 		}
 		case VecMathLexer::CROSS: {
 			if (m_ExprStack.size() >= 2) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::cross(op1, op2));
+				auto op2 = popFromStack();
+				auto op1 = popFromStack();
+				pushToExprStack(IMatrix::cross(op1.get(), op2.get()));
 			}
 			break;
 		}
 		case VecMathLexer::POWER: {
 			if (m_ExprStack.size() >= 2) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::power(op1, op2));
+				auto op2 = popFromStack();
+				auto op1 = popFromStack();
+				pushToExprStack(IMatrix::power(op1.get(), op2.get()));
 			}
 			break;
 		}
 		case VecMathLexer::DIV: {
 			if (m_ExprStack.size() >= 2) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::divide(op1, op2));
+				auto op2 = popFromStack();
+				auto op1 = popFromStack();
+				pushToExprStack(IMatrix::divide(op1.get(), op2.get()));
 			}
 			break;
 		}
 		case VecMathLexer::DOT: {
 			if (m_ExprStack.size() >= 2) {
-				IMatrix* op2 = popFromStack();
-				IMatrix* op1 = popFromStack();
-				m_ExprStack.push(IMatrix::dot(op1, op2));
+				auto op2 = popFromStack();
+				auto op1 = popFromStack();
+				pushToExprStack(IMatrix::dot(op1.get(), op2.get()));
 			}
 			break;
 		}
 		}
 	}
 	else if (ctx->f != nullptr && !m_ExprStack.empty()) {
-		IMatrix* op = popFromStack();
+		auto op = popFromStack();
 		IMatrix* result = nullptr;
 		auto ctxFunc = ctx->f;
+		IMatrix* rawOp = op.get();
 		if (ctxFunc->ID() == nullptr) {
-			result = IMatrix::maxMatrix(op, nullptr);
+			result = IMatrix::maxMatrix(rawOp, nullptr);
 			if (ctxFunc->COS() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return cos(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return cos(x); }, result);
 			}
 			else if (ctxFunc->SIN() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return sin(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return sin(x); }, result);
 			}
 			else if (ctxFunc->TAN() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return tan(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return tan(x); }, result);
 			}
 			else if (ctxFunc->ACOS() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return acos(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return acos(x); }, result);
 			}
 			else if (ctxFunc->ASIN() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return asin(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return asin(x); }, result);
 			}
 			else if (ctxFunc->ATAN() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return atan(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return atan(x); }, result);
 			}
 			else if (ctxFunc->DEGTORAD() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return x * m_DegToRad; }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return x * m_DegToRad; }, result);
 			}
 			else if (ctxFunc->RADTODEG() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return x * m_RadToDeg; }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return x * m_RadToDeg; }, result);
 			}
 			else if (ctxFunc->SQRT() != nullptr) {
-				IMatrix::unaryOp(op, [](float x) {return sqrt(x); }, result);
+				IMatrix::unaryOp(rawOp, [](float x) {return sqrt(x); }, result);
 			}
 			else if (ctxFunc->CON() != nullptr) {
 				// only do this if it is a quaternion.
@@ -420,8 +426,8 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 		else {
 			std::string funcName = ctxFunc->ID()->getText();
 			if (funcName == "abs") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return abs(x); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return abs(x); }, result);
 			}
 			else if (funcName == "norm") {
 				result = new Scalar(op->magnitude());
@@ -445,28 +451,28 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 				result = op->angled();
 			}
 			else if (funcName == "sind") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return sin(x * m_DegToRad); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return sin(x * m_DegToRad); }, result);
 			}
 			else if (funcName == "cosd") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return cos(x * m_DegToRad); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return cos(x * m_DegToRad); }, result);
 			}
 			else if (funcName == "tand") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return tan(x * m_DegToRad); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return tan(x * m_DegToRad); }, result);
 			}
 			else if (funcName == "asind") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * asin(x); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return m_RadToDeg * asin(x); }, result);
 			}
 			else if (funcName == "acosd") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * acos(x); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return m_RadToDeg * acos(x); }, result);
 			}
 			else if (funcName == "atand") {
-				result = IMatrix::maxMatrix(op, nullptr);
-				IMatrix::unaryOp(op, [](float x) {return m_RadToDeg * atan(x); }, result);
+				result = IMatrix::maxMatrix(rawOp, nullptr);
+				IMatrix::unaryOp(rawOp, [](float x) {return m_RadToDeg * atan(x); }, result);
 			}
 			else {
 				printError("There is no function called " + funcName + " (yet)!");
@@ -475,7 +481,7 @@ void VecMathListener::exitValue(VecMath::VecMathParser::ValueContext* ctx)
 			}
 		}
 		if (result != nullptr && !m_ErrorFlagged) {
-			pushToStack(result);
+			pushToExprStack(result);
 		}
 	}
 }
@@ -597,13 +603,13 @@ void VecMathListener::clearScreen()
 
 void VecMathListener::clearVariables()
 {
-	for (auto pair : m_VarMap) {
+	/*for (auto pair : m_VarMap) {
 		delete pair.second;
-	}
+	}*/
 	m_VarMap.clear();
-	for (auto pair : m_Constants) {
+	/*for (auto pair : m_Constants) {
 		delete pair.second;
-	}
+	}*/
 	m_Constants.clear();
 }
 
@@ -670,10 +676,10 @@ void VecMathListener::reportContextSensitivity(antlr4::Parser* recognizer, const
 {
 }
 
-IMatrix* VecMathListener::popFromStack()
+std::shared_ptr<IMatrix> VecMathListener::popFromStack()
 {
 	if (m_ExprStack.size() > 0) {
-		IMatrix* r = m_ExprStack.top();
+		auto r = m_ExprStack.top();
 		m_ExprStack.pop();
 		return r;
 	}
@@ -682,7 +688,14 @@ IMatrix* VecMathListener::popFromStack()
 	}
 }
 
-void VecMathListener::pushToStack(IMatrix* toPush)
+void VecMathListener::pushToExprStack(IMatrix* toPush)
 {
-	m_ExprStack.push(toPush);
+	m_ExprStack.push(std::shared_ptr<IMatrix>(toPush));
 }
+
+void VecMathListener::addToConstantMap(std::string constantName, IMatrix* constant)
+{
+	m_Constants[constantName] = std::shared_ptr<IMatrix>(constant);
+}
+
+

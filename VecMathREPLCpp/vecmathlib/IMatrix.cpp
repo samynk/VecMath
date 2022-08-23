@@ -6,6 +6,8 @@
 #include "Complex.h"
 #include "Quaternion.h"
 
+int IMatrix::m_Count = 0;
+
 IMatrix::IMatrix(Type type, AddressMode mode, int rows, int columns)
 	:IMatrix(type, mode, 0, rows, columns)
 {
@@ -14,6 +16,12 @@ IMatrix::IMatrix(Type type, AddressMode mode, int rows, int columns)
 IMatrix::IMatrix(Type type, AddressMode mode, float borderValue, int rows, int columns)
 	: m_AddressMode(mode), m_Type(type), m_BorderValue(borderValue), m_Rows(rows), m_Columns(columns)
 {
+	++m_Count;
+}
+
+IMatrix::~IMatrix()
+{
+	--m_Count;
 }
 
 void IMatrix::print(HANDLE console)

@@ -13,6 +13,7 @@ class IMatrix
 public:
 	IMatrix(Type type, AddressMode mode, int rows, int columns);
 	IMatrix(Type type, AddressMode mode, float borderValue, int rows, int columns);
+	~IMatrix();
 
 	virtual float get(int ri, int ci) = 0;
 	virtual void set(int ri, int ci, float value) = 0;
@@ -54,6 +55,8 @@ public:
 	static IMatrix* dot(IMatrix* op1, IMatrix* op2);
 	static IMatrix* power(IMatrix* op1, IMatrix* op2);
 	static IMatrix* cross(IMatrix* op1, IMatrix* op2);
+
+	static int m_Count;
 protected:
 	bool inRange(int ri, int ci);
 	Type m_Type;

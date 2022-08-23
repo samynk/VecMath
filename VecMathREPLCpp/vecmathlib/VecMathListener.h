@@ -5,6 +5,7 @@
 #include <stack>
 #include "IMatrix.h"
 #include <windows.h>
+#include <memory>
 
 class VecMathListener : 
 	public VecMath::VecMathParserBaseListener,
@@ -26,7 +27,7 @@ public:
 
 	void setCurrentCodeLine(std::string codeLine);
 	void exec(std::string code);
-	IMatrix* getVariable(const std::string& id)const;
+	std::shared_ptr<IMatrix> getVariable(const std::string& id)const;
 
 	void exitCommand(VecMath::VecMathParser::CommandContext* /*ctx*/) override;
 	void exitAssign(VecMath::VecMathParser::AssignContext* ctx) override;
@@ -45,7 +46,7 @@ public:
 	void printInfo(const std::string& message) const;
 	void printText(const std::string& message) const;
 	void printVariable(const std::string& id) const;
-	void printVariable(const std::string& id, IMatrix* matrix) const;
+	void printVariable(const std::string& id, std::shared_ptr<IMatrix> matrix) const;
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
 	void clearScreen();
@@ -62,15 +63,16 @@ public:
 	virtual void reportContextSensitivity(antlr4::Parser* recognizer, const antlr4::dfa::DFA& dfa, size_t startIndex, size_t stopIndex,
 		size_t prediction, antlr4::atn::ATNConfigSet* configs) override;
 
-	IMatrix* popFromStack();
-	void pushToStack(IMatrix* toPush);
+	std::shared_ptr<IMatrix> popFromStack();
+	void pushToExprStack(IMatrix* toPush);
+	void addToConstantMap(std::string constantName, IMatrix* constant);
 private:
 	HANDLE m_ConsoleHandle;
 	bool m_Exit{ false };
 	bool m_ErrorFlagged{ false };
-	std::map<std::string, IMatrix*> m_VarMap;
-	std::map<std::string, IMatrix*> m_Constants;
-	std::stack<IMatrix*> m_ExprStack;
+	std::map<std::string, std::shared_ptr<IMatrix>> m_VarMap;
+	std::map<std::string, std::shared_ptr<IMatrix>> m_Constants;
+	std::stack<std::shared_ptr<IMatrix>> m_ExprStack;
 	std::string m_CurrentCodeLine;
 	std::string m_HelpString;
 	static constexpr float m_DegToRad{static_cast<float>( M_PI / 180 ) };
