@@ -49,7 +49,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     /**
      * Creates a new VecMathListener object with a number of constants.
      */
-    VecMathListener() {
+    public VecMathListener() {
         float piVal = (float) Math.PI;
         constants.put("Pi", new Scalar(piVal));
         constants.put("PI", new Scalar(piVal));
