@@ -1,5 +1,7 @@
 package dae.gd.vecmathproject;
 
+import java.io.PrintStream;
+
 /**
  * Helper method and constants to print colored text in console.
  * @author Koen.Samyn
@@ -82,30 +84,30 @@ public class ConsolePrint {
      * Prints an error message on the console.
      * @param message the message to print.
      */
-    public static void printError(String message) {
-        System.out.print(RED);
-        System.out.print(message);
-        System.out.print(RESET);
+    public static void printError(String message, PrintStream out) {
+        out.print(RED);
+        out.print(message);
+        out.print(RESET);
     }
 
     /**
      * Prints an info message on the console.
      * @param message the message to print.
      */
-    public static void printInfo(String message) {
-        System.out.print(GREEN);
-        System.out.print(message);
-        System.out.print(RESET);
+    public static void printInfo(String message, PrintStream out) {
+        out.print(GREEN);
+        out.print(message);
+        out.print(RESET);
     }
 
     /**
      * Prints standard text on the console.
      * @param message the message to print.
      */
-    public static void printText(String message) {
-        System.out.print(WHITE);
-        System.out.print(message);
-        System.out.print(RESET);
+    public static void printText(String message, PrintStream out) {
+        out.print(WHITE);
+        out.print(message);
+        out.print(RESET);
     }
 
     /**

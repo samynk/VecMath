@@ -2,6 +2,7 @@ package dae.gd.vecmathproject;
 
 import dae.gd.vecmathproject.IMatrix.AddressMode;
 import dae.gd.vecmathproject.IMatrix.Type;
+import java.io.PrintStream;
 
 /**
  * A class to support Quaternion operations.
@@ -105,25 +106,26 @@ public class Quaternion extends IMatrix {
     /**
      * Prints the value of the quaternion to the console.
      */
-    public void print(String floatFormat) {
+    @Override
+    public void print(String floatFormat,PrintStream out) {
         //SetConsoleTextAttribute(console, 8);
-        System.out.print("[");
+        out.print("[");
         //SetConsoleTextAttribute(console, 7);
-        System.out.printf(java.util.Locale.US,floatFormat,w);
+        out.printf(java.util.Locale.US,floatFormat,w);
         //SetConsoleTextAttribute(console, 8);
-        System.out.print(" ,( ");
+        out.print(" ,( ");
         //SetConsoleTextAttribute(console, 12);
-        System.out.printf(java.util.Locale.US,floatFormat,x);
+        out.printf(java.util.Locale.US,floatFormat,x);
         //SetConsoleTextAttribute(console, 8);
-        System.out.print(" , ");
+        out.print(" , ");
         //SetConsoleTextAttribute(console, 10);
-        System.out.printf(java.util.Locale.US,floatFormat,y);
+        out.printf(java.util.Locale.US,floatFormat,y);
         //SetConsoleTextAttribute(console, 8);
-        System.out.print(" , ");
+        out.print(" , ");
         //SetConsoleTextAttribute(console, 3);
-        System.out.printf(java.util.Locale.US,floatFormat,z);
+        out.printf(java.util.Locale.US,floatFormat,z);
         //SetConsoleTextAttribute(console, 8);
-        System.out.print(" )]");
+        out.print(" )]");
 
     }
 

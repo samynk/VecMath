@@ -1,5 +1,7 @@
 package dae.gd.vecmathproject;
 
+import java.io.PrintStream;
+
 /**
  * An abstract class that models a two-dimensional matrix. The class supports
  * the implementation of vectors, quaternions and transformation matrices. The
@@ -136,31 +138,31 @@ public abstract class IMatrix {
      *
      * @param precision the precision for the output of floats.
      */
-    public void print(String floatFormat) {
+    public void print(String floatFormat, PrintStream out) {
         //SetConsoleTextAttribute(console, 8);
         if (rows > 1) {
-            System.out.print("{");
+            out.print("{");
         }
         for (int r = 0; r < rows; ++r) {
-            System.out.print("[");
+            out.print("[");
             for (int c = 0; c < columns; ++c) {
                 //SetConsoleTextAttribute(console, 10);
-                System.out.printf(java.util.Locale.US, floatFormat, get(r, c));
+                out.printf(java.util.Locale.US, floatFormat, get(r, c));
                 if (c + 1 < columns) {
                     //SetConsoleTextAttribute(console, 8);
-                    System.out.print(",");
+                    out.print(",");
                 }
             }
             if (r + 1 < rows) {
                 //SetConsoleTextAttribute(console, 8);
-                System.out.print(",");
+                out.print(",");
             }
             //SetConsoleTextAttribute(console, 8);
-            System.out.print("]");
+            out.print("]");
         }
         if (rows > 1) {
             //SetConsoleTextAttribute(console, 8);
-            System.out.print("}");
+            out.print("}");
         }
     }
 

@@ -5,6 +5,8 @@ import dae.gd.VecMathParser;
 import dae.gd.VecMathParserBaseListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -45,11 +47,23 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     private String version;
 
     private JokeGenerator jokeGenerator = new JokeGenerator();
+    private PrintStream out;
+
+    public VecMathListener() {
+        this(System.out);
+    }
 
     /**
      * Creates a new VecMathListener object with a number of constants.
+     *
+     * @param out the outputstream to write to.
      */
-    public VecMathListener() {
+    public VecMathListener(OutputStream out) {
+        if (out instanceof PrintStream ps) {
+            this.out = ps;
+        } else {
+            this.out = new PrintStream(out);
+        }
         float piVal = (float) Math.PI;
         constants.put("Pi", new Scalar(piVal));
         constants.put("PI", new Scalar(piVal));
@@ -132,7 +146,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
      * Creates a newline on the console.
      */
     public void newline() {
-        System.out.print("\n");
+        out.print("\n");
     }
 
     /**
@@ -147,7 +161,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
             for (var pair : varMap.entrySet()) {
                 prompt(pair.getKey());
                 prompt(" = ");
-                pair.getValue().print(floatFormat);
+                pair.getValue().print(floatFormat, out);
                 newline();
             }
         } else if (ctx.JOKE() != null) {
@@ -172,8 +186,9 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     }
 
     public void exitAssign(VecMathParser.AssignContext ctx) {
-        if (errorFlagged)
+        if (errorFlagged) {
             return;
+        }
         var idToken = ctx.ID();
         var assignToken = ctx.ASSIGN();
         if (idToken != null && assignToken != null) {
@@ -196,7 +211,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
         } else if (ctx.value() != null) {
             if (stackIsValid()) {
                 IMatrix result = popFromStack();
-                result.print(floatFormat);
+                result.print(floatFormat, out);
                 newline();
             }
         } else {
@@ -237,7 +252,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
         if (varMap.containsKey(id)) {
             printInfo(id, false);
             printInfo(" = ", false);
-            varMap.get(id).print(floatFormat);
+            varMap.get(id).print(floatFormat, out);
             newline();
         } else {
             printError("Could not find variable " + id + ",are you sure it exists?", true);
@@ -577,16 +592,16 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     }
 
     private void printError(String text, boolean newLine) {
-        ConsolePrint.printError(text);
+        ConsolePrint.printError(text, out);
         if (newLine) {
-            System.out.print("\n");
+            out.print("\n");
         }
     }
 
     void printInfo(String text, boolean newLine) {
-        ConsolePrint.printInfo(text);
+        ConsolePrint.printInfo(text, out);
         if (newLine) {
-            System.out.print("\n");
+            out.println("\n");
         }
     }
 
@@ -598,13 +613,13 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
                 printError(Character.toString(message.charAt(pc)), false);
             }
         }
-        System.out.println("\n");
+        out.println("\n");
     }
 
     private void printText(String text, boolean newLine) {
-        ConsolePrint.printText(text);
+        ConsolePrint.printText(text, out);
         if (newLine) {
-            System.out.print("\n");
+            out.print("\n");
         }
     }
 
