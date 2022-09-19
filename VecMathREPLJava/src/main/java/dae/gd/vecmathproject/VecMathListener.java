@@ -48,9 +48,10 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
 
     private JokeGenerator jokeGenerator = new JokeGenerator();
     private PrintStream out;
+    private boolean printColors;
 
     public VecMathListener() {
-        this(System.out);
+        this(System.out, true);
     }
 
     /**
@@ -58,12 +59,13 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
      *
      * @param out the outputstream to write to.
      */
-    public VecMathListener(OutputStream out) {
+    public VecMathListener(OutputStream out, boolean printColors) {
         if (out instanceof PrintStream ps) {
             this.out = ps;
         } else {
             this.out = new PrintStream(out);
         }
+        this.printColors = printColors;
         float piVal = (float) Math.PI;
         constants.put("Pi", new Scalar(piVal));
         constants.put("PI", new Scalar(piVal));
@@ -79,7 +81,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
      * @param text the text to print.
      */
     public void prompt(String text) {
-        ConsolePrint.printPrompt(text);
+        ConsolePrint.printPrompt(text, printColors, out);
         errorFlagged = false;
         exprStack.clear();
     }
@@ -123,6 +125,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
 
     public void exec(String code) {
         this.exprStack.clear();
+        errorFlagged = false;
         VecMathLexer vmLexer = new VecMathLexer(CharStreams.fromString(code));
         setCurrentCodeLine(code);
         CommonTokenStream stream = new CommonTokenStream(vmLexer);
@@ -592,14 +595,14 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     }
 
     private void printError(String text, boolean newLine) {
-        ConsolePrint.printError(text, out);
+        ConsolePrint.printError(text, printColors, out);
         if (newLine) {
             out.print("\n");
         }
     }
 
     void printInfo(String text, boolean newLine) {
-        ConsolePrint.printInfo(text, out);
+        ConsolePrint.printInfo(text, printColors, out);
         if (newLine) {
             out.println("\n");
         }
@@ -617,7 +620,7 @@ public class VecMathListener extends VecMathParserBaseListener implements ANTLRE
     }
 
     private void printText(String text, boolean newLine) {
-        ConsolePrint.printText(text, out);
+        ConsolePrint.printText(text, printColors, out);
         if (newLine) {
             out.print("\n");
         }

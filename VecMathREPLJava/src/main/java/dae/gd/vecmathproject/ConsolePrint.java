@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 /**
  * Helper method and constants to print colored text in console.
+ *
  * @author Koen.Samyn
  */
 public class ConsolePrint {
@@ -82,41 +83,61 @@ public class ConsolePrint {
 
     /**
      * Prints an error message on the console.
+     *
      * @param message the message to print.
      */
-    public static void printError(String message, PrintStream out) {
-        out.print(RED);
+    public static void printError(String message, boolean printColors, PrintStream out) {
+        if (printColors) {
+            out.print(RED);
+        }
         out.print(message);
-        out.print(RESET);
+        if (printColors) {
+            out.print(RESET);
+        }
     }
 
     /**
      * Prints an info message on the console.
+     *
      * @param message the message to print.
      */
-    public static void printInfo(String message, PrintStream out) {
-        out.print(GREEN);
+    public static void printInfo(String message, boolean printColors, PrintStream out) {
+        if (printColors) {
+            out.print(GREEN);
+        }
         out.print(message);
-        out.print(RESET);
+        if (printColors) {
+            out.print(RESET);
+        }
     }
 
     /**
      * Prints standard text on the console.
+     *
      * @param message the message to print.
      */
-    public static void printText(String message, PrintStream out) {
-        out.print(WHITE);
+    public static void printText(String message, boolean printColors, PrintStream out) {
+        if (printColors) {
+            out.print(WHITE);
+        }
         out.print(message);
-        out.print(RESET);
+        if (printColors) {
+            out.print(RESET);
+        }
     }
 
     /**
      * Print a prompt message on the console.
+     *
      * @param text the message to print.
      */
-    static void printPrompt(String text) {
-        System.out.print(BLUE);
-        System.out.print(text);
-        System.out.print(RESET);
+    static void printPrompt(String text, boolean printColors, PrintStream out) {
+        if (printColors) {
+            out.print(BLUE);
+        }
+        out.print(text);
+        if (printColors) {
+            out.print(RESET);
+        }
     }
 }
