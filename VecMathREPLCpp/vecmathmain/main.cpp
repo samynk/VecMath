@@ -22,8 +22,6 @@ int main()
 #ifndef NDEBUG
 	_CrtSetDbgFlag(_CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_ALLOC_MEM_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	
-	_crtBreakAlloc = 3835;
 #endif
 	std::string codeLine;
 	size_t tokenType = -1;
