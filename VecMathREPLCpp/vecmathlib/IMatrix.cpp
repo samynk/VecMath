@@ -335,7 +335,7 @@ IMatrix* IMatrix::cross(IMatrix* op1, IMatrix* op2)
 	}
 }
 
-bool IMatrix::inRange(int ri, int ci)
+bool IMatrix::inRange(int ri, int ci) const
 {
 	return (ri >= 0 && ri < m_Rows&& ci >= 0 && ci < m_Columns);
 }

@@ -58,7 +58,7 @@ public:
 
 	static int m_Count;
 protected:
-	bool inRange(int ri, int ci);
+	bool inRange(int ri, int ci) const;
 	Type m_Type;
 	AddressMode m_AddressMode;
 	float m_BorderValue{ 0 };
