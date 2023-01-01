@@ -12,14 +12,14 @@ Joke::Joke(std::string line1, std::string line2)
 	m_Lines.push_back(line2);
 }
 
-void Joke::printJoke(HANDLE console)
+void Joke::printJoke(const Console& console) const
 {
-	if (m_Lines.size() >= 1) {
-		SetConsoleTextAttribute(console, 10);
-		std::cout << m_Lines[0] << "\n";
+	if (!m_Lines.empty()) {
+		console.Print(Console::VMF_BRIGHTGREEN, m_Lines[0]);
+		console.NewLine();
 	}
 	if (m_Lines.size() >= 2) {
-		SetConsoleTextAttribute(console, 11);
-		std::cout << m_Lines[1] << "\n";
+		console.Print(Console::VMF_BRIGHTCYAN, m_Lines[1]);
+		console.NewLine();
 	}
 }

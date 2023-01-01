@@ -8,9 +8,9 @@ public:
 	Quaternion();
 	Quaternion(float x, float y, float z,float w);
 
-	float get(int ri, int ci) override;
+	float get(int ri, int ci)  const override;
 	void set(int ri, int ci, float value) override;
-	void print(HANDLE console)override;
+	void print(const Console& console) const override;
 	Quaternion* conjugate()override;
 	Quaternion* inverse()override;
 	Vector3D* imaginary() override;

@@ -15,7 +15,7 @@ m_X(x),m_Y(y),m_Z(z)
 {
 }
 
-float Vector3D::get(int ri, int ci)
+float Vector3D::get(int ri, int ci) const
 {
 	if (inRange(ri, ci)) {
 		switch (ci) {

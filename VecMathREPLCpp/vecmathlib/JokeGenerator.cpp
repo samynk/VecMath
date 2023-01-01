@@ -23,12 +23,13 @@ JokeGenerator::JokeGenerator()
 	}
 }
 
-void JokeGenerator::printRandomJoke(HANDLE consoleHandle)
+void JokeGenerator::printRandomJoke(const Console& console)
 {
-	if (m_Jokes.size() > 0)
+	if (!m_Jokes.empty())
 	{
-		std::uniform_int_distribution<std::size_t> distribution(0, m_Jokes.size() - 1);
-		std::size_t number = distribution(m_Generator);
-		m_Jokes[number].printJoke(consoleHandle);
+		int max = static_cast<int>(m_Jokes.size() - 1);
+		std::uniform_int_distribution<> distribution{0,max};
+		auto number = distribution(m_Generator);
+		m_Jokes[number].printJoke(console);
 	}
 }

@@ -1,15 +1,14 @@
 #pragma once
 #include "Joke.h"
-#include <windows.h>
+#include "Console.h"
 #include <vector>
 #include <random>
 class JokeGenerator
 {
 public:
 	JokeGenerator();
-	void printRandomJoke(HANDLE consoleHandle);
+	void printRandomJoke(const Console& consoleHandle) ;
 private:
 	std::vector<Joke> m_Jokes;
-	std::mt19937 m_Generator{ std::random_device{}() };
-	
+	std::default_random_engine m_Generator; // seed the generator
 };

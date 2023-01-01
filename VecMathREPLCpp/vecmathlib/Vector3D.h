@@ -6,7 +6,7 @@ public:
 	Vector3D();
 	Vector3D(float x, float y, float z);
 
-	float get(int ri, int ci) override;
+	float get(int ri, int ci) const override;
 	void set(int ri, int ci, float value) override;
 
 	IMatrix* conjugate();

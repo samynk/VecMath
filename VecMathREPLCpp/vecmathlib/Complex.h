@@ -7,9 +7,9 @@ public:
 	Complex();
 	Complex(float x, float y);
 
-	float get(int ri, int ci) override;
+	float get(int ri, int ci) const override;
 	void set(int ri, int ci, float value) override;
-	void print(HANDLE console)override;
+	void print(const Console& console) const override;
 	
 	Complex* conjugate()override;
 	Complex* inverse()override;

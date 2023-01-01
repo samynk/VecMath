@@ -1,9 +1,11 @@
 #pragma once
 #include "VecMathParserBaseListener.h"
 #include "JokeGenerator.h"
+#include "IMatrix.h"
+#include "Console.h"
 #include <map>
 #include <stack>
-#include "IMatrix.h"
+
 #include <windows.h>
 #include <memory>
 
@@ -49,7 +51,6 @@ public:
 	void printVariable(const std::string& id, std::shared_ptr<IMatrix> matrix) const;
 	void printErrorLoc(size_t start, size_t end, const std::string& message);
 	void printMarkDown(const std::string& text);
-	void clearScreen();
 	void clearVariables();
 
 	// error listener
@@ -67,7 +68,6 @@ public:
 	void pushToExprStack(IMatrix* toPush);
 	void addToConstantMap(std::string constantName, IMatrix* constant);
 private:
-	HANDLE m_ConsoleHandle;
 	bool m_Exit{ false };
 	bool m_ErrorFlagged{ false };
 	std::map<std::string, std::shared_ptr<IMatrix>> m_VarMap;
@@ -79,9 +79,5 @@ private:
 	static constexpr float m_RadToDeg{ static_cast<float>(180 / M_PI )};
 
 	JokeGenerator m_JokeGenerator;
-
-
-	static const int ERRORCOLOR{ 12 };
-	static const int INFOCOLOR{ 10 };
-	static const int TEXTCOLOR{ 7 };
+	Console m_Console;
 };

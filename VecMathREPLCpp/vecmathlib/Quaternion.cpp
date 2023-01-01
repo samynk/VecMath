@@ -16,7 +16,7 @@ m_X(x), m_Y(y), m_Z(z), m_W(w)
 {
 }
 
-float Quaternion::get(int ri, int ci)
+float Quaternion::get(int ri, int ci) const
 {
 	if (inRange(ri, ci)) {
 		switch (ci) {
@@ -60,27 +60,17 @@ void Quaternion::set(int ri, int ci, float value)
 	}
 }
 
-void Quaternion::print(HANDLE console)
+void Quaternion::print(const Console& console) const
 {
-	SetConsoleTextAttribute(console, 8);
-	std::cout << "[";
-	SetConsoleTextAttribute(console, 7);
-	std::cout << m_W;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " ,( ";
-	SetConsoleTextAttribute(console, 12);
-	std::cout << m_X;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " , ";
-	SetConsoleTextAttribute(console, 10);
-	std::cout << m_Y;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " , ";
-	SetConsoleTextAttribute(console, 3);
-	std::cout << m_Z;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " )]";
-
+	console.Print(Console::VMF_GRAY, "[");
+	console.Print(Console::VMF_LIGHTGRAY, m_W);
+	console.Print(Console::VMF_GRAY, " ,(");
+	console.Print(Console::VMF_BRIGHTRED, m_X);
+	console.Print(Console::VMF_GRAY, " , ");
+	console.Print(Console::VMF_BRIGHTGREEN, m_Y);
+	console.Print(Console::VMF_GRAY, " , ");
+	console.Print(Console::VMF_CYAN, m_Z);
+	console.Print(Console::VMF_GRAY, " )]");
 }
 
 Quaternion* Quaternion::conjugate()

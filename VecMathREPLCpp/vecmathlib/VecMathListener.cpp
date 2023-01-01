@@ -5,13 +5,12 @@
 #include "Complex.h"
 #include "Quaternion.h"
 #include "VecMathLexer.h"
-#include <iomanip>
+
 
 #undef ERROR
 
 VecMathListener::VecMathListener()
 {
-	m_ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	float fPI = static_cast<float>(M_PI);
 	addToConstantMap("Pi", new Scalar(fPI));
 	addToConstantMap("PI", new Scalar(fPI));
@@ -22,13 +21,12 @@ VecMathListener::VecMathListener()
 
 void VecMathListener::prompt(const std::string& text)
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, 3);
-	std::cout << text;
-	SetConsoleTextAttribute(m_ConsoleHandle, 8);
+	m_Console.Print(Console::VMF_CYAN, text);
 	m_ErrorFlagged = false;
 	if (!m_ExprStack.empty())
 	{
-		std::cout << "Expression stack not empty :" << m_ExprStack.size();
+		m_Console.Print(Console::VMF_GRAY, "Expression stack not empty :");
+		m_Console.Print(Console::VMF_GRAY, std::to_string(m_ExprStack.size()));
 	}
 	while (!m_ExprStack.empty()) {
 		m_ExprStack.pop();
@@ -92,22 +90,20 @@ void VecMathListener::exitCommand(VecMath::VecMathParser::CommandContext* ctx)
 {
 	if (ctx->EXIT() != nullptr) {
 		printInfo("Leaving so soon? Was it something I said?");
-		SetConsoleTextAttribute(m_ConsoleHandle, 15);
+		m_Console.Reset();
 		m_Exit = true;
 
 	}
 	else if (ctx->PRINTALL() != nullptr) {
 		for (const auto& [key, value] : m_VarMap) {
-			SetConsoleTextAttribute(m_ConsoleHandle, 7);
-			std::cout << key;
-			SetConsoleTextAttribute(m_ConsoleHandle, 7);
-			std::cout << " = ";
-			value->print(m_ConsoleHandle);
-			std::cout << "\n";
+			m_Console.Print(Console::VMF_LIGHTGRAY, key);
+			m_Console.Print(Console::VMF_LIGHTGRAY, " = ");
+			value->print(m_Console);
+			m_Console.NewLine();
 		}
 	}
 	else if (ctx->JOKE() != nullptr) {
-		m_JokeGenerator.printRandomJoke(m_ConsoleHandle);
+		m_JokeGenerator.printRandomJoke(m_Console);
 	}
 	else if (ctx->HELP() != nullptr) {
 		printMarkDown(m_HelpString);
@@ -137,9 +133,9 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 			}
 		}
 		else {
-			SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
+			m_Console.SetColor(Console::VMF_BRIGHTRED);
 			std::cout << "I do not know '" << varId << "'\n";
-			SetConsoleTextAttribute(m_ConsoleHandle, INFOCOLOR);
+			m_Console.SetColor(Console::VMF_BRIGHTGREEN);
 			std::cout << "If you meant this as a command, this is a command I do not understand.\n";
 			std::cout << "Type 'help' for a list of commands.\n";
 			std::cout << "If you want this to be a variable you need the following format: b = 7\n";
@@ -149,14 +145,13 @@ void VecMathListener::exitAssign(VecMath::VecMathParser::AssignContext* ctx)
 		auto result = popFromStack();
 		if (result != nullptr)
 		{
-			SetConsoleTextAttribute(m_ConsoleHandle, 8);
-			result->print(m_ConsoleHandle);
+			result->print(m_Console);
 			std::cout << std::endl;
 		}
 	}
 	else
 	{
-		SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
+		m_Console.SetColor(Console::VMF_BRIGHTRED);
 		std::cout << "Assigning a new variable should be done with the equals sign.\n";
 		std::cout << "For example : a = 10\n";
 	}
@@ -170,7 +165,7 @@ void VecMathListener::exitPrint(VecMath::VecMathParser::PrintContext* ctx)
 		printVariable(id);
 	}
 	else {
-		SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
+		m_Console.SetColor(Console::VMF_BRIGHTRED);
 		std::cout << "Use the print statement with a variable id, for example: 'print var'\n";
 	}
 }
@@ -184,7 +179,7 @@ void VecMathListener::printVariable(const std::string& id) const
 		printVariable(id, m_Constants.at(id));
 	}
 	else {
-		SetConsoleTextAttribute(m_ConsoleHandle, 10);
+		m_Console.SetColor(Console::VMF_BRIGHTGREEN);
 		std::cout << "Could not find variable " << id << ",are you sure it exists? \n";
 		std::cout << "Use the 'printAll' command to see the current list of variables.\n ";
 	}
@@ -192,13 +187,10 @@ void VecMathListener::printVariable(const std::string& id) const
 
 void VecMathListener::printVariable(const std::string& id, std::shared_ptr<IMatrix> matrix) const
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, 7);
-	std::cout << id;
-	SetConsoleTextAttribute(m_ConsoleHandle, 7);
-	std::cout << " = ";
-	SetConsoleTextAttribute(m_ConsoleHandle, 8);
-	matrix->print(m_ConsoleHandle);
-	std::cout << std::endl;
+	m_Console.Print(Console::VMF_LIGHTGRAY, id);
+	m_Console.Print(Console::VMF_LIGHTGRAY, " = ");
+	matrix->print(m_Console);
+	m_Console.NewLine();
 }
 
 void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)
@@ -209,7 +201,7 @@ void VecMathListener::exitClear(VecMath::VecMathParser::ClearContext* ctx)
 	}
 	else {
 		m_VarMap.clear();
-		clearScreen();
+		m_Console.ClearScreen();
 		promptHeader();
 	}
 }
@@ -497,7 +489,8 @@ void VecMathListener::exitPrecision(VecMath::VecMathParser::PrecisionContext* ct
 		float p = std::stof(ctx->FLOAT()->getText());
 		int precision = static_cast<int>(round(p));
 		if (precision >= 0) {
-			std::cout << std::fixed << std::showpoint << std::setprecision(precision);
+			m_Console.SetPrecision(precision);
+			
 		}
 		else {
 			printInfo("The precision must be a positive number, specifying the number of decimal places.");
@@ -541,17 +534,16 @@ void VecMathListener::visitErrorNode(antlr4::tree::ErrorNode* node) {
 
 void VecMathListener::printErrorLoc(size_t start, size_t end, const std::string& message)
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, INFOCOLOR);
 	for (size_t pc = 0; pc < message.size(); ++pc) {
 		if (pc < start || pc > end) {
-			SetConsoleTextAttribute(m_ConsoleHandle, TEXTCOLOR);
+			m_Console.SetColor(Console::VMF_LIGHTGRAY);
 		}
 		else {
-			SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
+			m_Console.SetColor(Console::VMF_BRIGHTRED);
 		}
-		std::cout << message[pc];
+		m_Console.Print(message[pc]);
 	}
-	std::cout << "\n";
+	m_Console.NewLine();
 }
 
 void VecMathListener::printMarkDown(const std::string& text)
@@ -566,39 +558,6 @@ void VecMathListener::printMarkDown(const std::string& text)
 			printText(token);
 		}
 	}
-}
-
-void VecMathListener::clearScreen()
-{
-	// source : https://www.cplusplus.com/articles/4z18T05o/
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	DWORD                      count;
-	DWORD                      cellCount;
-	COORD                      homeCoords = { 0, 0 };
-	/* Get the number of cells in the current buffer */
-	if (!GetConsoleScreenBufferInfo(m_ConsoleHandle, &csbi)) return;
-	cellCount = csbi.dwSize.X * csbi.dwSize.Y;
-
-	/* Fill the entire buffer with spaces */
-	if (!FillConsoleOutputCharacter(
-		m_ConsoleHandle,
-		(TCHAR)' ',
-		cellCount,
-		homeCoords,
-		&count
-	)) return;
-
-	/* Fill the entire buffer with the current colors and attributes */
-	if (!FillConsoleOutputAttribute(
-		m_ConsoleHandle,
-		csbi.wAttributes,
-		cellCount,
-		homeCoords,
-		&count
-	)) return;
-
-	/* Move the cursor home */
-	SetConsoleCursorPosition(m_ConsoleHandle, homeCoords);
 }
 
 void VecMathListener::clearVariables()
@@ -616,20 +575,20 @@ void VecMathListener::clearVariables()
 
 void VecMathListener::printInfo(const std::string& message) const
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, INFOCOLOR);
-	std::cout << message << "\n";
+	m_Console.Print(Console::VMF_BRIGHTGREEN, message);
+	m_Console.NewLine();
 }
 
 void VecMathListener::printError(const std::string& message) const
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, ERRORCOLOR);
-	std::cout << message << "\n";
+	m_Console.Print(Console::VMF_BRIGHTRED, message);
+	m_Console.NewLine();
 }
 
 void VecMathListener::printText(const std::string& message) const
 {
-	SetConsoleTextAttribute(m_ConsoleHandle, TEXTCOLOR);
-	std::cout << message << "\n";
+	m_Console.Print(Console::VMF_LIGHTGRAY, message);
+	m_Console.NewLine();
 }
 
 void VecMathListener::syntaxError(antlr4::Recognizer* recognizer, antlr4::Token* offendingSymbol, size_t line, size_t charPositionInLine, const std::string& msg, std::exception_ptr e)
@@ -678,7 +637,7 @@ void VecMathListener::reportContextSensitivity(antlr4::Parser* recognizer, const
 
 std::shared_ptr<IMatrix> VecMathListener::popFromStack()
 {
-	if (m_ExprStack.size() > 0) {
+	if (!m_ExprStack.empty()) {
 		auto r = m_ExprStack.top();
 		m_ExprStack.pop();
 		return r;

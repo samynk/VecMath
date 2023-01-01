@@ -14,7 +14,7 @@ Vector2D::Vector2D(float x, float y) : IMatrix(
 {
 }
 
-float Vector2D::get(int ri, int ci)
+float Vector2D::get(int ri, int ci) const
 {
 	if (inRange(ri, ci)) {
 		switch (ci) {

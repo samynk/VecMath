@@ -16,7 +16,7 @@ Complex::Complex(float x, float y):IMatrix(
 
 }
 
-float Complex::get(int ri, int ci)
+float Complex::get(int ri, int ci) const
 {
 	if (inRange(ri, ci)) {
 		switch (ci) {
@@ -71,16 +71,11 @@ Scalar* Complex::imaginary()
 	return new Scalar(m_I);
 }
 
-void Complex::print(HANDLE console)
+void Complex::print(const Console& console) const
 {
-	SetConsoleTextAttribute(console, 8);
-	std::cout << "[";
-	SetConsoleTextAttribute(console, 12);
-	std::cout << m_R;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " ,( ";
-	SetConsoleTextAttribute(console, 10);
-	std::cout << m_I;
-	SetConsoleTextAttribute(console, 8);
-	std::cout << " )]";
+	console.Print(Console::VMF_GRAY, "[");
+	console.Print(Console::VMF_BRIGHTRED, m_R);
+	console.Print(Console::VMF_GRAY, " ,(");
+	console.Print(Console::VMF_BRIGHTGREEN, m_I);
+	console.Print(Console::VMF_GRAY, " )]");
 }

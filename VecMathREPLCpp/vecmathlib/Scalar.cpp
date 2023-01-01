@@ -13,7 +13,7 @@ Scalar::Scalar(float value) :IMatrix(
 {
 }
 
-float Scalar::get(int ri, int ci)
+float Scalar::get(int ri, int ci) const
 {
 	if (inRange(ri, ci)) {
 	return m_Value;
@@ -22,7 +22,7 @@ float Scalar::get(int ri, int ci)
 		switch (m_AddressMode) {
 		case AddressMode::CLAMP:return m_Value;
 		case AddressMode::BORDER:return m_BorderValue;
-		case AddressMode::BOUNDSERROR:return NAN;
+		case AddressMode::BOUNDSERROR:
 		default: return NAN;
 		}
 	}

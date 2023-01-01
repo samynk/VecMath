@@ -24,32 +24,26 @@ IMatrix::~IMatrix()
 	--m_Count;
 }
 
-void IMatrix::print(HANDLE console)
+void IMatrix::print(const Console& console) const
 {
-	SetConsoleTextAttribute(console, 8);
 	if (m_Rows > 1) {
-		std::cout << "{";
+		console.Print(Console::VMF_LIGHTGRAY, "{");
 	}
 	for (int r = 0; r < m_Rows; ++r) {
-		std::cout << "[";
+		console.Print(Console::VMF_LIGHTGRAY, "[");
 		for (int c = 0; c < m_Columns; ++c) {
-			SetConsoleTextAttribute(console, 10);
-			std::cout << get(r, c);
+			console.Print(Console::VMF_BRIGHTGREEN, get(r, c));
 			if (c + 1 < m_Columns) {
-				SetConsoleTextAttribute(console, 8);
-				std::cout << ",";
+				console.Print(Console::VMF_LIGHTGRAY, ",");
 			}
 		}
 		if (r + 1 < m_Rows) {
-			SetConsoleTextAttribute(console, 8);
-			std::cout << ",";
+			console.Print(Console::VMF_LIGHTGRAY, ",");
 		}
-		SetConsoleTextAttribute(console, 8);
-		std::cout << "]";
+		console.Print(Console::VMF_LIGHTGRAY, "]");
 	}
 	if (m_Rows > 1) {
-		SetConsoleTextAttribute(console, 8);
-		std::cout << "}";
+		console.Print(Console::VMF_LIGHTGRAY, "}");
 	}
 }
 

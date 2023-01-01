@@ -3,7 +3,7 @@
 #define NOMINMAX
 #include "math.h"
 #include <functional>
-#include <windows.h>
+#include "Console.h"
 
 enum class Type { MATRIX, VECTOR, COMPLEX, QUATERNION };
 enum class AddressMode { CLAMP, BORDER, BOUNDSERROR };
@@ -15,10 +15,10 @@ public:
 	IMatrix(Type type, AddressMode mode, float borderValue, int rows, int columns);
 	~IMatrix();
 
-	virtual float get(int ri, int ci) = 0;
+	virtual float get(int ri, int ci) const = 0;
 	virtual void set(int ri, int ci, float value) = 0;
 
-	virtual void print(HANDLE console);
+	virtual void print(const Console& console) const;
 	virtual float magnitude();
 	virtual IMatrix* conjugate();
 	virtual IMatrix* inverse();
