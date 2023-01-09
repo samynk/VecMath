@@ -5,8 +5,6 @@
 #include "Console.h"
 #include <map>
 #include <stack>
-
-#include <windows.h>
 #include <memory>
 
 class VecMathListener : 
@@ -47,6 +45,7 @@ public:
 	void printError(const std::string& message) const;
 	void printInfo(const std::string& message) const;
 	void printText(const std::string& message) const;
+	void printDebug(const std::string& message) const;
 	void printVariable(const std::string& id) const;
 	void printVariable(const std::string& id, std::shared_ptr<IMatrix> matrix) const;
 	void printErrorLoc(size_t start, size_t end, const std::string& message);

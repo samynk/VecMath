@@ -12,11 +12,11 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(UnitTests UnitTestMain.cpp  "AssignmentTests.h" "TestUtil.h" "UnitTestQuaternion.h" "UnitTestVector.h" "UnitTestFunctions.h" "UnitTestOperator.h" "UnitTestComplex.h" "UnitTestConstants.h" "UnitTestMemory.h")
 target_link_libraries(UnitTests PRIVATE VecMathLib Catch2::Catch2WithMain)
 
-#configure_file(week1.json week1.json)
-#configure_file(week2.json week2.json)
-#configure_file(week3.json week3.json)
-#configure_file(week4.json week4.json)
-#configure_file(week5.json week5.json)
+if (UNIX)
+find_package(Threads REQUIRED)
+target_link_libraries(UnitTests PRIVATE Threads::Threads)
+endif()
+
 
 add_custom_target(UnitTestsRun
   COMMAND UnitTests -d yes

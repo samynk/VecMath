@@ -62,14 +62,12 @@ void VecMathListener::exec(std::string code)
 	try {
 		ANTLRInputStream is{ code };
 		VecMath::VecMathLexer lexer{ &is };
-
 		CommonTokenStream stream{ &lexer };
 		VecMathParser parser(&stream);
 		parser.removeErrorListeners();
 		parser.addParseListener(this);
 		parser.addErrorListener(this);
 		parser.expression();
-		
 	}
 	catch (IllegalArgumentException ex) {
 		printError("Illegal character in code, best to use ASCII characters only. ");
@@ -589,6 +587,14 @@ void VecMathListener::printText(const std::string& message) const
 {
 	m_Console.Print(Console::VMF_LIGHTGRAY, message);
 	m_Console.NewLine();
+}
+
+void VecMathListener::printDebug(const std::string& message) const
+{
+#ifndef NDEBUG
+	m_Console.Print(Console::VMF_LIGHTGRAY, message);
+	m_Console.NewLine();
+#endif
 }
 
 void VecMathListener::syntaxError(antlr4::Recognizer* recognizer, antlr4::Token* offendingSymbol, size_t line, size_t charPositionInLine, const std::string& msg, std::exception_ptr e)

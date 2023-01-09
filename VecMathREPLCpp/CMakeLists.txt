@@ -2,7 +2,10 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7 FATAL_ERROR)
 project(VecMathLexer)
-cmake_policy(SET CMP0114 NEW)
+if (WIN32)
+    cmake_policy(SET CMP0114 NEW)
+endif (WIN32)
+
 set( ANTLR4_TAG "4.10.1")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 

@@ -15,10 +15,9 @@ void Console::Print(const unsigned short color, const std::string& text) const
 	SetConsoleTextAttribute(m_ConsoleHandle, color);
 	std::cout << text;
 #else
-	std::cout << "\033[1;";
-	std::cout << color;
+	std::cout << '\033' << "[1;" << color << "m";
 	std::cout << text;
-	std::cout << "\033[0m";
+	std::cout << '\033' << "[0m";
 #endif
 }
 
@@ -28,9 +27,8 @@ void Console::Print(const unsigned short color, const float value) const
 	SetConsoleTextAttribute(m_ConsoleHandle, color);
 	std::cout << value;
 #else
-	std::cout << "\033[1;";
-	std::cout << color;
-	std::cout << text;
+	std::cout << '\033' << "[1;" << color << "m";
+	std::cout << value;
 	std::cout << "\033[0m";
 #endif
 }
@@ -56,8 +54,7 @@ void Console::SetColor(const unsigned short color) const
 #ifdef _WIN32
 	SetConsoleTextAttribute(m_ConsoleHandle, color);
 #else
-	std::cout << "\033[1;";
-	std::cout << color;
+	std::cout << '\033' << "[1;" << color << "m";
 #endif
 }
 
