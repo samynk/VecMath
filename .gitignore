@@ -16,7 +16,7 @@ docs/.vitepress/dist
 /VecMathREPLCpp/out/build/x64-Debug
 /VecMathREPLCpp/out/install/x64-Debug/bin
 /VecMathREPLCpp/out/build/x64-Release
-/VecMathREPL/out/Linux
+/VecMathREPLCpp/out/Linux
 /VecMathREPLJava/target
 /VecMathREPLJava/nbproject/
 /VecMathREPLJava/start.bat
