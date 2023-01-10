@@ -107,23 +107,23 @@ public class Quaternion extends IMatrix {
      * Prints the value of the quaternion to the console.
      */
     @Override
-    public void print(String floatFormat,PrintStream out) {
+    public void print(String floatFormat, PrintStream out) {
         //SetConsoleTextAttribute(console, 8);
         out.print("[");
         //SetConsoleTextAttribute(console, 7);
-        out.printf(java.util.Locale.US,floatFormat,w);
+        out.printf(java.util.Locale.US, floatFormat, w);
         //SetConsoleTextAttribute(console, 8);
         out.print(" ,( ");
         //SetConsoleTextAttribute(console, 12);
-        out.printf(java.util.Locale.US,floatFormat,x);
+        out.printf(java.util.Locale.US, floatFormat, x);
         //SetConsoleTextAttribute(console, 8);
         out.print(" , ");
         //SetConsoleTextAttribute(console, 10);
-        out.printf(java.util.Locale.US,floatFormat,y);
+        out.printf(java.util.Locale.US, floatFormat, y);
         //SetConsoleTextAttribute(console, 8);
         out.print(" , ");
         //SetConsoleTextAttribute(console, 3);
-        out.printf(java.util.Locale.US,floatFormat,z);
+        out.printf(java.util.Locale.US, floatFormat, z);
         //SetConsoleTextAttribute(console, 8);
         out.print(" )]");
 
@@ -150,32 +150,41 @@ public class Quaternion extends IMatrix {
 
     @Override
     public Vector3D imaginary() {
-        return new Vector3D(x,y,z);
+        return new Vector3D(x, y, z);
     }
-    
+
     /**
-     * Returns the angle of a quaternion in radians, NAN scalar for other matrices.
+     * Returns the angle of a quaternion in radians, NAN scalar for other
+     * matrices.
+     *
      * @return the angle of the quaternion in radians.
      */
-    Scalar angle(){
-        return new Scalar((float)(2 * Math.acos(w)));
+    Scalar angle() {
+        float m = magnitude();
+        return new Scalar((float) (2 * Math.acos(w / m)));
     }
-    
+
     /**
-     * Returns the angle of a quaternion in degrees, NAN scalar for other matrices.
+     * Returns the angle of a quaternion in degrees, NAN scalar for other
+     * matrices.
+     *
      * @return the angle of the quaternion in radians.
      */
-    Scalar angled(){
-        return new Scalar((float)(2 * Math.acos(w)*180/Math.PI));
+    Scalar angled() {
+        float m = magnitude();
+        return new Scalar((float) (2 * Math.acos(w / m) * 180 / Math.PI));
     }
-    
+
     /**
-     * Returns the axis of a quaternion, 
-     * @return 
+     * Returns the normalized axis of a quaternion,
+     *
+     * @return the normalized axis of a quaternion.
      */
-    Vector3D axis(){
-        float denom = (float)Math.sqrt(1-w*w);
-        return new Vector3D(x/denom,y/denom,z/denom);
+    Vector3D axis() {
+        float m = magnitude();
+        float nw = w / m;
+        float nom = 1 / (m * (float) Math.sqrt(1 - nw * nw));
+        return new Vector3D(x * nom, y * nom, z * nom);
     }
-    
+
 }

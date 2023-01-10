@@ -96,16 +96,20 @@ Scalar* Quaternion::real()
 
 Scalar* Quaternion::angle()
 {
-	return new Scalar(2 * acos(m_W));
+	const float m = magnitude();
+	return new Scalar(2 * acos(m_W / m));
 }
 
 Scalar* Quaternion::angled()
 {
-	return new Scalar(static_cast<float>(2 * acos(m_W)*180/M_PI));
+	const float m = magnitude();
+	return new Scalar(static_cast<float>(2 * acos(m_W / m) * 180 / M_PI));
 }
 
 Vector3D* Quaternion::axis()
 {
-	float denom = sqrtf(1 - m_W * m_W);
-	return new Vector3D(m_X / denom, m_Y / denom, m_Z / denom);
+	const float m = magnitude();
+	const float n_w = m_W / m;
+	const float nom = 1/(m * sqrtf(1 - n_w * n_w));
+	return new Vector3D(m_X * nom, m_Y * nom, m_Z * nom);
 }
