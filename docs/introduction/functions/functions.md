@@ -2,14 +2,26 @@
 Functions are used in a syntax that resembles C++, but with one important distinction that the
 function is applied to all the components in a vector or quaternion.
 
-- sin, cos and tan: The sine, cosine and tangent function. These formulas work with radians.
+- sin, cos and tan: The sine, cosine and tangent function. These functions work with radians.
+- sind, cosd and tand: The sine, cosine and tangent function. These functions work with degrees as input.
 - asin,acos and atan: The arcsine, arc cosine and arc tangent functions. These formulas return an
-angle in radians. Undefined behaviour when the variable is bigger than one, or smaller than minus
-one.
+angle in **radians**. Undefined behaviour when the variable is not in the range [-1,1].
+- asind,acosd and atand: The arcsine, arc cosine and arc tangent functions. These formulas return an
+angle in **degrees**. Undefined behaviour when the variable is not in the range [-1,1].
 
+- sqrt: Calculates the square root of a variable.
+- norm : calculate the length of a vector, alternative for the | | notation.
+- abs : calculates the absolute value of all the components.
+- con : calculates the conjugate of a quaternion or complex number.
+- inv : calculates the inverse of a variable.
+    For a scalar this is 1/x,
+    for a 2d vector [1/x,1/y],
+    for a complex number or quaternion this is the actual inverse.
+- angle : analyzes the rotation angle of a quaternion, returns the result in radians.
+- angled : anaylyzes the rotaiton angle of a quaternion, returns the result in degrees.
+- axis : analyzes the rotation axis of a quaternion, returns the result as a 3D vector.
 - rad2deg: Converts a variable from radians to degrees.
 - deg2rad: Converts a variable from degrees to radians.
-- sqrt: Calculates the square root of a variable.
 
 ## Trigonometric functions
 
