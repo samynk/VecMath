@@ -7,6 +7,7 @@ Console::Console()
 #ifdef _WIN32
 	m_ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 #endif
+	SetPrecision(6);
 }
 
 void Console::Print(const unsigned short color, const std::string& text) const
