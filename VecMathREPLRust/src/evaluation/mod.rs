@@ -225,7 +225,11 @@ impl Spanned<Expression> {
                 let resulting_expression = Expression::Vec(evaluated_expressions);
                 let result = Spanned::new(resulting_expression, span);
                 let node = StringTreeNode::with_child_nodes(
-                    self.content.clone().fg(VALUE_COLOR).to_string(),
+                    format!(
+                        "{} = {}",
+                        self.content.clone().fg(VALUE_COLOR),
+                        result.content.to_string().fg(OPERATION_RESULT_COLOR)
+                    ),
                     nodes.into_iter(),
                 );
 
