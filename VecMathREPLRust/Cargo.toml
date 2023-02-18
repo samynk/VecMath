@@ -1,0 +1,12 @@
+[package]
+name = "vec_math_repl_rust"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chumsky = "0.9.0"
+ariadne = "0.1.5"
+text_trees = "0.1.2"
+rustyline = "10.1.1"

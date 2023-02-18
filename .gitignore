@@ -12,6 +12,9 @@ docs/.vitepress/dist
 *.db-wal
 *.opendb
 
+# JetBrains IDEs
+/.idea
+
 /VecMathREPLCpp/.vs
 /VecMathREPLCpp/out/build/x64-Debug
 /VecMathREPLCpp/out/install/x64-Debug/bin
@@ -20,4 +23,5 @@ docs/.vitepress/dist
 /VecMathREPLJava/target
 /VecMathREPLJava/nbproject/
 /VecMathREPLJava/start.bat
+/VecMathREPLRust/target
 /Releases
