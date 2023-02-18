@@ -26,7 +26,7 @@ impl Expression {
     pub fn value_type_name(&self) -> String {
         match self {
             Self::Scalar(_) => "scalar",
-            Self::Vec(_) => "vec",
+            Self::Vec(_) => "vector",
             Expression::Complex(_, _) => "complex",
             Expression::Quaternion(_, _, _, _) => "quaternion",
             Expression::VariableReference(_) => "variable reference",
