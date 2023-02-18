@@ -58,7 +58,7 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
             .map_with_span(|expr, span| Spanned::new(Expression::Vec(expr), span))
             .padded();
 
-        let value = scalar.or(var_reference).or(fn_call).or(vector);
+        let value = scalar.or(fn_call).or(var_reference).or(vector);
 
         let brackets = expr
             .clone()
