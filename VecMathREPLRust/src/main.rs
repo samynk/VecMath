@@ -67,7 +67,7 @@ fn handle_errors(input: String, errors: &Vec<SimpleError>) {
 
             SimpleReason::Custom(message) => report.with_message(message).with_label(
                 Label::new((SRC_ID, error.span()))
-                    .with_message(format!("{}", message.fg(Color::Red)))
+                    .with_message(message)
                     .with_color(Color::Yellow),
             ),
         };
