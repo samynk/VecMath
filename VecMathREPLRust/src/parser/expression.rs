@@ -1,26 +1,34 @@
-use crate::parser::Spanned;
+use crate::parser::{SimpleError, Spanned};
+use chumsky::error::Simple;
 use std::fmt::{Display, Formatter};
+
+type ExpressionChild = Box<Spanned<Expression>>;
+type ExpressionChildren = Vec<Spanned<Expression>>;
+type ExpressionIdentifier = Spanned<String>;
 
 #[derive(Debug, Clone)]
 pub enum Expression {
-    Addition(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
-    Subtraction(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
-    Multiplication(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
-    Division(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
-
-    Negative(Box<Spanned<Expression>>),
+    // Value types
     Scalar(f64),
-    Vec(Vec<Spanned<Expression>>),
-    Brackets(Spanned<Box<Expression>>),
-    Complex(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
+    Vec(ExpressionChildren),
+    Complex(ExpressionChild, ExpressionChild),
     Quaternion(
-        Box<Spanned<Expression>>,
-        Box<Spanned<Expression>>,
-        Box<Spanned<Expression>>,
-        Box<Spanned<Expression>>,
+        ExpressionChild,
+        ExpressionChild,
+        ExpressionChild,
+        ExpressionChild,
     ),
-    VariableReference(Spanned<String>),
-    FnCall(Spanned<String>, Spanned<Vec<Spanned<Expression>>>),
+
+    // Miscellaneous
+    Addition(ExpressionChild, ExpressionChild),
+    Subtraction(ExpressionChild, ExpressionChild),
+    Multiplication(ExpressionChild, ExpressionChild),
+    Division(ExpressionChild, ExpressionChild),
+    Negative(ExpressionChild),
+    Magnitude(ExpressionChild),
+    Brackets(ExpressionChild),
+    VariableReference(ExpressionIdentifier),
+    FnCall(ExpressionIdentifier, Spanned<ExpressionChildren>),
 }
 
 impl Expression {
@@ -34,6 +42,34 @@ impl Expression {
             _ => panic!("Type {:?} is not a value type", self),
         }
         .to_string()
+    }
+}
+
+impl Spanned<Expression> {
+    pub fn scalar(self) -> Result<f64, Box<SimpleError>> {
+        match self.content {
+            Expression::Scalar(value) => Ok(value),
+            expr => Err(Box::new(Simple::custom(
+                self.span,
+                format!(
+                    "Expected this expression to be a scalar but it was of type '{}'",
+                    expr.value_type_name()
+                ),
+            ))),
+        }
+    }
+
+    pub fn vec(self) -> Result<ExpressionChildren, Box<SimpleError>> {
+        match self.content {
+            Expression::Vec(children) => Ok(children),
+            expr => Err(Box::new(Simple::custom(
+                self.span.clone(),
+                format!(
+                    "Expected this expression to be a vector but it was of type '{}'",
+                    expr.value_type_name()
+                ),
+            ))),
+        }
     }
 }
 
@@ -85,6 +121,9 @@ impl Display for Expression {
             Expression::Quaternion(_, _, _, _) => todo!(),
             Expression::VariableReference(name) => {
                 write!(f, "{}", name.content)
+            }
+            Expression::Magnitude(expr) => {
+                write!(f, "|{}|", expr.content)
             }
         }
     }

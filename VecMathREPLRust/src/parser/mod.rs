@@ -16,14 +16,14 @@ const CMD_EXIT: &str = "exit";
 const CMD_PRINT: &str = "print";
 const CMD_PRINT_WITH_STEPS: &str = "print_steps";
 
-pub type ParseError = Simple<char>;
+pub type SimpleError = Simple<char>;
 
-pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
+pub fn parser() -> impl Parser<char, Statement, Error = SimpleError> + Clone {
     let ident = text::ident().padded().map_with_span(Spanned::<String>::new);
 
     let operator = |character| just(character).padded();
 
-    let expression = recursive::<_, Spanned<Expression>, _, _, ParseError>(|expr| {
+    let expression = recursive::<_, Spanned<Expression>, _, _, SimpleError>(|expr| {
         let scalar = text::int(10)
             .chain::<char, _, _>(just('.').chain(text::digits(10)).or_not())
             .collect::<String>()
@@ -60,23 +60,32 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
 
         let value = scalar.or(fn_call).or(var_reference).or(vector);
 
+        let magnitude = expr
+            .clone()
+            .delimited_by(just('|'), just('|'))
+            .map_with_span(|expr, span| Spanned::new(Expression::Magnitude(Box::new(expr)), span));
+
         let brackets = expr
             .clone()
             .delimited_by(just('('), just(')'))
             .map_with_span(|expr, span| {
-                let inner_expression = Spanned::new(Box::new(expr.content), expr.span);
+                let inner_expression = Box::new(Spanned::new(expr.content, expr.span));
 
                 Spanned::new(Expression::Brackets(inner_expression), span)
             })
+            .or(magnitude)
             .or(value);
 
-        let negative = just('-').or_not().then(brackets).map_with_span(|(neg, expr), span| {
-            if neg.is_some() {
-                Spanned::new(Expression::Negative(Box::new(expr)), span)
-            } else {
-                expr
-            }
-        });
+        let negative = just('-')
+            .or_not()
+            .then(brackets)
+            .map_with_span(|(neg, expr), span| {
+                if neg.is_some() {
+                    Spanned::new(Expression::Negative(Box::new(expr)), span)
+                } else {
+                    expr
+                }
+            });
 
         let products_and_divisions = negative
             .clone()

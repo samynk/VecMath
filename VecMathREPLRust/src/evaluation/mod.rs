@@ -3,7 +3,7 @@ mod functions;
 use crate::evaluation::functions::evaluate_call;
 use crate::parser::expression::Expression;
 use crate::parser::spanned::Spanned;
-use crate::parser::ParseError;
+use crate::parser::SimpleError;
 use ariadne::{Color, Fmt};
 use chumsky::error::Simple;
 use std::collections::HashMap;
@@ -11,7 +11,7 @@ use std::ops;
 use text_trees::StringTreeNode;
 
 impl ops::Add<Spanned<Expression>> for Spanned<Expression> {
-    type Output = Result<Spanned<Expression>, ParseError>;
+    type Output = Result<Spanned<Expression>, SimpleError>;
 
     fn add(self, rhs: Spanned<Expression>) -> Self::Output {
         let span = self.span.start..rhs.span.end;
@@ -44,7 +44,7 @@ impl ops::Add<Spanned<Expression>> for Spanned<Expression> {
 }
 
 impl ops::Sub<Spanned<Expression>> for Spanned<Expression> {
-    type Output = Result<Spanned<Expression>, ParseError>;
+    type Output = Result<Spanned<Expression>, SimpleError>;
 
     fn sub(self, rhs: Spanned<Expression>) -> Self::Output {
         let span = self.span.start..rhs.span.end;
@@ -66,7 +66,7 @@ impl ops::Sub<Spanned<Expression>> for Spanned<Expression> {
 }
 
 impl ops::Mul<Spanned<Expression>> for Spanned<Expression> {
-    type Output = Result<Spanned<Expression>, ParseError>;
+    type Output = Result<Spanned<Expression>, SimpleError>;
 
     fn mul(self, rhs: Spanned<Expression>) -> Self::Output {
         let span = self.span.start..rhs.span.end;
@@ -99,7 +99,7 @@ impl ops::Mul<Spanned<Expression>> for Spanned<Expression> {
 pub const ERR_DIVIDE_BY_ZERO: &str = "Cannot divide by 0";
 
 impl ops::Div<Spanned<Expression>> for Spanned<Expression> {
-    type Output = Result<Spanned<Expression>, ParseError>;
+    type Output = Result<Spanned<Expression>, SimpleError>;
 
     fn div(self, rhs: Spanned<Expression>) -> Self::Output {
         let span = self.span.start..rhs.span.end;
@@ -137,18 +137,15 @@ impl ops::Div<Spanned<Expression>> for Spanned<Expression> {
 }
 
 impl ops::Neg for Spanned<Expression> {
-    type Output = Result<Spanned<Expression>, ParseError>;
+    type Output = Result<Spanned<Expression>, SimpleError>;
 
     fn neg(self) -> Self::Output {
         match &self.content {
             Expression::Scalar(value) => Ok(Spanned::new(Expression::Scalar(-*value), self.span)),
             expr => Err(Simple::custom(
                 self.span,
-                format!(
-                    "Cannot negate type '{}'",
-                    expr.value_type_name()
-                ),
-            ))
+                format!("Cannot negate type '{}'", expr.value_type_name()),
+            )),
         }
     }
 }
@@ -160,7 +157,7 @@ impl Spanned<Expression> {
     pub fn evaluate(
         &self,
         variables: &mut HashMap<String, Spanned<Expression>>,
-    ) -> Result<(Spanned<Expression>, StringTreeNode), Box<ParseError>> {
+    ) -> Result<(Spanned<Expression>, StringTreeNode), Box<SimpleError>> {
         let span = self.span.clone();
 
         match &self.content {
@@ -235,6 +232,11 @@ impl Spanned<Expression> {
                 for expression in expressions {
                     let (expr, node) = expression.evaluate(variables)?;
 
+                    let expr = Spanned::new(
+                        Expression::Scalar(expr.clone().scalar()?),
+                        expr.span.clone(),
+                    );
+
                     evaluated_expressions.push(expr);
                     nodes.push(node);
                 }
@@ -259,7 +261,7 @@ impl Spanned<Expression> {
                 Ok((spanned_expression, node))
             }
             Expression::Brackets(inner_expression) => {
-                let spanned_expression = Spanned::new(*inner_expression.clone().content, span);
+                let spanned_expression = Spanned::new(inner_expression.content.clone(), span);
                 let (resulting_expression, inner_node) = spanned_expression.evaluate(variables)?;
                 let node = StringTreeNode::with_child_nodes(
                     self.content.to_string(),
@@ -322,14 +324,40 @@ impl Spanned<Expression> {
                 let (inner_evaluated, inner_nodes) = expr.evaluate(variables)?;
                 let result = (-inner_evaluated)?;
 
-                let node = StringTreeNode::with_child_nodes(format!(
-                    "-{} = {}",
-                    expr.content,
-                    result
-                        .content
-                        .to_string()
-                        .fg(OPERATION_RESULT_COLOR)
-                ), vec![inner_nodes].into_iter());
+                let node = StringTreeNode::with_child_nodes(
+                    format!(
+                        "-{} = {}",
+                        expr.content,
+                        result.content.to_string().fg(OPERATION_RESULT_COLOR)
+                    ),
+                    vec![inner_nodes].into_iter(),
+                );
+
+                Ok((result, node))
+            }
+            Expression::Magnitude(expr) => {
+                let (inner_evaluated, inner_nodes) = expr.evaluate(variables)?;
+                let magnitude =
+                    inner_evaluated
+                        .vec()?
+                        .iter()
+                        .map(|child| {
+                            child.clone().scalar().map(|scalar| scalar.powf(2f64)).expect(
+                            "Every element in the vector should have been a scalar at this point.",
+                        )
+                        })
+                        .fold(0f64, |acc, current| acc + current)
+                        .sqrt();
+                let result = Spanned::new(Expression::Scalar(magnitude), span);
+
+                let node = StringTreeNode::with_child_nodes(
+                    format!(
+                        "|{}| = {}",
+                        expr.content,
+                        result.content.to_string().fg(OPERATION_RESULT_COLOR)
+                    ),
+                    vec![inner_nodes].into_iter(),
+                );
 
                 Ok((result, node))
             }

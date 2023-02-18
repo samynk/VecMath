@@ -1,7 +1,7 @@
 use crate::evaluation::ERR_DIVIDE_BY_ZERO;
 use crate::parser::expression::Expression;
 use crate::parser::spanned::Spanned;
-use crate::parser::ParseError;
+use crate::parser::SimpleError;
 use ariadne::{Color, Fmt};
 use chumsky::error::Simple;
 
@@ -39,7 +39,7 @@ macro_rules! invalid_arg_types {
 }
 
 type Arguments = Spanned<Vec<Spanned<Expression>>>;
-type CallResult = Result<Expression, Box<ParseError>>;
+type CallResult = Result<Expression, Box<SimpleError>>;
 
 /// The caller ought to already have evaluated the argument expressions as far as possible.
 /// Function names are case insensitive.
@@ -55,7 +55,7 @@ pub fn evaluate_call(fn_name: Spanned<String>, arguments: Arguments) -> CallResu
         "y" => get_element_sugar(arguments, 1),
         "z" => get_element_sugar(arguments, 2),
         "nthroot" => nth_root(arguments),
-        _ => Err(Box::new(ParseError::custom(
+        _ => Err(Box::new(SimpleError::custom(
             fn_name.span,
             format!("Unknown function '{}'", fn_name.content.fg(Color::Yellow)),
         ))),

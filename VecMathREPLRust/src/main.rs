@@ -1,7 +1,7 @@
 use crate::parser::expression::Expression;
 use crate::parser::spanned::Spanned;
 use crate::parser::statement::Statement;
-use crate::parser::ParseError;
+use crate::parser::SimpleError;
 use ariadne::{Color, Fmt, Label, Report, ReportKind, Source};
 use chumsky::error::SimpleReason;
 use chumsky::Parser;
@@ -18,7 +18,7 @@ const PROMPT_PREFIX: &str = "vecmath> ";
 const PROMPT_COLOR: Color = Color::Cyan;
 const SRC_ID: &str = "stdin";
 
-fn handle_errors(input: String, errors: &Vec<ParseError>) {
+fn handle_errors(input: String, errors: &Vec<SimpleError>) {
     for error in errors {
         let report = Report::build::<&str>(ReportKind::Error, SRC_ID, error.span().start);
 
@@ -81,7 +81,7 @@ fn handle_errors(input: String, errors: &Vec<ParseError>) {
 
 pub type Variables = HashMap<String, Spanned<Expression>>;
 
-fn handle_input(input: String, variables: &mut Variables) -> Result<(), Vec<ParseError>> {
+fn handle_input(input: String, variables: &mut Variables) -> Result<(), Vec<SimpleError>> {
     let parser = parser::parser();
 
     let (statement, mut errors) = parser.parse_recovery(input.clone());
