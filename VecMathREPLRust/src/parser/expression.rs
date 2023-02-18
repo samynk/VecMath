@@ -96,6 +96,7 @@ impl Spanned<Expression> {
     pub fn vec(&self) -> Result<ExpressionChildren, Box<SimpleError>> {
         match &self.content {
             Expression::Vec(children) => Ok(children.clone()),
+            Expression::Scalar(_) => Ok(vec![self.clone()]),
             expr => Err(Box::new(Simple::custom(
                 self.span.clone(),
                 format!(
