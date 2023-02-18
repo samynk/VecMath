@@ -1,17 +1,18 @@
+use crate::parser::expression::Expression;
+use crate::parser::spanned::Spanned;
 use crate::parser::statement::Statement;
 use crate::parser::ParseError;
 use ariadne::{Color, Fmt, Label, Report, ReportKind, Source};
 use chumsky::error::SimpleReason;
 use chumsky::Parser;
-use std::io;
-use std::io::{BufRead, Write};
-use std::process::exit;
-use rustyline::Editor;
 use rustyline::error::ReadlineError;
+use rustyline::Editor;
+use std::collections::HashMap;
+use std::process::exit;
 use text_trees::{FormatCharacters, TreeFormatting};
 
-mod parser;
 mod evaluation;
+mod parser;
 
 const PROMPT_PREFIX: &str = "vecmath> ";
 const SRC_ID: &str = "stdin";
@@ -77,52 +78,44 @@ fn handle_errors(input: String, errors: &Vec<ParseError>) {
     }
 }
 
-fn handle_input(input: String) -> Result<(), Vec<ParseError>> {
+pub type Variables = HashMap<String, Spanned<Expression>>;
+
+fn handle_input(input: String, variables: &mut Variables) -> Result<(), Vec<ParseError>> {
     let parser = parser::parser();
 
     let (statement, mut errors) = parser.parse_recovery(input.clone());
 
     if let Some(statement) = statement {
         let error = match statement {
-            Statement::Variable(_) => todo!(),
+            Statement::Variable(name, value) => value.evaluate(variables).map(|(evaluated, _)| {
+                if let Some(variable) = variables.get_mut(&name.content) {
+                    *variable = evaluated;
+                } else {
+                    variables.insert(name.content, evaluated);
+                };
+            }),
             Statement::PrintWithSteps(expression) => {
-                let evaluation_attempt = expression.evaluate();
+                expression.evaluate(variables).map(|(expression, tree)| {
+                    let tree_result = tree
+                        .to_string_with_format(&TreeFormatting::dir_tree(
+                            FormatCharacters::box_chars(),
+                        ))
+                        .unwrap_or("Failed to render node tree".to_string());
 
-                match evaluation_attempt {
-                    Ok((expression, tree)) => {
-                        let tree_result = tree
-                            .to_string_with_format(&TreeFormatting::dir_tree(
-                                FormatCharacters::box_chars(),
-                            ))
-                            .unwrap_or("Failed to render node tree".to_string());
+                    println!("{}", tree_result);
 
-                        println!("{}", tree_result);
-
-                        println!("{}", expression.content);
-
-                        None
-                    }
-                    Err(e) => Some(e),
-                }
+                    println!("{}", expression.content);
+                })
             }
-            Statement::Print(expression) => {
-                let evaluation_attempt = expression.evaluate();
-
-                match evaluation_attempt {
-                    Ok((expression, _)) => {
-                        println!("{}", expression.content);
-
-                        None
-                    }
-                    Err(e) => Some(e),
-                }
-            }
+            Statement::Print(expression) => expression
+                .evaluate(variables)
+                .map(|(expression, _)| println!("{}", expression.content)),
             Statement::PrintAll => todo!(),
-            Statement::Exit => todo!(),
+            Statement::Exit => exit(0),
             Statement::Help => todo!(),
         };
 
-        if let Some(err) = error {
+        if let Err(err) = error {
             errors.push(*err)
         }
     }
@@ -138,10 +131,11 @@ fn handle_input(input: String) -> Result<(), Vec<ParseError>> {
 
 fn main() -> rustyline::Result<()> {
     let args_input = std::env::args().collect::<Vec<_>>()[1..].join(" ");
+    let mut variables = HashMap::new();
 
     if !args_input.is_empty() {
         #[allow(clippy::bool_to_int_with_if)]
-        let exit_code = if handle_input(args_input).is_err() {
+        let exit_code = if handle_input(args_input, &mut variables).is_err() {
             1
         } else {
             0
@@ -158,19 +152,19 @@ fn main() -> rustyline::Result<()> {
         match read_line {
             Ok(line) => {
                 editor.add_history_entry(line.as_str());
-                let _ = handle_input(line);
-            },
+                let _ = handle_input(line, &mut variables);
+            }
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
-                break
-            },
+                break;
+            }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
-                break
-            },
+                break;
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
-                break
+                break;
             }
         }
     }

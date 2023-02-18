@@ -6,8 +6,8 @@ use crate::parser::{expression::Expression, spanned::Spanned, statement::Stateme
 use chumsky::{
     error::Simple,
     prelude::{end, just, recursive},
-    text::TextParser,
     text,
+    text::TextParser,
     Parser,
 };
 use std::ops::Range;
@@ -19,9 +19,11 @@ const CMD_PRINT_WITH_STEPS: &str = "print_steps";
 pub type ParseError = Simple<char>;
 
 pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
-    let expression = recursive::<_, Spanned<Expression>, _, _, ParseError>(|expr| {
-        let operator = |character| just(character).padded();
+    let ident = text::ident().padded().map_with_span(Spanned::<String>::new);
 
+    let operator = |character| just(character).padded();
+
+    let expression = recursive::<_, Spanned<Expression>, _, _, ParseError>(|expr| {
         let scalar = text::int(10)
             .chain::<char, _, _>(just('.').chain(text::digits(10)).or_not())
             .collect::<String>()
@@ -34,18 +36,20 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
             .map_with_span(Spanned::new)
             .padded();
 
-        let fn_call = text::ident()
-            .padded()
-            .map_with_span(Spanned::<String>::new)
+        let fn_call = ident
             .then(
                 expr.clone()
                     .separated_by(just(',').padded())
-                    .delimited_by(just('('), just(')')).map_with_span(Spanned::new),
+                    .delimited_by(just('('), just(')'))
+                    .map_with_span(Spanned::new),
             )
             .map_with_span(|(fn_name, arguments), span| {
                 Spanned::new(Expression::FnCall(fn_name, arguments), span)
             })
             .padded();
+
+        let var_reference = ident
+            .map_with_span(|name, span| Spanned::new(Expression::VariableReference(name), span));
 
         let vector = expr
             .clone()
@@ -54,7 +58,7 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
             .map_with_span(|expr, span| Spanned::new(Expression::Vec(expr), span))
             .padded();
 
-        let value = scalar.or(fn_call).or(vector);
+        let value = scalar.or(var_reference).or(fn_call).or(vector);
 
         let brackets = expr
             .clone()
@@ -104,9 +108,14 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
     let print_with_steps = text::keyword(CMD_PRINT_WITH_STEPS)
         .ignore_then(expression.clone())
         .map(|expr| Statement::PrintWithSteps(Box::new(expr)));
+    let var_declaration = ident
+        .then_ignore(operator('='))
+        .then(expression)
+        .map(|(name, value)| Statement::Variable(name, Box::new(value)));
 
     exit.or(print.clone())
         .or(print_with_steps.clone())
+        .or(var_declaration.clone())
         .padded()
         .then_ignore(end())
 }

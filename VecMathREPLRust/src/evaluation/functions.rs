@@ -25,12 +25,12 @@ macro_rules! invalid_arg_types {
                 "Invalid argument type, expected '{}' but got {}.",
                 $expected
                     .iter()
-                    .map(|expr| format!("'{}'", expr.type_name().fg(Color::Green)))
+                    .map(|expr| format!("'{}'", expr.value_type_name().fg(Color::Green)))
                     .collect::<Vec<_>>()
                     .join(", "),
                 $actual
                     .iter()
-                    .map(|expr| format!("'{}'", expr.type_name().fg(Color::Red)))
+                    .map(|expr| format!("'{}'", expr.value_type_name().fg(Color::Red)))
                     .collect::<Vec<_>>()
                     .join(", ")
             ),

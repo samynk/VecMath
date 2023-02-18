@@ -18,19 +18,19 @@ pub enum Expression {
         Box<Spanned<Expression>>,
         Box<Spanned<Expression>>,
     ),
-    VariableReference(String),
+    VariableReference(Spanned<String>),
     FnCall(Spanned<String>, Spanned<Vec<Spanned<Expression>>>),
 }
 
 impl Expression {
-    pub fn type_name(&self) -> String {
+    pub fn value_type_name(&self) -> String {
         match self {
             Self::Scalar(_) => "scalar",
             Self::Vec(_) => "vec",
             Expression::Complex(_, _) => "complex",
             Expression::Quaternion(_, _, _, _) => "quaternion",
             Expression::VariableReference(_) => "variable reference",
-            _ => panic!("Type {:?} is not atomic.", self),
+            _ => panic!("Type {:?} is not a value type.", self),
         }
         .to_string()
     }

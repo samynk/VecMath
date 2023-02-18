@@ -6,6 +6,7 @@ use crate::parser::spanned::Spanned;
 use crate::parser::ParseError;
 use ariadne::{Color, Fmt};
 use chumsky::error::Simple;
+use std::collections::HashMap;
 use std::ops;
 use text_trees::StringTreeNode;
 
@@ -34,8 +35,8 @@ impl ops::Add<Spanned<Expression>> for Spanned<Expression> {
                 span,
                 format!(
                     "Cannot add type '{}' and type '{}'",
-                    lhs.type_name(),
-                    rhs.type_name()
+                    lhs.value_type_name(),
+                    rhs.value_type_name()
                 ),
             )),
         }
@@ -56,8 +57,8 @@ impl ops::Sub<Spanned<Expression>> for Spanned<Expression> {
                 span,
                 format!(
                     "Cannot subtract type '{}' from type '{}'",
-                    lhs.type_name(),
-                    rhs.type_name()
+                    lhs.value_type_name(),
+                    rhs.value_type_name()
                 ),
             )),
         }
@@ -87,8 +88,8 @@ impl ops::Mul<Spanned<Expression>> for Spanned<Expression> {
                 span,
                 format!(
                     "Cannot multiply type '{}' with type '{}'",
-                    lhs.type_name(),
-                    rhs.type_name()
+                    lhs.value_type_name(),
+                    rhs.value_type_name()
                 ),
             )),
         }
@@ -127,64 +128,84 @@ impl ops::Div<Spanned<Expression>> for Spanned<Expression> {
                 span,
                 format!(
                     "Cannot divide type '{}' by type '{}'",
-                    lhs.type_name(),
-                    rhs.type_name()
+                    lhs.value_type_name(),
+                    rhs.value_type_name()
                 ),
             )),
         }
     }
 }
 
+const VALUE_COLOR: Color = Color::Green;
 const OPERATION_RESULT_COLOR: Color = Color::Cyan;
 
 impl Spanned<Expression> {
-    pub fn evaluate(&self) -> Result<(Spanned<Expression>, StringTreeNode), Box<ParseError>> {
+    pub fn evaluate(
+        &self,
+        variables: &mut HashMap<String, Spanned<Expression>>,
+    ) -> Result<(Spanned<Expression>, StringTreeNode), Box<ParseError>> {
         let span = self.span.clone();
 
         match &self.content {
             Expression::Addition(lhs, rhs) => {
-                let (lhs_value, lhs_node) = lhs.evaluate()?;
-                let (rhs_value, rhs_node) = rhs.evaluate()?;
+                let (lhs_value, lhs_node) = lhs.evaluate(variables)?;
+                let (rhs_value, rhs_node) = rhs.evaluate(variables)?;
 
                 let result = (lhs_value + rhs_value)?;
                 let node = StringTreeNode::with_child_nodes(
-                    format!("{} = {}", self.content, result.content.clone().fg(OPERATION_RESULT_COLOR)),
+                    format!(
+                        "{} = {}",
+                        self.content,
+                        result.content.clone().fg(OPERATION_RESULT_COLOR)
+                    ),
                     vec![lhs_node, rhs_node].into_iter(),
                 );
 
                 Ok((result, node))
             }
             Expression::Subtraction(lhs, rhs) => {
-                let (lhs_value, lhs_node) = lhs.evaluate()?;
-                let (rhs_value, rhs_node) = rhs.evaluate()?;
+                let (lhs_value, lhs_node) = lhs.evaluate(variables)?;
+                let (rhs_value, rhs_node) = rhs.evaluate(variables)?;
 
                 let result = (lhs_value - rhs_value)?;
                 let node = StringTreeNode::with_child_nodes(
-                    format!("{} = {}", self.content, result.content.clone().fg(OPERATION_RESULT_COLOR)),
+                    format!(
+                        "{} = {}",
+                        self.content,
+                        result.content.clone().fg(OPERATION_RESULT_COLOR)
+                    ),
                     vec![lhs_node, rhs_node].into_iter(),
                 );
 
                 Ok((result, node))
             }
             Expression::Multiplication(lhs, rhs) => {
-                let (lhs_value, lhs_node) = lhs.evaluate()?;
-                let (rhs_value, rhs_node) = rhs.evaluate()?;
+                let (lhs_value, lhs_node) = lhs.evaluate(variables)?;
+                let (rhs_value, rhs_node) = rhs.evaluate(variables)?;
 
                 let result = (lhs_value * rhs_value)?;
                 let node = StringTreeNode::with_child_nodes(
-                    format!("{} = {}", self.content, result.content.clone().fg(OPERATION_RESULT_COLOR)),
+                    format!(
+                        "{} = {}",
+                        self.content,
+                        result.content.clone().fg(OPERATION_RESULT_COLOR)
+                    ),
                     vec![lhs_node, rhs_node].into_iter(),
                 );
 
                 Ok((result, node))
             }
             Expression::Division(lhs, rhs) => {
-                let (lhs_value, lhs_node) = lhs.evaluate()?;
-                let (rhs_value, rhs_node) = rhs.evaluate()?;
+                let (lhs_value, lhs_node) = lhs.evaluate(variables)?;
+                let (rhs_value, rhs_node) = rhs.evaluate(variables)?;
 
                 let result = (lhs_value / rhs_value)?;
                 let node = StringTreeNode::with_child_nodes(
-                    format!("{} = {}", self.content, result.content.clone().fg(OPERATION_RESULT_COLOR)),
+                    format!(
+                        "{} = {}",
+                        self.content,
+                        result.content.clone().fg(OPERATION_RESULT_COLOR)
+                    ),
                     vec![lhs_node, rhs_node].into_iter(),
                 );
 
@@ -195,7 +216,7 @@ impl Spanned<Expression> {
                 let mut nodes = vec![];
 
                 for expression in expressions {
-                    let (expr, node) = expression.evaluate()?;
+                    let (expr, node) = expression.evaluate(variables)?;
 
                     evaluated_expressions.push(expr);
                     nodes.push(node);
@@ -204,21 +225,21 @@ impl Spanned<Expression> {
                 let resulting_expression = Expression::Vec(evaluated_expressions);
                 let result = Spanned::new(resulting_expression, span);
                 let node = StringTreeNode::with_child_nodes(
-                    self.content.to_string(),
+                    self.content.clone().fg(VALUE_COLOR).to_string(),
                     nodes.into_iter(),
                 );
 
                 Ok((result, node))
             }
             Expression::Scalar(value) => {
-                let node = StringTreeNode::new(format!("{} ✓", value).fg(Color::Green).to_string());
+                let node = StringTreeNode::new(value.fg(VALUE_COLOR).to_string());
                 let spanned_expression = Spanned::new(Expression::Scalar(*value), span);
 
                 Ok((spanned_expression, node))
             }
             Expression::Brackets(inner_expression) => {
                 let spanned_expression = Spanned::new(*inner_expression.clone().content, span);
-                let (resulting_expression, inner_node) = spanned_expression.evaluate()?;
+                let (resulting_expression, inner_node) = spanned_expression.evaluate(variables)?;
                 let node = StringTreeNode::with_child_nodes(
                     self.content.to_string(),
                     vec![inner_node].into_iter(),
@@ -231,7 +252,7 @@ impl Spanned<Expression> {
                 let mut nodes = vec![];
 
                 for argument in &arguments.content {
-                    let (expr, node) = argument.evaluate()?;
+                    let (expr, node) = argument.evaluate(variables)?;
 
                     resulting_expressions.push(expr);
                     nodes.push(node);
@@ -242,11 +263,39 @@ impl Spanned<Expression> {
                 let spanned_result = Spanned::new(result, span);
 
                 let node = StringTreeNode::with_child_nodes(
-                    format!("{} = {}", self.content, spanned_result.content.to_string().fg(OPERATION_RESULT_COLOR)),
+                    format!(
+                        "{} = {}",
+                        self.content,
+                        spanned_result
+                            .content
+                            .to_string()
+                            .fg(OPERATION_RESULT_COLOR)
+                    ),
                     nodes.into_iter(),
                 );
 
                 Ok((spanned_result, node))
+            }
+            Expression::VariableReference(name) => {
+                if let Some(value) = variables.get(&name.content) {
+                    let (contained_expr, _) = value.clone().evaluate(variables)?;
+
+                    let node = StringTreeNode::new(format!(
+                        "{} = {}",
+                        name.content.to_string().fg(Color::Magenta),
+                        contained_expr
+                            .content
+                            .to_string()
+                            .fg(OPERATION_RESULT_COLOR)
+                    ));
+
+                    Ok((contained_expr, node))
+                } else {
+                    Err(Simple::custom(
+                        name.span.clone(),
+                        format!("No variable by the name '{}'.", name.content),
+                    ))
+                }
             }
             _ => todo!(),
         }
