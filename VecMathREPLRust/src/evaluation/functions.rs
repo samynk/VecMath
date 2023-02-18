@@ -1,9 +1,9 @@
+use crate::evaluation::ERR_DIVIDE_BY_ZERO;
 use crate::parser::expression::Expression;
 use crate::parser::spanned::Spanned;
 use crate::parser::ParseError;
 use ariadne::{Color, Fmt};
 use chumsky::error::Simple;
-use crate::evaluation::ERR_DIVIDE_BY_ZERO;
 
 macro_rules! incorrect_num_args {
     ($span: expr, $expected: expr, $actual: expr) => {
@@ -88,9 +88,10 @@ fn nth_root(args: Arguments) -> CallResult {
     let required_args = 2;
 
     if argument_expressions.len() == required_args {
-        if let (Expression::Scalar(value), Expression::Scalar(n)) =
-            (&argument_expressions[0].content, &argument_expressions[1].content)
-        {
+        if let (Expression::Scalar(value), Expression::Scalar(n)) = (
+            &argument_expressions[0].content,
+            &argument_expressions[1].content,
+        ) {
             if n == &0f64 {
                 Err(Box::new(Simple::custom(arguments_span, ERR_DIVIDE_BY_ZERO)))
             } else {
@@ -105,7 +106,10 @@ fn nth_root(args: Arguments) -> CallResult {
                     Expression::Scalar(f64::default()),
                     Expression::Scalar(f64::default())
                 ],
-                vec![argument_expressions[0].content.clone(), argument_expressions[1].content.clone()]
+                vec![
+                    argument_expressions[0].content.clone(),
+                    argument_expressions[1].content.clone()
+                ]
             )
         }
     } else {

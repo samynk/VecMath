@@ -8,5 +8,5 @@ pub enum Statement {
     PrintWithSteps(Box<Spanned<Expression>>),
     PrintAll,
     Exit,
-    Help
+    Help,
 }
