@@ -136,6 +136,23 @@ impl ops::Div<Spanned<Expression>> for Spanned<Expression> {
     }
 }
 
+impl ops::Neg for Spanned<Expression> {
+    type Output = Result<Spanned<Expression>, ParseError>;
+
+    fn neg(self) -> Self::Output {
+        match &self.content {
+            Expression::Scalar(value) => Ok(Spanned::new(Expression::Scalar(-*value), self.span)),
+            expr => Err(Simple::custom(
+                self.span,
+                format!(
+                    "Cannot negate type '{}'",
+                    expr.value_type_name()
+                ),
+            ))
+        }
+    }
+}
+
 const VALUE_COLOR: Color = Color::Green;
 const OPERATION_RESULT_COLOR: Color = Color::Cyan;
 
@@ -297,9 +314,24 @@ impl Spanned<Expression> {
                 } else {
                     Err(Simple::custom(
                         name.span.clone(),
-                        format!("No variable by the name '{}'.", name.content),
+                        format!("No variable by the name '{}'", name.content),
                     ))
                 }
+            }
+            Expression::Negative(expr) => {
+                let (inner_evaluated, inner_nodes) = expr.evaluate(variables)?;
+                let result = (-inner_evaluated)?;
+
+                let node = StringTreeNode::with_child_nodes(format!(
+                    "-{} = {}",
+                    expr.content,
+                    result
+                        .content
+                        .to_string()
+                        .fg(OPERATION_RESULT_COLOR)
+                ), vec![inner_nodes].into_iter());
+
+                Ok((result, node))
             }
             _ => todo!(),
         }

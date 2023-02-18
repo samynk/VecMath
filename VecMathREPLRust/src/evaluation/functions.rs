@@ -10,7 +10,7 @@ macro_rules! incorrect_num_args {
         Err(Box::new(Simple::custom(
             $span,
             format!(
-                "Incorrect number of arguments, expected {} but got {}.",
+                "Incorrect number of arguments, expected {} but got {}",
                 $expected, $actual
             ),
         )))
@@ -22,7 +22,7 @@ macro_rules! invalid_arg_types {
         Err(Box::new(Simple::custom(
             $span,
             format!(
-                "Invalid argument type, expected '{}' but got {}.",
+                "Invalid argument type, expected '{}' but got {}",
                 $expected
                     .iter()
                     .map(|expr| format!("'{}'", expr.value_type_name().fg(Color::Green)))

@@ -15,6 +15,7 @@ mod evaluation;
 mod parser;
 
 const PROMPT_PREFIX: &str = "vecmath> ";
+const PROMPT_COLOR: Color = Color::Cyan;
 const SRC_ID: &str = "stdin";
 
 fn handle_errors(input: String, errors: &Vec<ParseError>) {
@@ -34,7 +35,7 @@ fn handle_errors(input: String, errors: &Vec<ParseError>) {
                 .with_label(
                     Label::new((SRC_ID, error.span())).with_message(
                         format!(
-                            "Expected this to be {}.",
+                            "Expected this to be {}",
                             if error.expected().next().is_none() {
                                 "something else".to_string()
                             } else {
@@ -56,7 +57,7 @@ fn handle_errors(input: String, errors: &Vec<ParseError>) {
             SimpleReason::Unclosed { delimiter, .. } => report
                 .with_message(format!("Unclosed delimiter {}", delimiter.fg(Color::Red)))
                 .with_label(Label::new((SRC_ID, error.span())).with_message(format!(
-                    "Instead, {} was encountered.",
+                    "Instead, {} was encountered",
                     error
                         .found()
                         .map(|found| String::from(*found))
@@ -145,9 +146,10 @@ fn main() -> rustyline::Result<()> {
     }
 
     let mut editor = Editor::<()>::new()?;
+    let prompt_prefix = PROMPT_PREFIX.fg(PROMPT_COLOR).to_string();
 
     loop {
-        let read_line = editor.readline(PROMPT_PREFIX);
+        let read_line = editor.readline(prompt_prefix.as_str());
 
         match read_line {
             Ok(line) => {

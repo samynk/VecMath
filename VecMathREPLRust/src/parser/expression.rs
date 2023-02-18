@@ -8,6 +8,7 @@ pub enum Expression {
     Multiplication(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
     Division(Box<Spanned<Expression>>, Box<Spanned<Expression>>),
 
+    Negative(Box<Spanned<Expression>>),
     Scalar(f64),
     Vec(Vec<Spanned<Expression>>),
     Brackets(Spanned<Box<Expression>>),
@@ -30,7 +31,7 @@ impl Expression {
             Expression::Complex(_, _) => "complex",
             Expression::Quaternion(_, _, _, _) => "quaternion",
             Expression::VariableReference(_) => "variable reference",
-            _ => panic!("Type {:?} is not a value type.", self),
+            _ => panic!("Type {:?} is not a value type", self),
         }
         .to_string()
     }
@@ -50,16 +51,16 @@ impl Display for Expression {
                 write!(f, "[{}]", formatted)
             }
             Self::Addition(lhs, rhs) => {
-                write!(f, "{} + {}", lhs.as_ref().content, rhs.as_ref().content)
+                write!(f, "{} + {}", lhs.content, rhs.content)
             }
             Self::Subtraction(lhs, rhs) => {
-                write!(f, "{} - {}", lhs.as_ref().content, rhs.as_ref().content)
+                write!(f, "{} - {}", lhs.content, rhs.content)
             }
             Self::Multiplication(lhs, rhs) => {
-                write!(f, "{} * {}", lhs.as_ref().content, rhs.as_ref().content)
+                write!(f, "{} * {}", lhs.content, rhs.content)
             }
             Self::Division(lhs, rhs) => {
-                write!(f, "{} / {}", lhs.as_ref().content, rhs.as_ref().content)
+                write!(f, "{} / {}", lhs.content, rhs.content)
             }
             Self::Brackets(inner_expression) => {
                 write!(f, "({})", inner_expression.content)
@@ -77,7 +78,14 @@ impl Display for Expression {
                         .join(", ")
                 )
             }
-            expr => write!(f, "{:?}", expr),
+            Self::Negative(inner_expression) => {
+                write!(f, "-{}", inner_expression.content)
+            }
+            Expression::Complex(_, _) => todo!(),
+            Expression::Quaternion(_, _, _, _) => todo!(),
+            Expression::VariableReference(name) => {
+                write!(f, "{}", name.content)
+            }
         }
     }
 }

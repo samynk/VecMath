@@ -30,7 +30,7 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
             .try_map(
                 |num_as_string, span: _| match num_as_string.parse::<f64>() {
                     Ok(num) => Ok(Expression::Scalar(num)),
-                    Err(_) => Err(Simple::custom(span, "Couldn't parse as a 64-bit float.")),
+                    Err(_) => Err(Simple::custom(span, "Couldn't parse as a 64-bit float")),
                 },
             )
             .map_with_span(Spanned::new)
@@ -70,13 +70,21 @@ pub fn parser() -> impl Parser<char, Statement, Error = ParseError> + Clone {
             })
             .or(value);
 
-        let products_and_divisions = brackets
+        let negative = just('-').or_not().then(brackets).map_with_span(|(neg, expr), span| {
+            if neg.is_some() {
+                Spanned::new(Expression::Negative(Box::new(expr)), span)
+            } else {
+                expr
+            }
+        });
+
+        let products_and_divisions = negative
             .clone()
             .then(
                 operator('*')
                     .to(Expression::Multiplication as fn(_, _) -> _)
                     .or(operator('/').to(Expression::Division as fn(_, _) -> _))
-                    .then(brackets)
+                    .then(negative)
                     .repeated(),
             )
             .foldl(|lhs, (op, rhs)| {
