@@ -46,22 +46,56 @@ impl Expression {
 }
 
 impl Spanned<Expression> {
-    pub fn scalar(self) -> Result<f64, Box<SimpleError>> {
-        match self.content {
-            Expression::Scalar(value) => Ok(value),
-            expr => Err(Box::new(Simple::custom(
-                self.span,
-                format!(
-                    "Expected this expression to be a scalar but it was of type '{}'",
-                    expr.value_type_name()
-                ),
-            ))),
+    pub fn is_scalar(&self) -> bool {
+        let is_literal_scalar = matches!(self.content, Expression::Scalar(_));
+
+        // vectors of the first dimension are equivalent to scalars
+        if let Expression::Vec(elements) = self.content.clone() {
+            elements.len() == 1
+                && elements
+                    .get(0)
+                    .map(|value| value.is_scalar())
+                    .unwrap_or(false)
+        } else {
+            is_literal_scalar
         }
     }
 
-    pub fn vec(self) -> Result<ExpressionChildren, Box<SimpleError>> {
-        match self.content {
-            Expression::Vec(children) => Ok(children),
+    pub fn scalar(&self) -> Result<f64, Box<SimpleError>> {
+        let type_name = self.content.value_type_name();
+
+        let err = Err(Box::new(Simple::custom(
+            self.span.clone(),
+            format!(
+                "Expected this expression to be a scalar but it was of type '{}'",
+                type_name
+            ),
+        )));
+
+        match &self.content {
+            Expression::Scalar(value) => Ok(*value),
+            // vectors of the first dimension are equivalent to scalars
+            Expression::Vec(elements) => {
+                if elements.len() == 1 {
+                    match elements.get(0).map(|value| value.clone().scalar()) {
+                        Some(value) => Ok(value?),
+                        None => err,
+                    }
+                } else {
+                    err
+                }
+            }
+            _ => err,
+        }
+    }
+
+    pub fn is_vec(&self) -> bool {
+        matches!(self.content, Expression::Vec(_))
+    }
+
+    pub fn vec(&self) -> Result<ExpressionChildren, Box<SimpleError>> {
+        match &self.content {
+            Expression::Vec(children) => Ok(children.clone()),
             expr => Err(Box::new(Simple::custom(
                 self.span.clone(),
                 format!(

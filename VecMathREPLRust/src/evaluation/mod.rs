@@ -75,6 +75,15 @@ impl ops::Mul<Spanned<Expression>> for Spanned<Expression> {
             (Expression::Scalar(value), Expression::Scalar(rhs_value)) => {
                 Ok(Spanned::new(Expression::Scalar(value * rhs_value), span))
             }
+            (Expression::Vec(lhs), Expression::Vec(rhs)) => {
+                let inner_expressions = lhs
+                    .iter()
+                    .zip(rhs.iter())
+                    .map(|(a, b)| a.clone() * b.clone())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                Ok(Spanned::new(Expression::Vec(inner_expressions), span))
+            },
             (Expression::Scalar(_), Expression::Vec(vec)) => {
                 let result = vec
                     .iter()
@@ -242,7 +251,17 @@ impl Spanned<Expression> {
                 }
 
                 let resulting_expression = Expression::Vec(evaluated_expressions);
-                let result = Spanned::new(resulting_expression, span);
+                let result = Spanned::new(resulting_expression, span.clone());
+
+                // if we can reduce the vector to a scalar (if it's one dimensional), do so.
+                let result = if let Ok(scalar_value) = result.scalar() {
+                    let resulting_expression = Expression::Scalar(scalar_value);
+
+                    Spanned::new(resulting_expression, span)
+                } else {
+                    result
+                };
+
                 let node = StringTreeNode::with_child_nodes(
                     format!(
                         "{} = {}",
