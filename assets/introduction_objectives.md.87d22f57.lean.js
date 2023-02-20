@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as t,a as o}from"./app.8c51f311.js";const u='{"title":"Objectives","description":"","frontmatter":{},"headers":[],"relativePath":"introduction/objectives.md","lastUpdated":1676884101000}',i={},n=o("",3),r=[n];function s(l,c,h,m,p,g){return t(),a("div",null,r)}var _=e(i,[["render",s]]);export{u as __pageData,_ as default};
