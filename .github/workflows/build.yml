@@ -30,14 +30,14 @@ jobs:
       run: |
         cd VecMathREPLCpp
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-        tar -czvf VecMathREPL.tar.gz ${{github.workspace}}/build/vecmathmain/VecMathMain ${{github.workspace}}/build/vecmathmain/resources
+        tar -czvf VecMathREPL_Linux_Nightly.tar.gz ${{github.workspace}}/build/vecmathmain/VecMathMain ${{github.workspace}}/build/vecmathmain/resources
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{github.workspace}}/VecMathREPL.tar.gz
         asset_name: VecMathREPL
-        tag: ${{env.BUILD_TYPE}}
+        tag: nightly
         overwrite: true
         body: "Test building and uploading the linux release build."
 
