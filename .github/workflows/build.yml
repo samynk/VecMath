@@ -6,6 +6,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  TAG: v.1.0.7
 
 jobs:
   build:
@@ -29,4 +30,14 @@ jobs:
       run: |
         cd VecMathREPLCpp
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        tar -czvf VecMathREPL.tar.gz ${{github.workspace}}/build/VecMathMain ${{github.workspace}}/build/resources
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ${{github.workspace}}/build/VecMathREPL.tar.gz
+        asset_name: VecMathREPL
+        tag: ${{env.BUILD_TYPE}}
+        overwrite: true
+        body: "Test building and uploading the linux release build."
 
