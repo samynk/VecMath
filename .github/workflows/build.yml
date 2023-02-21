@@ -37,7 +37,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{github.workspace}}/VecMathREPL_Linux_Nightly.tar.gz
-        asset_name: VecMathREPL
+        asset_name: VecMathNightly_Linux.tar.gz
         tag: nightly
         overwrite: true
         body: "Test building and uploading the linux release build."
