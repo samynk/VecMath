@@ -663,4 +663,9 @@ void VecMathListener::addToConstantMap(std::string constantName, IMatrix* consta
 	m_Constants[constantName] = std::shared_ptr<IMatrix>(constant);
 }
 
+void VecMathListener::setUseColors(bool colors)
+{
+	m_Console.SetUseColors(colors);
+}
+
 

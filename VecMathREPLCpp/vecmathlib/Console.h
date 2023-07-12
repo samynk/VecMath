@@ -24,6 +24,7 @@ public:
 	void Reset();
 	void ClearScreen() const;
 	void NewLine() const;
+	void SetUseColors(bool useColors);
 
 #ifdef _WIN32
 	
@@ -49,6 +50,7 @@ public:
 #endif
 private:
 	int m_Precision{5};
+	bool m_UseColors{ true };
 #ifdef _WIN32
 	HANDLE m_ConsoleHandle;
 #endif

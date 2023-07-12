@@ -13,24 +13,42 @@ Console::Console()
 void Console::Print(const unsigned short color, const std::string& text) const
 {
 #ifdef _WIN32
-	SetConsoleTextAttribute(m_ConsoleHandle, color);
+	if (m_UseColors)
+	{
+		SetConsoleTextAttribute(m_ConsoleHandle, color);
+	}
 	std::cout << text;
 #else
-	std::cout << '\033' << "[1;" << color << "m";
+	if (m_UseColors)
+	{
+		std::cout << '\033' << "[1;" << color << "m";
+	}
 	std::cout << text;
-	std::cout << '\033' << "[0m";
+	if (m_UseColors)
+	{
+		std::cout << '\033' << "[0m";
+	}
 #endif
 }
 
 void Console::Print(const unsigned short color, const float value) const
 {
 #ifdef _WIN32
-	SetConsoleTextAttribute(m_ConsoleHandle, color);
+	if (m_UseColors)
+	{
+		SetConsoleTextAttribute(m_ConsoleHandle, color);
+	}
 	std::cout << value;
 #else
-	std::cout << '\033' << "[1;" << color << "m";
+	if (m_UseColors)
+	{
+		std::cout << '\033' << "[1;" << color << "m";
+	}
 	std::cout << value;
-	std::cout << "\033[0m";
+	if (m_UseColors)
+	{
+		std::cout << "\033[0m";
+	}
 #endif
 }
 
@@ -53,9 +71,13 @@ void Console::Print(char singleCharacter) const
 void Console::SetColor(const unsigned short color) const
 {
 #ifdef _WIN32
-	SetConsoleTextAttribute(m_ConsoleHandle, color);
+	if (m_UseColors) {
+		SetConsoleTextAttribute(m_ConsoleHandle, color);
+	}
 #else
-	std::cout << '\033' << "[1;" << color << "m";
+	if (m_UseColors) {
+		std::cout << '\033' << "[1;" << color << "m";
+	}
 #endif
 }
 
@@ -64,7 +86,9 @@ void Console::Reset()
 #ifdef _WIN32
 	SetConsoleTextAttribute(m_ConsoleHandle, VMF_WHITE);
 #else
-	std::cout << "\033[0m";
+	if (m_UseColors) {
+		std::cout << "\033[0m";
+	}
 #endif
 }
 
@@ -108,4 +132,9 @@ void Console::ClearScreen() const
 void Console::NewLine() const
 {
 	std::cout << "\n";
+}
+
+void Console::SetUseColors(bool useColors)
+{
+	m_UseColors = useColors;
 }

@@ -6,6 +6,8 @@ node_modules
 docs/.vitepress/dist
 #vscode ignores
 .vscode
+_deps/
+
 #visual studio ignores
 *.db
 *.db-shm
@@ -17,6 +19,8 @@ docs/.vitepress/dist
 /VecMathREPLCpp/out/install/x64-Debug/bin
 /VecMathREPLCpp/out/build/x64-Release
 /VecMathREPLCpp/out/Linux
+/VecMathREPLCpp/out/web
+/VecMathREPLCpp/Build
 /VecMathREPLJava/target
 /VecMathREPLJava/nbproject/
 /VecMathREPLJava/start.bat

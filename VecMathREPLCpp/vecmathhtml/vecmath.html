@@ -1,0 +1,64 @@
+<html>
+<head>
+<style>
+#console {
+background-color:black;
+color:white;
+padding:1em;
+overflow:auto;
+font-family:monospace;
+}
+input{
+background-color:black;
+color:white;
+border:none;
+width:100%;
+outline:none;
+font-family:monospace;
+}
+
+#cmdInput:read-only{
+	background-color:inherit;
+}
+</style>
+</head>
+<body>
+<div id="console">
+<div class="inputGroup">
+	<input type="text" class="cmdInput" id="input" onkeydown="checkKey(event)">
+</div>
+</div>
+<script>
+function checkKey(e){
+ if (e.keyCode == 13 ){
+	e.preventDefault();
+	submitCommand();
+ }
+}
+
+function submitCommand()
+{
+	var input = document.getElementById('input');
+	var consoleDiv = document.getElementById('console');
+	
+	var ig = document.createElement("div");
+	ig.className = 'inputGroup';
+	input.id = 'oldInput';
+	input.readOnly = true;
+	var commandDiv = document.createElement('div');
+	commandDiv.textContent = 'vecmath>' + input.value;
+	ig.appendChild(commandDiv);
+	
+	var newInput = document.createElement('input');
+	newInput.type = 'text';
+	newInput.id = 'input';
+	newInput.class= 'cmdInput';
+	newInput.onkeydown = checkKey;
+	ig.appendChild(newInput);
+	consoleDiv.appendChild(ig);
+	newInput.focus();
+	
+}
+</script>
+</body>
+</html>
