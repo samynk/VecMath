@@ -74,7 +74,7 @@ c = [-5,10]
 #### This corresponds to the quaternion: -5 + <span style="color:red">10i</span>
 
 ## 3D Vector
-A 3d vector is defined as an array of two floats (or two operations that result in a float).
+A 3d vector is defined as an array of three floats (or two operations that result in a float).
 Again, the REPL shell does not make a distinction between points (place vectors) or vectors. The
 user (you) has to make that distinction theirself:
 
