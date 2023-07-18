@@ -29,7 +29,10 @@ target_include_directories(VecMathLib INTERFACE
 
 message(${ANTLR_VecMathLexer_OUTPUT_DIR})
 
-
+if (EMSCRIPTEN)
+set_target_properties(VecMathLib PROPERTIES COMPILE_FLAGS
+"-sNO_DISABLE_EXCEPTION_CATCHING")
+endif()
     
 install(DIRECTORY ${VECMATH_COMMON_RESOURCE_DIR} DESTINATION "bin")
 install(DIRECTORY ${VECMATH_COMMON_RESOURCE_DIR} DESTINATION .)
