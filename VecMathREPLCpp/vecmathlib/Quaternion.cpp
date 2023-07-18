@@ -43,6 +43,7 @@ float Quaternion::get(int ri, int ci) const
 				return m_W;
 			}
 		}
+		case AddressMode::BOUNDSERROR: return NAN;
 		}
 	}
 	return 0.0f;

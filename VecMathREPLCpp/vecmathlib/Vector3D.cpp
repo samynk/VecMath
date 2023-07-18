@@ -38,6 +38,7 @@ float Vector3D::get(int ri, int ci) const
 				return m_Z;
 			}
 		}
+		case AddressMode::BOUNDSERROR:return NAN;
 		}
 	}
 	return 0.0f;
