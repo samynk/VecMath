@@ -4,7 +4,13 @@
 
 JokeGenerator::JokeGenerator()
 {
-	std::ifstream jokeFile{ "resources/jokes.txt" };
+#ifdef __EMSCRIPTEN__
+	std::string jokeFileLoc{ "/resources/jokes.txt" };
+#else
+	std::string jokeFileLoc{ "resources/jokes.txt" };
+#endif
+
+	std::ifstream jokeFile{ jokeFileLoc };
 	if (jokeFile.is_open()) {
 		while (!jokeFile.eof()) {
 			std::string line1,line2;

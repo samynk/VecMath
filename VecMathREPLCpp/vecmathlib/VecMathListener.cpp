@@ -41,7 +41,11 @@ void VecMathListener::promptHeader() const
 
 void VecMathListener::readHelp()
 {
+#ifdef __EMSCRIPTEN__
+	std::ifstream helpFile{ "/resources/help.txt" };
+#else
 	std::ifstream helpFile{ "resources/help.txt" };
+#endif
 	if (helpFile.is_open()) {
 		std::ostringstream ss;
 		ss << helpFile.rdbuf();
@@ -71,6 +75,10 @@ void VecMathListener::exec(std::string code)
 	}
 	catch (IllegalArgumentException ex) {
 		printError("Illegal character in code, best to use ASCII characters only. ");
+	}
+	catch(InputMismatchException ex)
+	{
+		printError("Input mismatch exception");
 	}
 }
 
