@@ -9,7 +9,7 @@ public:
 	float get(int ri, int ci) const override;
 	void set(int ri, int ci, float value) override;
 
-	IMatrix* conjugate();
+	IMatrix* conjugate() override;
 private:
 	float m_X{ 0 };
 	float m_Y{ 0 };
