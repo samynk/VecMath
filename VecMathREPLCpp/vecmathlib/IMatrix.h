@@ -13,7 +13,7 @@ class IMatrix
 public:
 	IMatrix(Type type, AddressMode mode, int rows, int columns);
 	IMatrix(Type type, AddressMode mode, float borderValue, int rows, int columns);
-	~IMatrix();
+	virtual ~IMatrix();
 
 	virtual float get(int ri, int ci) const = 0;
 	virtual void set(int ri, int ci, float value) = 0;
