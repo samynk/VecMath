@@ -29,7 +29,7 @@ jobs:
       # Build your program with the given configuration
       run: |
         cd VecMathREPLCpp
-        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        cmake --build ${{github.workspace}}/build --target VecMathMain --config ${{env.BUILD_TYPE}}
         cd ..
         tar -czvf VecMathREPL_Linux_Nightly.tar.gz ${{github.workspace}}/build/vecmathmain/VecMathMain ${{github.workspace}}/build/vecmathmain/resources
     - name: Upload binaries to release
