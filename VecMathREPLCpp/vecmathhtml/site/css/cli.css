@@ -1,0 +1,81 @@
+body {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: monospace;
+			font-size: 1.6em;
+        }
+
+        #console {
+            background-color: #1E1E1E;
+            color: #56ab2f;
+            padding: 15px;
+            margin-top: 15px;
+            height: 300px;
+            overflow-y: auto;
+        }
+		
+		input{
+			background-color:black;
+			color:#a8e063;
+			border:none;
+			width:100%;
+			outline:none;
+			font-family:monospace;
+			font-size: 1em;
+		}
+		
+		.cmdInput:read-only{
+			background-color:inherit;
+		}
+
+        .command {
+            color: #FFFFFF;
+        }
+		
+		.inputGroup {
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt {
+            margin-right: 5px;
+        }
+		
+		button {
+            font-family: monospace;
+            background-color: #000000;
+            border: 1px solid #00FF00;
+            color: #00FF00;
+            margin-left: 10px;
+            padding: 5px;
+			margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #00FF00;
+            color: #000000;
+		}
+		
+		a {
+            color: #7070FF; /* classic blue */
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #FF00FF; /* magenta on hover */
+        }
+		
+		@media (resolution: 300dpi) {
+            body {
+                font-size: 2em;  /* Increase font size for high-DPI devices */
+				 width: 100%;
+            }
+        }
+		
+		        /* Mobile-specific styles */
+        @media (max-width: 926px) {
+
+            #console {
+                width: 100%;
+            }
+        }
