@@ -1,6 +1,7 @@
 #include "JokeGenerator.h"
 #include <fstream>
 #include <random>
+#include <chrono>
 
 JokeGenerator::JokeGenerator()
 {
@@ -26,6 +27,7 @@ JokeGenerator::JokeGenerator()
 				m_Jokes.push_back(joke);
 			}
 		}
+		m_Generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 	}
 }
 
