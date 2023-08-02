@@ -11,7 +11,9 @@
 #include "UnitTestFunctions.h"
 #include "UnitTestOperator.h"
 #include "UnitTestComplex.h"
+#include "UnitTestComplexManipulation.h"
 #include "UnitTestConstants.h"
+
 
 
 
